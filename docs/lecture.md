@@ -790,8 +790,8 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 10. **A descriptor can be wrong**  
    But the descriptors themselves can be wrong: the language model says a California gull has a black head, which it does not.
 
-11. **The risks: nobody checks the checklist or the ticks**  
-   That is one of several risks. A descriptor can also be non-visual: no single photo shows a bird's wingspan. It can describe the setting rather than the bird. And nobody checks the ticks: CLIP gives every item some score, true or not.
+11. **A match score is not a fact check**  
+   Look at our herring gull photo: its head is white and its bill is yellow. The California gull checklist says black head and bill, yet CLIP gives that phrase a positive similarity score. That number compares the photo with the whole phrase; it is not a probability that each detail is true. The fixed average still includes it, so a misleading description can affect the class score. Other descriptions may be impossible to verify from a photo, or describe its background. The takeaway: check that the words are correct and visible, then test whether changing that feature changes its score.
 
 12. **What changed compared with LaBo: the head is no longer learned**  
    Compared with LaBo, the head is no longer learned. LaBo trained a linear layer on CLIP's sentence scores; here the class score is a fixed average, so nothing is trained and no labelled image is needed.

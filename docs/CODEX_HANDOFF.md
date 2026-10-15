@@ -154,11 +154,21 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   The worked gull example now leads directly into the use case with no labelled images. The section has
   13 slides and the lecture 311. All other examples and source data are unchanged. Content, 24 Python tests,
   three deck tests and live transition/narration checks passed. Saved film timing remains unchanged.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r15.pdf`, 311 pages and 27 section bookmarks.
+- Annotation PDF revision 15: `review/cbm-lecture-review-2026-10-15-r15.pdf`, 311 pages and 27 section bookmarks.
   Revision 14 page 248 is removed; pages 249-312 become 248-311. The removed page corresponds to revision 7
   page 242. All 311 retained slides have unchanged body text. Page numbers and bookmark destinations were
   checked, and the transition and final page were inspected visually. Earlier PDFs and saved film timing remain
   available. No audio generation, film render or publication was performed.
+
+- PDF revision 7 page 245 review: s25.11 now follows a mismatched phrase through CLIP into the class average,
+  beside the actual gull photo. The saved score 0.325 is identified as similarity, not a probability. The
+  takeaway asks students to check both the description's correctness/visibility and the score's dependence
+  on the named feature. No data or slide counts changed. Content, 24 Python tests, three deck tests and live
+  visual/narration/build checks passed. Saved film timing remains unchanged.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r16.pdf`, 311 pages and 27 section bookmarks.
+  Page 250 is revised (s25.11, revision 7 page 245). All footers and bookmark destinations are verified; the
+  other 310 page content streams and extracted text match revision 15. The revised PDF page was inspected
+  visually. Earlier PDFs remain available. No audio generation, film render or publication was performed.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

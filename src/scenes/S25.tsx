@@ -10,7 +10,7 @@
 // 25.8 the five class averages as one compact line; the winner's (Slaty-backed Gull) and Herring Gull's descriptor bars; near miss.
 // 25.9 when it is attractive: no labelled images; a new class needs only a new checklist (Ivory Gull, real descriptors).
 // 25.10 the wrong California Gull descriptor.
-// 25.11 the risks, four rows: wrong / non-visual / the setting / unchecked ticks (the wrong item's real CLIP score).
+// 25.11 a match score is not a fact check: our photo + a mismatched phrase still feed the class average.
 // 25.12 recap: what changed compared with LaBo.  25.13 VariantCard + the cost line.
 import React from 'react';
 import { C, F } from '../kit/theme';
@@ -45,8 +45,7 @@ const NEWC = 'Ivory Gull';
 const NEWD: string[] = CBD.gull_descriptors[NEWC];
 // 25.11 the risks: the wrong California Gull item still gets a CLIP score on our photo (computed)
 const CALS = CBD.gull_photo.per_species['California Gull'];
-const CAL_COS: number = CALS.cos[0], CAL_AVG: number = CALS.score;
-const WINGSPAN: string = HDESC[0];
+const CAL_COS: number = CALS.cos[0];
 
 // 25.5 two unit vectors (illustrative): phi(x) and psi(d)
 const VPHI: [number, number] = [0.6, 0.8], VPSI: [number, number] = [0.8, 0.6];
@@ -157,9 +156,10 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
   const s9score = at(w(9, 'scored') - 0.2, 0.5), s9retrain = at(w(9, 'retraining') - 0.3, 0.5);
   // ---------------- 25.10
   const s8card = at(w(10, 'California') - 0.4, 0.5), s8x = E.out(at(w(10, 'does') - 0.1, 0.6)), s8w = at(w(10, 'wrong') - 0.2);
-  // ---------------- 25.11 the risks
-  const s11r = [at(b(11) + 0.1, 0.5), at(w(11, 'non') - 0.2, 0.5), at(w(11, 'setting') - 0.3, 0.5), at(w(11, 'nobody') - 0.2, 0.5)];
-  const s11score = at(w(11, 'true') - 0.4, 0.5);
+  // ---------------- 25.11 follow one mismatched phrase through the scoring rule
+  const s11photo = at(b(11) + 0.1, 0.5), s11phrase = at(w(11, 'California') - 0.2, 0.5);
+  const s11score = at(w(11, 'CLIP') - 0.2, 0.5), s11meaning = at(w(11, 'probability') - 0.2, 0.5);
+  const s11average = at(w(11, 'fixed') - 0.2, 0.5), s11checks = at(w(11, 'takeaway') - 0.2, 0.5);
   // ---------------- 25.12 recap: compared with LaBo
   const s13h = at(b(12) + 0.1, 0.5);
   const s13r = [at(w(12, 'head') - 0.2, 0.5), at(w(12, 'nothing') - 0.2, 0.5), at(w(12, 'labelled') - 0.2, 0.5)];
@@ -178,7 +178,7 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
   const AVX = [728, 985, 1215]; // 25.6 word labels over the terms
   const PH2: Rect = { x: 170, y: 440, w: 190, h: 190 }; // 25.2 photo
   const K2X = 400, K2Y = 320, K2W = 440, K2G = 20, K2H = 450; // 25.2 checklist cards
-  const R11Y = 360, R11H = 130; // 25.11 risk rows
+  const PH11: Rect = { x: 160, y: 355, w: 350, h: 350 };
 
   return (
     <Stage>
@@ -430,32 +430,34 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={880} ax="right" kind="data" text="Menon and Vondrick's released CUB descriptors" o={s8card} />
       </Slide>
 
-      {/* ============================================================ 25.11 the risks */}
+      {/* ============================================================ 25.11 the score does not verify the words */}
       <Slide o={sl(11)}>
         <SlideHead text={bh(P, 11)} />
-        {[
-          { lab: 'wrong', ex: `"${CAL}"`, sub: 'California Gull', strike: true },
-          { lab: 'non-visual', ex: `"${WINGSPAN}"`, sub: 'Herring Gull: no single photo shows a wingspan', strike: false },
-          { lab: 'about the setting', ex: '"near the sea"', sub: 'a made-up example, as in the VLG-CBM part', strike: false },
-        ].map((r, i) => {
-          const y = R11Y + i * R11H, o = s11r[i];
-          return (
-            <React.Fragment key={r.lab}>
-              <Rich x={200} y={y} ay="middle" size={34} weight={700} text={r.lab} o={o} />
-              {o > 0.001 ? (
-                <div style={{ position: 'absolute', left: 620, top: y, transform: 'translateY(-50%)', opacity: o < 0.999 ? o : undefined, fontFamily: F.mono, fontSize: 26,
-                  color: C.concept, whiteSpace: 'nowrap', textDecoration: r.strike ? `line-through ${C.bad} 3px` : undefined }}>{r.ex}</div>
-              ) : null}
-              <Rich x={620} y={y + 30} size={24} color={C.mute} text={r.sub} o={o} />
-            </React.Fragment>
-          );
-        })}
-        <Rich x={200} y={R11Y + 3 * R11H} ay="middle" size={34} weight={700} text="unchecked ticks" o={s11r[3]} />
-        <Rich x={620} y={R11Y + 3 * R11H} ay="middle" size={30} o={s11r[3]}
-          text="{x:CLIP} gives every item some score, true or not" />
-        <Rich x={620} y={R11Y + 3 * R11H + 30} size={26} color={C.chalk2} o={s11score}
-          text={`the wrong California Gull item scores {c:${CAL_COS.toFixed(3)}} on our gull, above that class's average ${CAL_AVG.toFixed(3)}`} />
-        <EvTag x={1760} y={900} ax="right" kind="computed" text="CLIP ViT-B/32 on our gull photo, released CUB descriptors" o={s11score} />
+        <Rich x={160} y={305} size={28} text="Our {x:herring gull photo}" o={s11photo} />
+        <PhotoR R={PH11} src="gull.jpg" o={s11photo} />
+        <Rich x={160} y={725} size={28} text="White head, yellow bill" o={s11photo} />
+        <Rich x={740} y={305} size={26} color={C.chalk2} text="From the California Gull checklist:" o={s11phrase} />
+        <Rich x={740} y={355} size={36} w={1040} text={`"${CAL.replace('black head and bill', '{l:black head and bill}')}"`} o={s11phrase} />
+        <Rich x={740} y={418} size={26} color={C.bad} text="These words do not match this photo." o={s11phrase} />
+        <Svg>
+          <Flow pts={[[530, 575], [735, 575]]} color={C.input} p={s11score} />
+          <Flow pts={[[850, 468], [850, 520]]} color={C.concept} p={s11score} />
+          <Block x={850} y={575} w={230} h={110} kind="input" title="CLIP" size={34} o={s11score} />
+          <Flow pts={[[980, 575], [1110, 575]]} color={C.concept} p={s11score} />
+          <Flow pts={[[1340, 575], [1460, 575]]} color={C.head} p={s11average} />
+        </Svg>
+        <Rich x={1220} y={505} ax="center" size={28} text="{c:Match score}" o={s11score} />
+        <Rich x={1220} y={555} ax="center" size={50} weight={700} text={`{c:${CAL_COS.toFixed(3)}}`} o={s11score} />
+        <Rich x={1220} y={640} ax="center" size={24} color={C.chalk2} text="Similarity, not a probability" o={s11meaning} />
+        <Rich x={1500} y={493} size={24} color={C.chalk2} text="California Gull" o={s11average} />
+        <Rich x={1500} y={535} size={30} weight={700} text="{f:Class average}" o={s11average} />
+        <Rich x={1500} y={585} w={280} size={26} color={C.chalk2} text="still includes this score" o={s11average} />
+        <Rich x={160} y={825} size={32} weight={700} text="Check the {c:words}" o={s11checks} />
+        <Rich x={160} y={875} size={28} text="Correct and visible in the photo?" o={s11checks} />
+        <Rich x={960} y={825} size={32} weight={700} text="Check the {c:score}" o={s11checks} />
+        <Rich x={960} y={875} size={28} text="Does changing that feature change its score?" o={s11checks} />
+        <Credit x={160} y={955} text={CREDIT['gull.jpg']} o={s11photo} />
+        <EvTag x={1760} y={995} ax="right" kind="computed" text="CLIP ViT-B/32 on this photo; released CUB descriptor" o={s11score} />
       </Slide>
 
       {/* ============================================================ 25.12 recap: what changed compared with LaBo */}

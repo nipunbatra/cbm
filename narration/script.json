@@ -1660,8 +1660,8 @@
     {
      "id": "25.11",
      "gap": 1.2,
-     "text": "That is one of several risks. A descriptor can also be non-visual: no single photo shows a bird's wingspan. It can describe the setting rather than the bird. And nobody checks the ticks: CLIP gives every item some score, true or not.",
-     "head": "The risks: nobody checks the {c:checklist} or the ticks"
+     "text": "Look at our herring gull photo: its head is white and its bill is yellow. The California gull checklist says black head and bill, yet CLIP gives that phrase a positive similarity score. That number compares the photo with the whole phrase; it is not a probability that each detail is true. The fixed average still includes it, so a misleading description can affect the class score. Other descriptions may be impossible to verify from a photo, or describe its background. The takeaway: check that the words are correct and visible, then test whether changing that feature changes its score.",
+     "head": "A {c:match score} is not a fact check"
     },
     {
      "id": "25.12",

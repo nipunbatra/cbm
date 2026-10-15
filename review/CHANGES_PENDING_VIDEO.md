@@ -249,3 +249,15 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     become pages 248-311. Verified every footer and bookmark destination and unchanged body text for all 311
     retained slides. Visually checked the transition, neighbouring slides, section boundary and final page.
     Earlier PDFs are preserved. No audio generation, saved timeline rebuild, film render or publication occurred.
+41. **Make the description risks concrete (PDF revision 7 page 245).** Replaced the four abstract rows on
+    s25.11 with our herring gull photo, the mismatched California Gull phrase, its saved CLIP score 0.325 and
+    the path into the class average. Explain that similarity is not a probability that the words are true.
+    End with two checks: are the words correct and visible, and does changing the named feature change its
+    score? Other unobservable or background descriptions remain in the narration. No data or slide counts
+    changed. Content, type checking, 24 Python tests and three deck tests passed. Inspected the slide,
+    narration and progressive builds in the deck; no browser warnings or errors. Saved film timing is unchanged.
+42. **Annotation PDF revision 16.** Saved `review/cbm-lecture-review-2026-10-15-r16.pdf`, with 311 pages and
+    27 section bookmarks. Page 250 (s25.11, revision 7 page 245) is revised. Verified every footer and bookmark
+    destination, visually inspected the revised PDF page, and confirmed identical content streams and text
+    for the other 310 pages. Earlier PDFs remain available. No audio generation, saved timeline rebuild,
+    film render or publication was performed.
