@@ -4,6 +4,7 @@
 import esbuild from 'esbuild';
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const out = path.resolve(process.argv[2] || path.join(root, 'deck'));
 fs.mkdirSync(out, { recursive: true });
@@ -23,11 +24,13 @@ for f in pathlib.Path(sys.argv[1]).rglob('*.jpg'):
     if max(im.size) > 1400:
         im.thumbnail((1400, 1400)); im.convert('RGB').save(f, quality=86)
 `, path.join(out, 'img')]);
+// Change asset URLs with their contents so a returning reviewer gets the new build.
+const assetVersion = (name) => createHash('sha256').update(fs.readFileSync(path.join(out, name))).digest('hex').slice(0, 12);
 fs.writeFileSync(path.join(out, 'index.html'), `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Concept Bottleneck Models</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="deck.css">
+<title>Concept Bottleneck Models</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="deck.css?v=${assetVersion('deck.css')}">
 <script>window.remotion_staticBase = location.pathname.split('/').slice(0, -1).join('/');</script>
 <style>html,body{margin:0;background:#000;height:100%;overflow:hidden}@media print{html,body{overflow:visible;height:auto}@page{size:1920px 1080px;margin:0}}</style>
-</head><body><div id="root"></div><script src="deck.js"></script></body></html>
+</head><body><div id="root"></div><script src="deck.js?v=${assetVersion('deck.js')}"></script></body></html>
 `);
 console.log('deck ->', out);
