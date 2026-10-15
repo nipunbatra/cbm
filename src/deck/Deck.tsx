@@ -197,6 +197,9 @@ export const PrintAll: React.FC<{ only?: string; step?: number }> = ({ only, ste
         <div key={b.id} className="page" style={{ width: W, height: H, position: 'relative', overflow: 'hidden', breakAfter: 'page' }}>
           <Player component={SceneOnly} inputProps={{ id: sc.id }} durationInFrames={Math.max(1, Math.round(sc.dur * FPS))} fps={FPS}
             compositionWidth={W} compositionHeight={H} style={{ width: W, height: H }} initialFrame={stepFrame(s, k)} acknowledgeRemotionLicense />
+          <div style={{ position: 'absolute', bottom: 18, right: 48, color: C.mute, fontFamily: F.mono, fontSize: 20 }}>
+            {`${sc.id}.${k + 1} · ${TL.scenes.slice(0, s).reduce((n, x) => n + x.beats.length, 0) + k + 1} / ${TL.scenes.reduce((n, x) => n + x.beats.length, 0)}`}
+          </div>
         </div>
       )))))}
     </div>

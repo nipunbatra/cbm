@@ -43,3 +43,8 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     the heatmap should stay the same. The result slide has one takeaway: a convincing heatmap alone is insufficient.
     The notes retain the distinction between methods that barely changed and methods that passed the test. Maps are
     explicitly schematic. Content checks, all 21 checks and browser inspection passed; notes and arrow navigation work.
+11. **Annotation PDF (slides only).** Exported `review/cbm-lecture-review-2026-10-15.pdf`: 318 pages, selectable text,
+    28 section bookmarks and a slide ID/page number on each page. The exporter now enumerates the current script,
+    rather than the old film timeline, and checks for missing slides, unloaded images and browser errors. The footer
+    appears only in the PDF view. All page IDs and the revised pages were verified. Saliency is on pages 14-15 and
+    the model check on pages 17-18. No audio, saved timing, film or published output was changed.

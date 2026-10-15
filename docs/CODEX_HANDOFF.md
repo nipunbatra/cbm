@@ -30,6 +30,9 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 - `npm run content` now leaves both saved film timelines and `docs/beats.txt` untouched. The deck reads the updated
   script and uses temporary preview timing in memory for changed scenes. Review via the deck until Claude Code
   remakes the audio and film. The saved film timing still describes the previous narration.
+- Annotation PDF: `review/cbm-lecture-review-2026-10-15.pdf` (generated, ignored by git), 318 pages with slide IDs and
+  section bookmarks. Both review simplifications are included: pages 14-15 and 17-18. `npm run deck:pdf` now exports
+  the current script's slide list, independently of the saved film timeline.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck and asks for changes. For each
