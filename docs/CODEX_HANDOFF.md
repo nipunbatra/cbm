@@ -22,6 +22,13 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   reported, illustrative, constructed, schematic). Tests: `npm run check`.
 - Published: see `publishing/README.md` (deck, notes, PDF on the attention site; course page row; YouTube films).
 
+## Review updates
+- 15 Oct, first review comment: reduced the six saliency slides to two (s21.3 and s21.4). The deck now has 318 slides;
+  s21 has 16. Later s21 slide numbers move up by four. See `review/CHANGES_PENDING_VIDEO.md`.
+- `npm run content` now leaves both saved film timelines and `docs/beats.txt` untouched. The deck reads the updated
+  script and uses temporary preview timing in memory for changed scenes. Review via the deck until Claude Code
+  remakes the audio and film. The saved film timing still describes the previous narration.
+
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck and asks for changes. For each
    change: edit the narration line and/or the scene, run `npm run content` and `npm run check`, look at the slide in

@@ -1,25 +1,12 @@
-// s21 Part 1 · Post-hoc or interpretable by design? (revision 2: one idea per slide, 20 slides, one per beat)
-// 21.1 two routes, two columns         21.2 post-hoc: evidence = E(f, x)
-// 21.3 to 21.8 saliency, worked on a constructed 3 x 3 image (D.saliency_toy):
-//   21.3 the image and three classes   21.4 weights, s_k = sum_i W_ki x_i, the three scores
-//   21.5 nudge the centre / a corner pixel by eps, every score moves     21.6 change / nudge = the gradient
-//   21.7 one saliency map |W| per class 21.8 a deep network: backpropagation gives the gradient (Simonyan)
-// 21.9 occlusion (real CLIP map)
-// 21.10 limit 1 setup: trained vs layer-by-layer randomised network, each -> E -> explanation (Adebayo)
-// 21.11 result: guided backprop maps barely change (edge detector); plain gradient / Grad-CAM change (pass)
-// 21.12 limit 2 setup: two hospitals, pneumonia rate 34.2% vs 1.2% (reported), one detector trained on both (Zech)
-// 21.13 the shortcut: corner marker, hospital identified 99.95%; hospital -> marker, hospital -> pneumonia rate
-// 21.14 exposed, not fixed: heatmap lights the marker; AUC same hospitals vs new hospital; fix = new data
-// 21.15 limit 3: the gull occlusion map + three questions (yellow bill? red spot? head shape?)
-// 21.16 findings vs knobs: teal findings, a black box with no wingtip-colour knob; pointer to the CBM
-// 21.17 ante-hoc examples              21.18 Rudin                              21.19 the CBM in words
-// 21.20 the same line in symbols, aligned under the words.
-// TCAV (formerly 21.5 to 21.10) now lives in the appendix scene s26 (S26.tsx).
-// Slides replace each other: the old one fades out in the gap before a beat, the new one fades in on its first words.
+// s21 Part 1: Post-hoc or interpretable by design? One slide per narration beat.
+// 1-2: two routes and post-hoc. 3-4: a tiny input nudge and one class's saliency map.
+// 5: occlusion. 6-7: model randomisation check. 8-10: hospital shortcut.
+// 11-12: where versus what, and named controls. 13-16: interpretable models and the CBM.
+// TCAV is in the appendix, S26.tsx.
 import React from 'react';
 import { C } from '../kit/theme';
 import { E, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, ROLE, bs, be, bw, bh, clamp, inv, type SceneProps } from '../kit/core';
-import { CREDIT, Credit, EvTag, Flow, MathSvg, PhotoR, Pill, Region, SensMap, Block, Cross, Person, fit, rgba, ux, vy, type Rect } from '../kit/cbm';
+import { CREDIT, Credit, EvTag, MathSvg, PhotoR, Pill, Region, SensMap, Block, Cross, Person, fit, rgba, ux, vy, type Rect } from '../kit/cbm';
 import { rnd } from '../kit/anim';
 import { D } from '../kit/data';
 
@@ -103,29 +90,16 @@ const Arr: React.FC<{ x1: number; y1: number; x2: number; y2: number; color?: st
   );
 };
 
-// ------------------------------------------------------------------ fixed illustrative data
-// 21.8: a 6 x 6 saliency map (illustrative values in 0..1)
-const SAL: number[][] = Array.from({ length: 6 }, (_, r) => Array.from({ length: 6 }, (_, c) =>
-  clamp(Math.exp(-((r - 2) ** 2 + (c - 1.5) ** 2) / 2.2) + 0.45 * Math.exp(-((r - 3.6) ** 2 + (c - 4.2) ** 2) / 1.4) + 0.06 * rnd(r * 6 + c))));
-
-
-// 21.3 to 21.7: the constructed 3 x 3 saliency example (D.saliency_toy): a linear model, score_k = sum_i W_ki x_i
+// 21.3 and 21.4: one input nudge, one class score, then the saliency map.
+// All numerical values come from the existing constructed example in math/data.py.
 const ST = D.saliency_toy;
-const TCL: string[] = ST.classes; // vertical bar, horizontal bar, dot
+const TOY_CLASS: string = ST.classes[0];
 const IMG: number[][] = ST.image;
-const WK: number[][][] = TCL.map((k) => ST.W[k]);
-const SCORE: number[] = TCL.map((k) => ST.scores[k]);
 const EPS: number = ST.eps;
-const DC: number[] = TCL.map((k) => ST.nudge_centre[k]); // score changes when the centre pixel rises by EPS
-const DK: number[] = TCL.map((k) => ST.nudge_corner[k]); // ... when a corner pixel rises by EPS
-const SALT: number[][][] = TCL.map((k) => ST.saliency[k]);
-const WIN = SCORE.indexOf(Math.max(...SCORE));
-const CORNER = { r: 0, c: 0 }; // the nudged corner pixel (any corner gives the same deltas)
-const TOYTAG = 'a 3 × 3 teaching example';
-/** a number as written on the board: no trailing zeros; txt uses a true minus sign, tex a plain one */
+const DELTA: number = ST.nudge_centre[TOY_CLASS];
+const SALIENCY: number[][] = ST.saliency[TOY_CLASS];
+const TOYTAG = 'constructed linear model, not a trained image classifier';
 const fm = (v: number) => String(parseFloat(v.toFixed(3)));
-const fmt = (v: number) => fm(v).replace('-', '−');
-const sgn = (v: number) => (v > 0 ? '+' : '') + fmt(v);
 
 /** a 3 x 3 image: lit pixels in input blue, dark pixels near black, the pixel value small in each cell.
  *  lift brightens chosen cells (a nudge); ring outlines them */
@@ -157,54 +131,15 @@ const PixGrid: React.FC<{
   );
 };
 
-/** a 3 x 3 weight grid of one class: signed numbers, positive cells shaded in the head colour, negative cells dark */
-const WGrid: React.FC<{ x: number; y: number; cell: number; W: number[][]; o?: number; ring?: number }> = ({ x, y, cell, W, o = 1, ring = 0 }) => {
-  if (o <= 0.001) return null;
-  return (
-    <g opacity={o < 0.999 ? o : undefined}>
-      {W.map((row, r) => row.map((v, c) => (
-        <g key={`${r}-${c}`}>
-          <rect x={x + c * cell} y={y + r * cell} width={cell} height={cell} fill={v > 0 ? rgba(FC, 0.2 + 0.25 * Math.min(1, v / 2)) : '#080B0F'}
-            stroke={C.line2} strokeWidth={1.5} />
-          <Txt x={x + c * cell + cell / 2} y={y + r * cell + cell / 2} size={Math.min(cell * 0.3, 22)} mono weight={v > 0 ? 700 : 500}
-            fill={v > 0 ? C.chalk : C.mute}>{fmt(v)}</Txt>
-        </g>
-      )))}
-      {/* the lit pixels of the image (its middle column) */}
-      <rect x={x + cell} y={y} width={cell} height={3 * cell} fill="none" stroke={C.input} strokeWidth={4} opacity={ring} />
-    </g>
-  );
-};
-
-/** a 3 x 3 saliency map: white luminance on dark (scaled to the map's largest value), values small */
-const SalGrid: React.FC<{ x: number; y: number; cell: number; S: number[][]; o?: number; p?: number }> = ({ x, y, cell, S, o = 1, p = 1 }) => {
-  if (o <= 0.001) return null;
-  const mx = Math.max(...S.flat());
-  return (
-    <g opacity={o < 0.999 ? o : undefined}>
-      <rect x={x} y={y} width={3 * cell} height={3 * cell} fill="#06080B" />
-      {S.map((row, r) => row.map((v, c) => (
-        <g key={`${r}-${c}`}>
-          <rect x={x + c * cell} y={y + r * cell} width={cell} height={cell} fill={C.heat} opacity={0.92 * (v / mx) * p} />
-          <Txt x={x + c * cell + cell / 2} y={y + r * cell + cell / 2} size={24} mono fill={v / mx > 0.55 ? '#0B1220' : C.chalk2} o={p}>{fmt(v)}</Txt>
-        </g>
-      )))}
-      {Array.from({ length: 4 }, (_, i) => (
-        <g key={i}>
-          <line x1={x + i * cell} x2={x + i * cell} y1={y} y2={y + 3 * cell} stroke={C.line2} strokeWidth={2} />
-          <line y1={y + i * cell} y2={y + i * cell} x1={x} x2={x + 3 * cell} stroke={C.line2} strokeWidth={2} />
-        </g>
-      ))}
-    </g>
-  );
-};
-
-// 21.4: score table (rows = classes); 21.5: score bars with nudge arrows
-const T4 = { x: [160, 505, 850], gy: 370, cell: 88, k: 64 };
-const T5 = { gx: 200, gy: 380, cell: 120, lab: 1000, bx: 1030, k: 180, y: [430, 580, 730] };
-const T7 = { cell: 110, x: [285, 795, 1305], y: 400 };
-const PH8: Rect = { x: 200, y: 320, w: 240, h: 240 };
-const NET8 = { x: 760, y: 440 };
+/** The relative size of each pixel's score change, for the same tiny nudge. */
+const SalGrid: React.FC<{ x: number; y: number; cell: number; o?: number }> = ({ x, y, cell, o = 1 }) => (
+  <g opacity={o}>
+    {SALIENCY.map((row, r) => row.map((v, c) => (
+      <rect key={`${r}-${c}`} x={x + c * cell} y={y + r * cell} width={cell} height={cell}
+        fill={rgba(C.heat, 0.92 * v / Math.max(...SALIENCY.flat()))} stroke={C.line2} strokeWidth={2} />
+    )))}
+  </g>
+);
 
 /** an opaque network: a dark box with a faint, slowly shimmering inner texture (as in s01) */
 const ClipBox: React.FC<{ x: number; y: number; w: number; h: number; t: number; o?: number }> = ({ x, y, w, h, t, o = 1 }) => {
@@ -224,7 +159,7 @@ const ClipBox: React.FC<{ x: number; y: number; w: number; h: number; t: number;
   );
 };
 
-// ------------------------------------------------------------------ 21.10 to 21.16: the limits
+// ------------------------------------------------------------------ 21.6 to 21.12: the limits
 /** a small schematic network: 4 columns of 4 nodes. R (0..3) randomises its 3 weight layers from the output end
  *  (the cascading randomisation of Adebayo et al.): a randomised layer is drawn dashed with scrambled strengths. */
 const NetGlyph: React.FC<{ x: number; y: number; R?: number; o?: number; seed?: number }> = ({ x, y, R = 0, o = 1, seed = 3 }) => {
@@ -309,12 +244,12 @@ const Knob: React.FC<{ x: number; y: number; r?: number; v?: number; o?: number 
 const ZR = { prevMSH: 34.2, prevNIH: 1.2, nMSH: 42396, nNIH: 112120 };
 const ZE = D.lit.zech;
 const TOKEN = [0.857, 0.062, 0.085, 0.13]; // the corner marker on the X-ray (normalized cx, cy, w, h)
-// 21.12 rows (hospital A = Mount Sinai, B = NIH), bar scale in px per percentage point
+// 21.8 rows (hospital A = Mount Sinai, B = NIH), bar scale in px per percentage point
 const R12 = [440, 700], BAR12 = { x: 640, k: 13 };
-// 21.13 / 21.14 X-ray frames
+// 21.9 / 21.10 X-ray frames
 const XR13: Rect = fit('chest.jpg', 180, 330, 500);
 const XR14: Rect = fit('chest.jpg', 180, 330, 520);
-// 21.15 the gull with its occlusion map; question points (normalized) for head shape, yellow bill, red spot
+// 21.11 the gull with its occlusion map; question points (normalized) for head shape, yellow bill, red spot
 const PH15: Rect = { x: 700, y: 300, w: 540, h: 540 };
 const Q15 = [
   { text: 'head shape?', u: 0.3, v: 0.215, y: 380 },
@@ -322,7 +257,7 @@ const Q15 = [
   { text: 'red spot?', u: 0.105, v: 0.306, y: 580 },
 ];
 
-// 21.17: the decision tree
+// 21.13: the decision tree
 const TREE = {
   root: { x: 880, y: 445, text: 'wingtip black?' },
   leafL: { x: 790, y: 580, a: 'glaucous', b: 'gull' },
@@ -334,7 +269,7 @@ const TREE = {
 // geometry
 const PH2: Rect = { x: 200, y: 330, w: 170, h: 170 };
 const PH9: Rect = { x: 200, y: 300, w: 540, h: 540 };
-const COLS = [520, 960, 1400]; // 21.19 / 21.20 columns: photo, concepts, answer
+const COLS = [520, 960, 1400]; // 21.15 / 21.16 columns: photo, concepts, answer
 const ROWW = 430, ROWS = 575;
 
 export const S21: React.FC<SceneProps> = ({ t, P }) => {
@@ -358,106 +293,78 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
   const s2ev = at(w(2, 'evidence') - 0.2), s2eq = at(w(2, 'evidence') + 0.2, 0.6);
 
 
-  // ---------------- 21.3 the 3 x 3 image and three classes
-  const t3g = at(b(3) - 0.05, 0.3), t3bar = E.io(inv(w(3, 'vertical') - 0.1, w(3, 'vertical') + 0.7, t));
-  const t3m = at(w(3, 'model') - 0.1), t3a = E.io(inv(w(3, 'model') - 0.1, w(3, 'model') + 0.6, t));
-  const t3c = [at(w(3, 'vertical', 1) - 0.1), at(w(3, 'horizontal') - 0.1), at(w(3, 'dot') - 0.1)];
-  const t3in = at(w(3, 'three') - 0.1);
+  // ---------------- 21.3 one nudge, one score change
+  const nudge = at(w(3, 'brighten') - 0.1);
+  const change = at(w(3, 'rises') - 0.1);
+  const sameClass = at(w(3, 'even') - 0.1);
 
-  // ---------------- 21.4 weights, the weighted sum, the scores
-  const t4l = at(b(4) - 0.05, 0.3);
-  const t4g = [0, 1, 2].map((i) => at(w(4, 'weights') - 0.3 + i * 0.25, 0.4));
-  const t4wd = at(w(4, 'weighted') - 0.1), t4ring = at(w(4, 'pixels') - 0.1), t4eq = at(w(4, 'pixels') + 0.5, 0.6);
-  const t4s = [w(4, 'scores'), w(4, 'horizontal'), w(4, 'dot')].map((x) => E.out(inv(x - 0.1, x + 0.7, t)));
-  const t4win = E.io(inv(w(4, 'says') - 0.1, w(4, 'says') + 0.5, t));
+  // ---------------- 21.4 assemble the saliency map
+  const map = at(w(4, 'Brighter') - 0.1);
+  const sensitive = at(w(4, 'Here') - 0.1);
 
-  // ---------------- 21.5 the nudge: centre pixel, then a corner pixel
-  const t5ctx = at(b(5) - 0.05, 0.3);
-  const t5k = inv(w(5, 'Brighten', 1) - 0.1, w(5, 'Brighten', 1) + 0.4, t); // switch from the centre to the corner
-  const t5c = at(w(5, 'centre') - 0.1) * (1 - t5k), t5cv = at(w(5, '0.1') - 0.1) * (1 - t5k);
-  const t5d = [at(w(5, 'rise') - 0.1), at(w(5, 'rise') + 0.1), at(w(5, '0.2') - 0.3)].map((v) => E.out(v) * (1 - t5k));
-  const t5kc = at(w(5, 'corner') - 0.1), t5kd = E.out(at(w(5, 'falls') - 0.1));
-
-  // ---------------- 21.6 the gradient
-  const t6wd = at(w(6, 'Divide') - 0.1), t6eq = at(w(6, 'gradient') - 0.1, 0.6);
-  const t6r = [at(w(6, '1') - 0.1), at(w(6, '2') - 0.1), at(w(6, 'minus') - 0.1)];
-  const t6s = at(w(6, 'saliency') - 0.1);
-
-  // ---------------- 21.7 one saliency map per class
-  const t7f = at(b(7) - 0.05, 0.3);
-  const t7m = [at(w(7, 'vertical') - 0.1, 0.6), at(w(7, 'horizontal') - 0.1, 0.6), at(w(7, 'dot') - 0.1, 0.6)];
-  const t7l = at(w(7, 'always') - 0.1);
-
-  // ---------------- 21.8 a deep network: backpropagation
-  const t8ph = at(b(8) - 0.05, 0.3), t8n = at(w(8, 'deep') - 0.1), t8a = E.io(inv(w(8, 'deep') - 0.1, w(8, 'deep') + 0.6, t));
-  const t8s = at(w(8, 'score') - 0.1), t8ch = at(w(8, 'changes') - 0.1);
-  const t8bp = E.io(inv(w(8, 'Backpropagation') - 0.1, w(8, 'Backpropagation') + 1.0, t));
-  const t8map = inv(w(8, 'every') - 0.1, w(8, 'every') + 1.0, t);
-  const t8wd = at(w(8, 'one') - 0.1), t8eq = at(w(8, 'Simonyan') - 0.1, 0.6);
-
-  // ---------------- 21.9
-  const s9ph = at(b(9) - 0.05, 0.3);
-  const s9patch = at(w(9, 'Grey') - 0.1, 0.4);
-  const s9map = inv(w(9, 'occlusion') - 0.3, w(9, 'occlusion') + 1.2, t);
-  const s9w = at(w(9, 'measure') - 0.1), s9eq = at(w(9, 'drops') - 0.1, 0.6);
+  // ---------------- 21.5
+  const s9ph = at(b(5) - 0.05, 0.3);
+  const s9patch = at(w(5, 'Grey') - 0.1, 0.4);
+  const s9map = inv(w(5, 'occlusion') - 0.3, w(5, 'occlusion') + 1.2, t);
+  const s9w = at(w(5, 'measure') - 0.1), s9eq = at(w(5, 'drops') - 0.1, 0.6);
 
 
-  // ---------------- 21.10 limit 1 setup
-  const s10n1 = at(w(10, 'sanity') - 0.1), s10e1 = E.io(inv(w(10, 'explanation') - 0.1, w(10, 'explanation') + 0.8, t));
-  const s10pr = at(w(10, 'should') - 0.1);
-  const s10n2 = at(w(10, 'Adebayo') - 0.1), s10l2 = at(w(10, 'randomising') - 0.1);
-  const s10R = 3 * E.io(inv(w(10, 'randomising'), w(10, 'nothing'), t));
-  const s10e2 = E.io(inv(w(10, 'nothing') - 0.3, w(10, 'nothing') + 0.5, t));
+  // ---------------- 21.6 limit 1 setup
+  const s10n1 = at(w(6, 'sanity') - 0.1), s10e1 = E.io(inv(w(6, 'explanation') - 0.1, w(6, 'explanation') + 0.8, t));
+  const s10pr = at(w(6, 'should') - 0.1);
+  const s10n2 = at(w(6, 'Adebayo') - 0.1), s10l2 = at(w(6, 'randomising') - 0.1);
+  const s10R = 3 * E.io(inv(w(6, 'randomising'), w(6, 'nothing'), t));
+  const s10e2 = E.io(inv(w(6, 'nothing') - 0.3, w(6, 'nothing') + 0.5, t));
 
-  // ---------------- 21.11 result
-  const s11a = at(w(11, 'guided') - 0.1, 0.6), s11b = at(w(11, 'randomised') - 0.1, 0.6), s11eq = at(w(11, 'randomised') + 0.4);
-  const s11edge = at(w(11, 'edges') - 0.1), s11pan = at(w(11, 'Plain') - 0.1, 0.6);
-  const s11pass = E.io(inv(w(11, 'pass') - 0.1, w(11, 'pass') + 0.5, t));
+  // ---------------- 21.7 result
+  const s11a = at(w(7, 'guided') - 0.1, 0.6), s11b = at(w(7, 'randomised') - 0.1, 0.6), s11eq = at(w(7, 'randomised') + 0.4);
+  const s11edge = at(w(7, 'edges') - 0.1), s11pan = at(w(7, 'Plain') - 0.1, 0.6);
+  const s11pass = E.io(inv(w(7, 'pass') - 0.1, w(7, 'pass') + 0.5, t));
 
-  // ---------------- 21.12 limit 2 setup
-  const s12det = at(w(12, 'pneumonia') - 0.1), s12hA = at(w(12, 'chest') - 0.1), s12hB = at(w(12, 'two') - 0.1);
-  const s12br = E.io(inv(w(12, 'systems') - 0.1, w(12, 'systems') + 0.6, t));
-  const s12bA = E.out(inv(w(12, 'third') - 0.1, w(12, 'third') + 0.9, t)), s12bB = E.out(inv(w(12, 'other') - 0.1, w(12, 'other') + 0.9, t));
+  // ---------------- 21.8 limit 2 setup
+  const s12det = at(w(8, 'pneumonia') - 0.1), s12hA = at(w(8, 'chest') - 0.1), s12hB = at(w(8, 'two') - 0.1);
+  const s12br = E.io(inv(w(8, 'systems') - 0.1, w(8, 'systems') + 0.6, t));
+  const s12bA = E.out(inv(w(8, 'third') - 0.1, w(8, 'third') + 0.9, t)), s12bB = E.out(inv(w(8, 'other') - 0.1, w(8, 'other') + 0.9, t));
 
-  // ---------------- 21.13 the shortcut
-  const s13x = at(b(13) - 0.05, 0.3), s13q = at(w(13, 'which') - 0.1), s13pc = at(w(13, 'almost') - 0.1);
-  const s13m = E.io(inv(w(13, 'markers') - 0.1, w(13, 'markers') + 0.6, t));
-  const s13hm = E.io(inv(w(13, 'markers') + 0.2, w(13, 'markers') + 0.9, t));
-  const s13hp = E.io(inv(w(13, 'predicts') - 0.1, w(13, 'predicts') + 0.7, t));
-  const s13sc = E.io(inv(w(13, 'detector') - 0.1, w(13, 'detector') + 0.7, t)), s13end = at(w(13, 'shortcut') - 0.3);
+  // ---------------- 21.9 the shortcut
+  const s13x = at(b(9) - 0.05, 0.3), s13q = at(w(9, 'which') - 0.1), s13pc = at(w(9, 'almost') - 0.1);
+  const s13m = E.io(inv(w(9, 'markers') - 0.1, w(9, 'markers') + 0.6, t));
+  const s13hm = E.io(inv(w(9, 'markers') + 0.2, w(9, 'markers') + 0.9, t));
+  const s13hp = E.io(inv(w(9, 'predicts') - 0.1, w(9, 'predicts') + 0.7, t));
+  const s13sc = E.io(inv(w(9, 'detector') - 0.1, w(9, 'detector') + 0.7, t)), s13end = at(w(9, 'shortcut') - 0.3);
 
-  // ---------------- 21.14 exposed, not fixed
-  const s14x = at(b(14) - 0.05, 0.3), s14heat = inv(w(14, 'light') - 0.1, w(14, 'light') + 0.9, t);
-  const s14ok = E.io(inv(w(14, 'expose') - 0.1, w(14, 'expose') + 0.5, t)), s14no = inv(w(14, 'cannot') - 0.1, w(14, 'cannot') + 0.6, t);
-  const s14b1 = E.out(inv(w(14, 'On') - 0.1, w(14, 'On') + 0.8, t)), s14b2 = E.out(inv(w(14, 'worse') - 0.4, w(14, 'worse') + 0.6, t));
-  const s14fix = at(w(14, 'fix') - 0.1);
+  // ---------------- 21.10 exposed, not fixed
+  const s14x = at(b(10) - 0.05, 0.3), s14heat = inv(w(10, 'light') - 0.1, w(10, 'light') + 0.9, t);
+  const s14ok = E.io(inv(w(10, 'expose') - 0.1, w(10, 'expose') + 0.5, t)), s14no = inv(w(10, 'cannot') - 0.1, w(10, 'cannot') + 0.6, t);
+  const s14b1 = E.out(inv(w(10, 'On') - 0.1, w(10, 'On') + 0.8, t)), s14b2 = E.out(inv(w(10, 'worse') - 0.4, w(10, 'worse') + 0.6, t));
+  const s14fix = at(w(10, 'fix') - 0.1);
 
-  // ---------------- 21.15 limit 3
-  const s15ph = at(w(15, 'heatmap') - 0.1, 0.5), s15map = inv(w(15, 'heatmap'), w(15, 'heatmap') + 1.0, t);
-  const s15wh = E.io(inv(w(15, 'where') - 0.1, w(15, 'where') + 0.5, t)), s15wt = at(w(15, 'what') - 0.1);
-  const s15q = [at(w(15, 'head') - 0.1), at(w(15, 'yellow') - 0.1), at(w(15, 'red') - 0.1)];
+  // ---------------- 21.11 limit 3
+  const s15ph = at(w(11, 'heatmap') - 0.1, 0.5), s15map = inv(w(11, 'heatmap'), w(11, 'heatmap') + 1.0, t);
+  const s15wh = E.io(inv(w(11, 'where') - 0.1, w(11, 'where') + 0.5, t)), s15wt = at(w(11, 'what') - 0.1);
+  const s15q = [at(w(11, 'head') - 0.1), at(w(11, 'yellow') - 0.1), at(w(11, 'red') - 0.1)];
 
-  // ---------------- 21.16 findings vs knobs
-  const s16f = at(w(16, 'findings') - 0.1), s16c = [at(w(16, 'narrowed') - 0.1, 0.4), at(w(16, 'bone') - 0.1, 0.4), at(w(16, 'black') - 0.1, 0.4)];
-  const s16box = at(w(16, 'Even') - 0.1), s16p = at(w(16, 'expert') - 0.1), s16arr = E.io(inv(w(16, 'mistake') - 0.2, w(16, 'mistake') + 0.7, t));
-  const s16no = at(w(16, 'named', 1) - 0.1), s16k = at(w(16, 'setting') - 0.1), s16kv = E.io(inv(w(16, 'switch'), w(16, 'black', 1) + 0.3, t));
-  const s16x = inv(w(16, 'colour') + 0.1, w(16, 'colour') + 0.7, t), s16fw = at(w(16, 'switch') - 0.1);
+  // ---------------- 21.12 findings vs knobs
+  const s16f = at(w(12, 'findings') - 0.1), s16c = [at(w(12, 'narrowed') - 0.1, 0.4), at(w(12, 'bone') - 0.1, 0.4), at(w(12, 'black') - 0.1, 0.4)];
+  const s16box = at(w(12, 'Even') - 0.1), s16p = at(w(12, 'expert') - 0.1), s16arr = E.io(inv(w(12, 'mistake') - 0.2, w(12, 'mistake') + 0.7, t));
+  const s16no = at(w(12, 'named', 1) - 0.1), s16k = at(w(12, 'setting') - 0.1), s16kv = E.io(inv(w(12, 'switch'), w(12, 'black', 1) + 0.3, t));
+  const s16x = inv(w(12, 'colour') + 0.1, w(12, 'colour') + 0.7, t), s16fw = at(w(12, 'switch') - 0.1);
 
-  // ---------------- 21.17
-  const s17fr = at(w(17, 'computed') - 0.1, 0.6);
-  const s17a = at(w(17, 'sparse') - 0.1, 0.6), s17b = at(w(17, 'decision') - 0.1, 0.6), s17c = at(w(17, 'Prototype') - 0.1, 0.6);
+  // ---------------- 21.13
+  const s17fr = at(w(13, 'computed') - 0.1, 0.6);
+  const s17a = at(w(13, 'sparse') - 0.1, 0.6), s17b = at(w(13, 'decision') - 0.1, 0.6), s17c = at(w(13, 'Prototype') - 0.1, 0.6);
 
-  // ---------------- 21.18
-  const s18q = at(w(18, 'high') - 0.3, 0.7), s18c = at(w(18, 'over') - 0.1, 0.6);
+  // ---------------- 21.14
+  const s18q = at(w(14, 'high') - 0.3, 0.7), s18c = at(w(14, 'over') - 0.1, 0.6);
 
-  // ---------------- 21.19 / 21.20 (the words row stays from 21.19 into 21.20)
-  const rowO = inv(b(19) - 0.05, b(19) + 0.25, t);
-  const r19 = [at(w(19, 'photo') - 0.1), at(w(19, 'concepts') - 0.1), at(w(19, 'answer') - 0.1)];
-  const r20a = [at(w(19, 'concepts') - 0.3), at(w(19, 'answer') - 0.3)];
-  const s19vis = 1 - inv(b(20) - 0.35, b(20) - 0.05, t);
-  const s19al = at(w(19, 'alone') - 0.6);
-  const s20 = [at(w(20, 'x') - 0.1), at(w(20, 'c') - 0.1), at(w(20, 'y') - 0.1)];
-  const s20g = E.io(inv(w(20, 'predictor') - 0.2, w(20, 'predictor') + 0.6, t)), s20f = E.io(inv(w(20, 'task') - 0.2, w(20, 'task') + 0.6, t));
+  // ---------------- 21.15 / 21.16 (the words row stays from 21.15 into 21.16)
+  const rowO = inv(b(15) - 0.05, b(15) + 0.25, t);
+  const r19 = [at(w(15, 'photo') - 0.1), at(w(15, 'concepts') - 0.1), at(w(15, 'answer') - 0.1)];
+  const r20a = [at(w(15, 'concepts') - 0.3), at(w(15, 'answer') - 0.3)];
+  const s19vis = 1 - inv(b(16) - 0.35, b(16) - 0.05, t);
+  const s19al = at(w(15, 'alone') - 0.6);
+  const s20 = [at(w(16, 'x') - 0.1), at(w(16, 'c') - 0.1), at(w(16, 'y') - 0.1)];
+  const s20g = E.io(inv(w(16, 'predictor') - 0.2, w(16, 'predictor') + 0.6, t)), s20f = E.io(inv(w(16, 'task') - 0.2, w(16, 'task') + 0.6, t));
 
   return (
     <Stage>
@@ -525,160 +432,46 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Tex x={960} y={850} ax="center" size={56} tex="\text{evidence} = E(\chead{f}, \cin{x})" o={s2eq} />
       </Slide>
 
-{/* ============================================================ 21.3 the 3 x 3 image, three classes */}
+      {/* ============================================================ 21.3 one small input change */}
       <Slide o={sl(3)}>
         <SlideHead text={bh(P, 3)} />
         <Svg>
-          <PixGrid x={300} y={340} cell={140} img={IMG} o={t3g} lit={t3bar} vals={t3bar} />
-          <Arr x1={750} y1={550} x2={880} y2={550} color={C.input} p={t3a} />
-          <g opacity={t3m < 0.999 ? t3m : undefined}>
-            <Block x={1010} y={550} w={220} h={130} kind="head"><Txt x={0} y={0} size={32} weight={600}>model</Txt></Block>
-          </g>
-          {TCL.map((k, i) => <Arr key={k} x1={1130} y1={550} x2={1262} y2={430 + i * 120} color={C.chalk2} p={E.io(t3c[i])} />)}
+          <PixGrid x={240} y={365} cell={110} img={IMG} vals={0} lift={[{ r: 1, c: 1, a: nudge }]} />
+          <rect x={354} y={479} width={102} height={102} fill="none" stroke={C.input} strokeWidth={5} opacity={nudge} />
+          <Arr x1={610} y1={530} x2={800} y2={530} color={C.input} p={nudge} />
+          <Block x={960} y={530} w={260} h={140} kind="head">
+            <Txt x={0} y={0} size={36} weight={600}>model</Txt>
+          </Block>
+          <Arr x1={1120} y1={530} x2={1300} y2={530} p={change} />
+          <Txt x={1480} y={530} size={80} weight={650} mono o={change}>{`+${fm(DELTA)}`}</Txt>
         </Svg>
-        {TCL.map((k, i) => <Rich key={k} x={1290} y={430 + i * 120} ay="middle" size={38} weight={650} text={`{y:${k}}`} o={t3c[i]} />)}
-        <Rich x={510} y={790} ax="center" size={32} text="{x:image} $\cin{x}$: 3 × 3 pixels" o={t3in} />
-        <EvTag x={300} y={872} kind="constructed" text={TOYTAG} o={t3in} />
+        <Rich x={405} y={315} ax="center" size={32} text="{x:input image}" />
+        <Rich x={405} y={735} ax="center" size={34} text={`centre {x:pixel}: {x:+${fm(EPS)}}`} o={nudge} />
+        <Rich x={1480} y={390} ax="center" size={34} text={`{y:${TOY_CLASS} score}`} />
+        <Rich x={1480} y={625} ax="center" size={30} color={C.chalk2} text="change in score" o={change} />
+        <Rich x={960} y={825} ax="center" size={32} text="The {y:score} can change while the {y:class} stays the same" o={sameClass} />
+        <EvTag x={240} y={910} kind="constructed" text={TOYTAG} />
       </Slide>
 
-      {/* ============================================================ 21.4 weights and scores */}
+      {/* ============================================================ 21.4 repeat across pixels */}
       <Slide o={sl(4)}>
         <SlideHead text={bh(P, 4)} />
         <Svg>
-          {TCL.map((k, i) => {
-            const x0 = T4.x[i], len = T4.k * SCORE[i] * t4s[i], yb = T4.gy + 3 * T4.cell + 62;
-            return (
-              <g key={k}>
-                <Txt x={x0 + 1.5 * T4.cell} y={T4.gy - 38} size={32} weight={650} o={t4l}>{k}</Txt>
-                <WGrid x={x0} y={T4.gy} cell={T4.cell} W={WK[i]} o={t4g[i]} ring={t4ring} />
-                <g opacity={t4s[i] > 0.001 ? 1 : 0}>
-                  <line x1={x0} x2={x0} y1={yb - 30} y2={yb + 30} stroke={C.line2} strokeWidth={2.5} />
-                  <rect x={x0} y={yb - 20} width={Math.max(3, len)} height={40} rx={5} fill={C.chalk} opacity={0.85} />
-                  <Txt x={x0 + len + 16} y={yb} size={34} weight={700} anchor="start" mono o={inv(0.4, 1, t4s[i])}>{fmt(SCORE[i])}</Txt>
-                </g>
-              </g>
-            );
-          })}
-          <Txt x={T4.x[0] - 24} y={T4.gy + 3 * T4.cell + 62} size={24} fill={C.mute} anchor="end" o={t4s[0]}>score</Txt>
-          <PixGrid x={1240} y={720} cell={40} img={IMG} o={t4ring} vals={0} />
-          <Pill x={T4.x[WIN] + 1.5 * T4.cell} y={T4.gy + 3 * T4.cell + 140} text="the answer" color={C.chalk} size={28} mono={false} anchorX="middle" o={t4win} />
+          <PixGrid x={240} y={375} cell={110} img={IMG} vals={0} />
+          <Arr x1={630} y1={540} x2={950} y2={540} color={C.chalk2} p={map} />
+          <SalGrid x={1040} y={375} cell={110} o={map} />
         </Svg>
-        <Rich x={1240} y={350} w={520} size={32} text="{y:score}: add up {f:weight} × {x:pixel} over the nine pixels" o={t4wd} />
-        <Tex x={1240} y={580} size={52} tex="s_k = \displaystyle\sum_{i=1}^{9} \chead{W_{k,i}}\, \cin{x_i}" o={t4eq} />
-        <Rich x={1380} y={780} ay="middle" size={28} color={C.chalk2} text="the {x:image} $\cin{x}$" o={t4ring} />
-        <EvTag x={T4.x[0]} y={890} kind="constructed" text={TOYTAG} o={t4l} />
+        <Rich x={405} y={315} ax="center" size={32} text="{x:input image}" />
+        <Rich x={790} y={620} ax="center" w={340} size={28} color={C.chalk2} text="same tiny nudge, one pixel at a time" />
+        <Rich x={1205} y={315} ax="center" size={32} text={`saliency for {y:${TOY_CLASS}}`} o={map} />
+        <Rich x={1435} y={440} w={330} size={32} text="brighter = larger {y:score change}" o={map} />
+        <Rich x={1205} y={760} ax="center" size={34} text="middle column: most sensitive" o={sensitive} />
+        <EvTag x={240} y={910} kind="constructed" text={TOYTAG} />
       </Slide>
 
-      {/* ============================================================ 21.5 the nudge */}
+      {/* ============================================================ 21.5 occlusion */}
       <Slide o={sl(5)}>
         <SlideHead text={bh(P, 5)} />
-        <Svg>
-          <PixGrid x={T5.gx} y={T5.gy} cell={T5.cell} img={IMG} o={t5ctx}
-            lift={[{ r: 1, c: 1, a: t5cv }, { r: CORNER.r, c: CORNER.c, a: t5kc }]} />
-          {[{ r: 1, c: 1, o: t5c }, { r: CORNER.r, c: CORNER.c, o: t5kc }].map((q, j) => (
-            <g key={j} opacity={q.o < 0.999 ? q.o : undefined}>
-              {q.o > 0.001 ? <rect x={T5.gx + q.c * T5.cell + 3} y={T5.gy + q.r * T5.cell + 3} width={T5.cell - 6} height={T5.cell - 6} fill="none" stroke={C.chalk} strokeWidth={5} /> : null}
-              <Txt x={T5.gx + (q.c + 0.5) * T5.cell} y={T5.gy - 34} size={34} weight={700} fill={C.input} o={j === 0 ? t5cv : t5kc}>{sgn(EPS)}</Txt>
-            </g>
-          ))}
-          {TCL.map((k, i) => {
-            const yc = T5.y[i], end = T5.bx + T5.k * SCORE[i];
-            const dl = (d: number, o: number, big: boolean) => {
-              if (o <= 0.001) return null;
-              const dir = d > 0 ? 1 : -1, ay = yc - 46;
-              return (
-                <g opacity={o < 0.999 ? o : undefined}>
-                  <Arr x1={end} y1={ay} x2={end + dir * 56} y2={ay} color={big ? C.chalk : C.chalk2} sw={big ? 4 : 3} head={big ? 15 : 12} p={o} />
-                  <Txt x={end + dir * 68} y={ay} size={big ? 32 : 24} weight={big ? 700 : 500} anchor={dir > 0 ? 'start' : 'end'} mono
-                    fill={big ? C.chalk : C.chalk2}>{sgn(d)}</Txt>
-                </g>
-              );
-            };
-            return (
-              <g key={k} opacity={t5ctx < 0.999 ? t5ctx : undefined}>
-                <Txt x={T5.lab} y={yc} size={30} weight={650} anchor="end">{k}</Txt>
-                <line x1={T5.bx} x2={T5.bx} y1={yc - 30} y2={yc + 30} stroke={C.line2} strokeWidth={2.5} />
-                <rect x={T5.bx} y={yc - 18} width={Math.max(3, T5.k * SCORE[i])} height={36} rx={5} fill={C.chalk} opacity={0.85} />
-                <Txt x={end + 16} y={yc + 2} size={28} weight={600} anchor="start" mono fill={C.chalk2}>{fmt(SCORE[i])}</Txt>
-                {dl(DC[i], t5d[i], true)}
-                {dl(DK[i], t5kd, i === 0)}
-              </g>
-            );
-          })}
-        </Svg>
-        <Rich x={T5.gx + 1.5 * T5.cell} y={790} ax="center" size={32} text={`brighten one {x:pixel} by ${fm(EPS)}`} o={t5ctx} />
-        <EvTag x={T5.gx} y={872} kind="constructed" text={TOYTAG} o={t5ctx} />
-      </Slide>
-
-      {/* ============================================================ 21.6 the gradient */}
-      <Slide o={sl(6)}>
-        <SlideHead text={bh(P, 6)} />
-        <Rich x={960} y={320} ax="center" size={36} text="change in {y:score} ÷ size of the {x:nudge}" o={t6wd} />
-        <Tex x={960} y={455} ax="center" size={58} o={t6eq}
-          tex={`\\closs{\\text{gradient}} = \\dfrac{\\closs{\\partial}\\, s_k}{\\closs{\\partial}\\, \\cin{x_i}} = \\dfrac{\\Delta s_k}{\\cin{${fm(EPS)}}}`} />
-        {[
-          { lab: `{y:${TCL[0]}}, {x:centre}`, d: DC[0] },
-          { lab: `{y:${TCL[2]}}, {x:centre}`, d: DC[2] },
-          { lab: `{y:${TCL[0]}}, {x:corner}`, d: DK[0] },
-        ].map((r, i) => (
-          <React.Fragment key={i}>
-            <Rich x={900} y={605 + i * 78} ax="right" ay="middle" size={30} text={r.lab} o={t6r[i]} />
-            <Tex x={940} y={605 + i * 78} size={42} o={t6r[i]} tex={`${fm(r.d)} \\div \\cin{${fm(EPS)}} = \\closs{${fm(r.d / EPS)}}`} />
-          </React.Fragment>
-        ))}
-        <Rich x={960} y={858} ax="center" ay="middle" size={34} text="saliency of a {x:pixel} = | {l:gradient} |, the sign ignored" o={t6s} />
-        <EvTag x={160} y={900} kind="constructed" text={TOYTAG} o={t6wd} />
-      </Slide>
-
-      {/* ============================================================ 21.7 one saliency map per class */}
-      <Slide o={sl(7)}>
-        <SlideHead text={bh(P, 7)} />
-        <Svg>
-          {TCL.map((k, i) => (
-            <g key={k}>
-              <SalGrid x={T7.x[i]} y={T7.y} cell={T7.cell} S={SALT[i]} o={t7f} p={t7m[i]} />
-              <Txt x={T7.x[i] + 1.5 * T7.cell} y={T7.y - 40} size={32} weight={650} o={t7f}>{k}</Txt>
-              <Txt x={T7.x[i] + 1.5 * T7.cell} y={T7.y + 3 * T7.cell + 40} size={26} fill={C.chalk2} o={t7m[i]}>{['middle column', 'middle row', 'centre'][i]}</Txt>
-            </g>
-          ))}
-        </Svg>
-        <Rich x={960} y={830} ax="center" ay="middle" size={36} text="a saliency map answers a question about one {y:class}" o={t7l} />
-        <EvTag x={T7.x[0]} y={890} kind="constructed" text={`${TOYTAG}: saliency = |W| for this linear model`} o={t7f} />
-      </Slide>
-
-      {/* ============================================================ 21.8 a deep network: backpropagation */}
-      <Slide o={sl(8)}>
-        <SlideHead text={bh(P, 8)} />
-        <PhotoR R={PH8} src="gull.jpg" o={t8ph} border={C.input} />
-        <Credit x={PH8.x} y={PH8.y + PH8.h + 8} text={CREDIT['gull.jpg']} o={t8ph} />
-        <Svg>
-          <Arr x1={PH8.x + PH8.w + 16} y1={NET8.y} x2={NET8.x - 165} y2={NET8.y} color={C.input} p={t8a} />
-          <NetGlyph x={NET8.x} y={NET8.y} o={t8n} seed={5} />
-          <Txt x={NET8.x} y={NET8.y - 118} size={30} weight={600} fill={C.chalk2} o={t8n}>deep network</Txt>
-          <Arr x1={NET8.x + 165} y1={NET8.y} x2={NET8.x + 255} y2={NET8.y} color={C.chalk2} p={E.io(t8s)} />
-          <Txt x={NET8.x + 275} y={NET8.y - 18} size={36} weight={700} anchor="start" o={t8s}>herring gull</Txt>
-          <Flow pts={[[NET8.x + 420, NET8.y + 62], [NET8.x + 420, 775], [PH8.x + PH8.w + 22, 775]]} color={C.loss} sw={4} p={t8bp} t={t} live={t8bp > 0.99 ? 1 : 0} />
-          <g opacity={t8map > 0.001 ? 1 : 0}>
-            {SAL.map((row, r) => row.map((v, c) => (
-              <rect key={`${r}-${c}`} x={PH8.x + c * 40} y={655 + r * 40} width={40} height={40} fill={C.heat}
-                opacity={0.06 + 0.86 * v * clamp(t8map * 1.6 - (r + c) / 14)} />
-            )))}
-            <rect x={PH8.x} y={655} width={240} height={240} fill="none" stroke={C.line2} strokeWidth={2} />
-          </g>
-        </Svg>
-        <Rich x={NET8.x + 275} y={NET8.y + 12} size={28} color={C.chalk2} text="score $\hat y_k$" o={t8s} />
-        <Rich x={NET8.x + 130} y={NET8.y + 160} ax="center" size={28} color={C.chalk2} text="the {l:gradient} changes from image to image" o={t8ch} />
-        <Rich x={(PH8.x + PH8.w + NET8.x + 420) / 2} y={736} ax="center" ay="middle" size={30} weight={650} color={C.loss} text="backpropagation" o={t8bp} />
-        <Rich x={PH8.x} y={612} size={26} color={C.chalk2} text="saliency map" o={t8map} />
-        <EvTag x={PH8.x + PH8.w + 22} y={860} kind="illustrative" text="6 × 6 example map, not computed" o={t8map} />
-        <Rich x={1260} y={660} size={30} text="{x:pixel i}: how far the {y:score} moves" o={t8wd} />
-        <Tex x={1260} y={800} size={54} tex="s_i = \left|\dfrac{\closs{\partial}\,\hat y_k}{\closs{\partial}\,\cin{x_i}}\right|" o={t8eq} />
-        <Rich x={1760} y={900} ax="right" ay="middle" size={26} color={C.mute} text="Simonyan et al. 2014" o={t8eq} />
-      </Slide>
-
-      {/* ============================================================ 21.9 occlusion */}
-      <Slide o={sl(9)}>
-        <SlideHead text={bh(P, 9)} />
         <PhotoR R={PH9} src="gull.jpg" o={s9ph} dim={0.6 * s9map} />
         <Svg>
           <SensMap R={PH9} vals={DROP} vmax={CL.drop_max} draw={s9map} id="s21occ" />
@@ -700,9 +493,9 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
       </Slide>
 
 
-      {/* ============================================================ 21.10 limit 1 setup: the sanity check */}
-      <Slide o={sl(10)}>
-        <SlideHead text={bh(P, 10)} />
+      {/* ============================================================ 21.6 limit 1 setup: the sanity check */}
+      <Slide o={sl(6)}>
+        <SlideHead text={bh(P, 6)} />
         <Svg>
           {[{ R: 440, net: s10n1, e: s10e1, rr: 0 }, { R: 690, net: s10n2, e: s10e2, rr: s10R }].map((row, i) => (
             <g key={i}>
@@ -730,9 +523,9 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={220} y={862} kind="schematic" text="networks and maps drawn" o={s10n1} />
       </Slide>
 
-      {/* ============================================================ 21.11 the result */}
-      <Slide o={sl(11)}>
-        <SlideHead text={bh(P, 11)} />
+      {/* ============================================================ 21.7 the result */}
+      <Slide o={sl(7)}>
+        <SlideHead text={bh(P, 7)} />
         <Svg>
           <SchemMap x={260} y={390} s={300} id="s21sA" o={s11a} />
           <SchemMap x={720} y={390} s={300} id="s21sB" jit={1} o={s11b} />
@@ -757,9 +550,9 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={260} y={872} kind="schematic" text="maps drawn, after Adebayo et al., NeurIPS 2018" o={s11a} />
       </Slide>
 
-      {/* ============================================================ 21.12 limit 2 setup: two hospitals */}
-      <Slide o={sl(12)}>
-        <SlideHead text={bh(P, 12)} />
+      {/* ============================================================ 21.8 limit 2 setup: two hospitals */}
+      <Slide o={sl(8)}>
+        <SlideHead text={bh(P, 8)} />
         {R12.map((ry, i) => {
           const o = i === 0 ? s12hA : s12hB;
           return [16, 8, 0].map((d) => (
@@ -798,9 +591,9 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={BAR12.x} y={872} kind="reported" text="Zech et al., PLOS Medicine 2018" o={s12hA} />
       </Slide>
 
-      {/* ============================================================ 21.13 the shortcut */}
-      <Slide o={sl(13)}>
-        <SlideHead text={bh(P, 13)} />
+      {/* ============================================================ 21.9 the shortcut */}
+      <Slide o={sl(9)}>
+        <SlideHead text={bh(P, 9)} />
         <PhotoR R={XR13} src="chest.jpg" o={s13x} />
         <Credit x={XR13.x} y={XR13.y + XR13.h + 8} text={CREDIT['chest.jpg']} o={s13x} />
         <Svg>
@@ -823,9 +616,9 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={XR13.x} y={XR13.y + XR13.h + 40} kind="reported" text="Zech et al., PLOS Medicine 2018" o={s13pc} />
       </Slide>
 
-      {/* ============================================================ 21.14 exposed, not fixed */}
-      <Slide o={sl(14)}>
-        <SlideHead text={bh(P, 14)} />
+      {/* ============================================================ 21.10 exposed, not fixed */}
+      <Slide o={sl(10)}>
+        <SlideHead text={bh(P, 10)} />
         <PhotoR R={XR14} src="chest.jpg" o={s14x} dim={0.55 * s14heat} />
         <Credit x={XR14.x} y={XR14.y + XR14.h + 8} text={CREDIT['chest.jpg']} o={s14x} />
         <Svg>
@@ -866,9 +659,9 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={XR14.x} y={XR14.y + XR14.h + 40} kind="reported" text="Zech et al., PLOS Medicine 2018" o={s14b1} />
       </Slide>
 
-      {/* ============================================================ 21.15 limit 3: where, not what */}
-      <Slide o={sl(15)}>
-        <SlideHead text={bh(P, 15)} />
+      {/* ============================================================ 21.11 limit 3: where, not what */}
+      <Slide o={sl(11)}>
+        <SlideHead text={bh(P, 11)} />
         <PhotoR R={PH15} src="gull.jpg" o={s15ph} dim={0.6 * s15map} />
         <Svg>
           <SensMap R={PH15} vals={DROP} vmax={CL.drop_max} draw={s15map} id="s21occ16" />
@@ -891,9 +684,9 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Rich x={1320} y={600} w={440} size={34} text="{c:what} the model saw there: not said" o={s15wt} />
       </Slide>
 
-      {/* ============================================================ 21.16 findings, and no knob for them */}
-      <Slide o={sl(16)}>
-        <SlideHead text={bh(P, 16)} />
+      {/* ============================================================ 21.12 findings, and no knob for them */}
+      <Slide o={sl(12)}>
+        <SlideHead text={bh(P, 12)} />
         <Svg>
           {['narrowed joint space', 'bone spur', 'black wingtips'].map((s, i) => (
             <Pill key={s} x={200} y={440 + i * 80} text={s} color={C.concept} size={32} o={s16c[i]} mono={false} />
@@ -915,9 +708,9 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Rich x={1760} y={860} ax="right" ay="middle" size={28} color={C.chalk2} text="next: a {c:concept bottleneck} adds that knob (Part 2)" o={s16fw} />
       </Slide>
 
-      {/* ============================================================ 21.17 ante-hoc examples */}
-      <Slide o={sl(17)}>
-        <SlideHead text={bh(P, 17)} />
+      {/* ============================================================ 21.13 ante-hoc examples */}
+      <Slide o={sl(13)}>
+        <SlideHead text={bh(P, 13)} />
         <Svg>
           {[{ x: 160, o: s17fr }, { x: 710, o: s17fr }, { x: 1260, o: s17fr }].map((p, i) => (
             <rect key={i} x={p.x} y={320} width={500} height={480} rx={16} fill={C.bg2} stroke={C.line} strokeWidth={2} opacity={p.o} />
@@ -961,9 +754,9 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Credit x={1760} y={812} ax="right" text={CREDIT['gull.jpg']} o={s17c} />
       </Slide>
 
-      {/* ============================================================ 21.18 Rudin */}
-      <Slide o={sl(18)}>
-        <SlideHead text={bh(P, 18)} />
+      {/* ============================================================ 21.14 Rudin */}
+      <Slide o={sl(14)}>
+        <SlideHead text={bh(P, 14)} />
         <Svg>
           <rect x={360} y={390} width={1200} height={380} rx={20} fill={C.bg2} stroke={C.line} strokeWidth={2} opacity={s18q} />
           <Txt x={420} y={450} size={110} weight={700} fill={C.line2} o={s18q}>“</Txt>
@@ -973,12 +766,12 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Rich x={960} y={710} ax="center" ay="middle" size={26} color={C.mute} text="Rudin, Nature Machine Intelligence 2019 (paraphrase)" o={s18c} />
       </Slide>
 
-      {/* ============================================================ 21.19 / 21.20 the CBM: words, then symbols */}
-      <Slide o={sl(19)}>
-        <SlideHead text={bh(P, 19)} />
+      {/* ============================================================ 21.15 / 21.16 the CBM: words, then symbols */}
+      <Slide o={sl(15)}>
+        <SlideHead text={bh(P, 15)} />
       </Slide>
-      <Slide o={sl(20)}>
-        <SlideHead text={bh(P, 20)} />
+      <Slide o={sl(16)}>
+        <SlideHead text={bh(P, 16)} />
       </Slide>
       <Slide o={rowO}>
         <Svg>
@@ -989,7 +782,7 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Rich x={COLS[1]} y={ROWW} ax="center" ay="middle" size={60} weight={700} text="{c:concepts}" o={r19[1]} />
         <Rich x={COLS[2]} y={ROWW} ax="center" ay="middle" size={60} weight={700} text="{y:answer}" o={r19[2]} />
       </Slide>
-      <Slide o={sl(19) * s19vis}>
+      <Slide o={sl(15) * s19vis}>
         <PhotoR R={{ x: COLS[0] - 115, y: 515, w: 230, h: 230 }} src="gull.jpg" o={r19[0]} border={C.input} />
         <Credit x={COLS[0] - 115} y={752} text={CREDIT['gull.jpg']} o={r19[0]} />
         <Svg>
@@ -1000,7 +793,7 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         </Svg>
         <Rich x={960} y={850} ax="center" ay="middle" size={34} text="the {y:answer} is computed from the {c:concepts} alone" o={s19al} />
       </Slide>
-      <Slide o={sl(20)}>
+      <Slide o={sl(16)}>
         <Svg>
           {COLS.map((x, i) => (
             <line key={i} x1={x} x2={x} y1={ROWW + 48} y2={ROWS - 52} stroke={C.line2} strokeWidth={2} strokeDasharray="4 8" opacity={s20[i]} />

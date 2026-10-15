@@ -27,3 +27,13 @@ Audio note: the voice for these lines was already generated and checked (asrchec
 7. **Repository moved to `~/git/cbm`** (the old grounding lab that lived there is now `~/git/cbm-grounding`;
    `~/git/dl-summaries/cbm` is a symlink). Added `publishing/` (YouTube descriptions, thumbnail, where everything is
    published) and `docs/CODEX_HANDOFF.md`.
+8. **Saliency simplified after slide review (s21.3 to s21.8 become s21.3 and s21.4).** Two slides now show a tiny
+   centre-pixel nudge and its effect on the vertical-bar score, then the saliency map for that same class. Removed
+   weight tables, the three-class comparison, derivative arithmetic and the deep-network detour. The existing
+   constructed values in `D.saliency_toy` are unchanged. Clarified that a score can change without changing the
+   predicted class. Remaining s21 slides move up by four; the section has 16 slides, the deck 318.
+   Content and numerical checks passed, with both replacement slides inspected in the deck.
+9. **Review content no longer rewrites film timing.** `npm run content` updates the script and readable lecture only.
+   The deck previews revised narration in memory, retaining recorded word alignment for unchanged narration. Both
+   saved timelines and `docs/beats.txt` remain the previous film version. Three deck-content checks cover slide order,
+   timing bounds, unchanged alignment and deletion of earlier slides. Audio, film rebuild and publishing remain pending.

@@ -36,8 +36,10 @@ Keys in the deck: right arrow, space or click = next build; left = back; up/down
 ## Editing workflow
 1. Edit the narration line(s) in `narration/scenes/<id>.txt` (one idea per slide; plain, active British English,
    no em or en dashes).
-2. `npm run content` rebuilds script.json, docs/lecture.md, the timeline (estimated from the text when audio is out of
-   date) and docs/beats.txt, and checks spoken numbers.
+2. `npm run content` rebuilds script.json and docs/lecture.md and checks spoken numbers. It leaves the saved film
+   timelines and docs/beats.txt untouched. The deck uses the current script with preview timing in memory for revised
+   scenes (`src/deck/reviewContent.ts`); unchanged scenes retain their recorded word timing. During review, use the
+   deck to inspect changed slides: docs/beats.txt and film stills refer to the last audio build.
 3. Edit the scene; keep one idea per slide, at least a third of the canvas empty, words before symbols, every
    number-bearing visual tagged with an `EvTag` (computed, measured, dataset, reported, illustrative, constructed,
    schematic). Photos need their `Credit`.

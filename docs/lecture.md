@@ -48,58 +48,46 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 2. **Post-hoc: a method explains a trained model on one input**  
    Start with post-hoc. The model f is already trained. An explanation method takes the model and one input, and returns some evidence about the prediction.
 
-3. **Saliency in a tiny example: one image, three classes**  
-   One family asks which pixels mattered. Start with a tiny example: a three by three image of a vertical bar, and a model that scores three classes: vertical bar, horizontal bar and dot.
+3. **Saliency: nudge one pixel, watch one class score**  
+   How sensitive is the vertical bar score to one pixel? In this teaching example, brighten the centre pixel by 0.1. The score rises by 0.1. We watch the score, even if the predicted class stays the same.
 
-4. **Each class score is a weighted sum of the nine pixels**  
-   Each class has its own nine weights, and its score is the weighted sum of the pixels. For this image, vertical bar scores 3, dot scores 1.5, and horizontal bar scores 0. So the model says vertical bar.
+4. **A saliency map shows where the score is most sensitive**  
+   Give each pixel the same tiny nudge, one at a time, and compare the size of the score changes. Brighter cells in the saliency map mean a larger change, whether the score rises or falls. Here the middle column matters most for the vertical bar score.
 
-5. **Nudge one pixel, and every class score moves**  
-   Now brighten the centre pixel by 0.1. The vertical bar and horizontal bar scores each rise by 0.1, and the dot score rises by 0.2. Brighten a corner pixel instead, and the vertical bar score falls by 0.05.
-
-6. **Change in score per unit change in pixel: the gradient**  
-   Divide each change by the size of the nudge. That ratio is the gradient of the class score with respect to the pixel: 1 for vertical bar at the centre, 2 for dot at the centre, and minus 0.5 for vertical bar at a corner. A pixel's saliency is the size of its gradient, ignoring the sign.
-
-7. **One saliency map for each class**  
-   Do this for all nine pixels and you get a saliency map, and each class has its own. For vertical bar the middle column stands out, for horizontal bar the middle row, and for dot the centre. A saliency map always answers a question about one class.
-
-8. **In a deep network, backpropagation computes the gradient**  
-   In a deep network the score is no longer a plain weighted sum, so the gradient changes from image to image. Backpropagation computes it for every pixel at once, for one image and one class. Simonyan and colleagues called the result a saliency map.
-
-9. **Occlusion: grey out a patch and measure how far the score drops**  
+5. **Occlusion: grey out a patch and measure how far the score drops**  
    A second family changes the input. Grey out one patch, run the model again, and measure how much the score drops. That is the occlusion map we computed for the gull in Part 1.
 
-10. **Limit 1: an explanation should change when the model changes**  
+6. **Limit 1: an explanation should change when the model changes**  
    These methods are useful, and they have limits. The first is a sanity check. If an explanation really describes the model, it should change when the model changes. Adebayo and colleagues tested this by randomising a trained network's weights, layer by layer, until it had learned nothing.
 
-11. **Some saliency maps barely changed**  
+7. **Some saliency maps barely changed**  
    Some saliency methods, such as guided backpropagation, still produced almost the same maps for the randomised network. Those maps mostly trace the edges in the image, like an edge detector. So a convincing map is not, on its own, evidence about the model. Plain gradients and Grad-CAM did pass this test.
 
-12. **Limit 2: a model can learn a shortcut**  
+8. **Limit 2: a model can learn a shortcut**  
    The second limit is about shortcuts. Zech and colleagues trained a pneumonia detector on chest X-rays from two hospital systems. At one hospital about a third of the patients had pneumonia, and at the other about one in a hundred.
 
-13. **The network could tell which hospital an X-ray came from**  
+9. **The network could tell which hospital an X-ray came from**  
    A network could tell which hospital an X-ray came from almost perfectly, from markers and scanner details rather than from the lungs. Since the hospital predicts pneumonia, the detector could use the hospital as a shortcut.
 
-14. **An explanation can expose the shortcut, but the fix is new data**  
+10. **An explanation can expose the shortcut, but the fix is new data**  
    A heatmap might light up the hospital marker in the corner, and expose the shortcut. But it cannot remove it. On X-rays from a third hospital, the detector did worse. The only fix was new data and retraining.
 
-15. **Limit 3: a heatmap says where, not what**  
+11. **Limit 3: a heatmap says where, not what**  
    The third limit is vocabulary. A heatmap says where the score was sensitive. It does not say what the model saw there. On the gull: the yellow bill, the red spot, or the shape of the head?
 
-16. **Experts speak in findings, and the model has no knob for them**  
+12. **Experts speak in findings, and the model has no knob for them**  
    Experts reason in named findings: a narrowed joint space, a bone spur, black wingtips. Even when an expert spots the mistake, the model has no named part to correct. There is no setting for wingtip colour that a person could switch from grey to black.
 
-17. **Ante-hoc: the prediction is computed from quantities a person can read**  
+13. **Ante-hoc: the prediction is computed from quantities a person can read**  
    Ante-hoc models take the other route. The prediction is computed from quantities a person can read. A sparse linear model on named features is one example. A short decision tree is another. Prototype networks compare parts of an image with stored example parts.
 
-18. **The case for models that are interpretable by design**  
+14. **The case for models that are interpretable by design**  
    Rudin argued that for high-stakes decisions we should prefer models like these over black boxes explained afterwards.
 
-19. **A concept bottleneck predicts concepts first, then the answer**  
+15. **A concept bottleneck predicts concepts first, then the answer**  
    A concept bottleneck model is an ante-hoc model for deep networks. First, predict named properties of the photo, its concepts. Then predict the answer from those concepts alone.
 
-20. **The same path in symbols**  
+16. **The same path in symbols**  
    In symbols: x is the input, c hat is the vector of predicted concepts, and y hat is the prediction. A concept predictor, g, maps x to c hat. A task head, f, maps c hat to y hat.
 
 ## Introducing the concept bottleneck  (s02)

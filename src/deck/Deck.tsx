@@ -13,9 +13,16 @@ import { HText, Stage, type SceneProps } from '../kit/core';
 import { useFontsReady } from '../kit/fonts';
 import { scenePlan, type Timeline } from '../kit/timeline';
 import timeline from '../timeline.json';
+import script from '../../narration/script.json';
+import { reviewScene } from './reviewContent';
 import { SCENES } from '../scenes';
 
-const TL = timeline as unknown as Timeline;
+const recorded = timeline as unknown as Timeline;
+const TL: Timeline = { ...recorded, scenes: script.scenes.map((sc) => {
+  const previous = recorded.scenes.find((s) => s.id === sc.id);
+  if (!previous) throw new Error(`No recorded scene ${sc.id} for slide review`);
+  return reviewScene(sc, previous, recorded.fps, recorded.tempo);
+}) };
 const FPS = TL.fps;
 const HOLD = -0.05; // the beat's end state (scene authors design and check the frame at beat end - 0.05 s)
 

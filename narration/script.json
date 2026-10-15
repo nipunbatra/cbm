@@ -105,109 +105,85 @@
     },
     {
      "id": "21.3",
-     "gap": 0.6,
-     "text": "One family asks which pixels mattered. Start with a tiny example: a three by three image of a vertical bar, and a model that scores three classes: vertical bar, horizontal bar and dot.",
-     "head": "Saliency in a tiny example: one {x:image}, three {y:classes}"
+     "gap": 0.8,
+     "text": "How sensitive is the vertical bar score to one pixel? In this teaching example, brighten the centre pixel by 0.1. The score rises by 0.1. We watch the score, even if the predicted class stays the same.",
+     "head": "Saliency: nudge one {x:pixel}, watch one {y:class score}"
     },
     {
      "id": "21.4",
      "gap": 0.8,
-     "text": "Each class has its own nine weights, and its score is the weighted sum of the pixels. For this image, vertical bar scores 3, dot scores 1.5, and horizontal bar scores 0. So the model says vertical bar.",
-     "head": "Each {y:class score} is a weighted sum of the nine {x:pixels}"
+     "text": "Give each pixel the same tiny nudge, one at a time, and compare the size of the score changes. Brighter cells in the saliency map mean a larger change, whether the score rises or falls. Here the middle column matters most for the vertical bar score.",
+     "head": "A saliency map shows where the {y:score} is most sensitive"
     },
     {
      "id": "21.5",
-     "gap": 0.8,
-     "text": "Now brighten the centre pixel by 0.1. The vertical bar and horizontal bar scores each rise by 0.1, and the dot score rises by 0.2. Brighten a corner pixel instead, and the vertical bar score falls by 0.05.",
-     "head": "Nudge one {x:pixel}, and every {y:class score} moves"
-    },
-    {
-     "id": "21.6",
-     "gap": 0.8,
-     "text": "Divide each change by the size of the nudge. That ratio is the gradient of the class score with respect to the pixel: 1 for vertical bar at the centre, 2 for dot at the centre, and minus 0.5 for vertical bar at a corner. A pixel's saliency is the size of its gradient, ignoring the sign.",
-     "head": "Change in score per unit change in pixel: the gradient"
-    },
-    {
-     "id": "21.7",
-     "gap": 0.8,
-     "text": "Do this for all nine pixels and you get a saliency map, and each class has its own. For vertical bar the middle column stands out, for horizontal bar the middle row, and for dot the centre. A saliency map always answers a question about one class.",
-     "head": "One saliency map for each {y:class}"
-    },
-    {
-     "id": "21.8",
-     "gap": 0.8,
-     "text": "In a deep network the score is no longer a plain weighted sum, so the gradient changes from image to image. Backpropagation computes it for every pixel at once, for one image and one class. Simonyan and colleagues called the result a saliency map.",
-     "head": "In a deep network, backpropagation computes the gradient"
-    },
-    {
-     "id": "21.9",
      "gap": 0.8,
      "text": "A second family changes the input. Grey out one patch, run the model again, and measure how much the score drops. That is the occlusion map we computed for the gull in Part 1.",
      "head": "Occlusion: grey out a {x:patch} and measure how far the {y:score} drops"
     },
     {
-     "id": "21.10",
+     "id": "21.6",
      "gap": 0.8,
      "text": "These methods are useful, and they have limits. The first is a sanity check. If an explanation really describes the model, it should change when the model changes. Adebayo and colleagues tested this by randomising a trained network's weights, layer by layer, until it had learned nothing.",
      "head": "Limit 1: an explanation should change when the {f:model} changes"
     },
     {
-     "id": "21.11",
+     "id": "21.7",
      "gap": 1.0,
      "text": "Some saliency methods, such as guided backpropagation, still produced almost the same maps for the randomised network. Those maps mostly trace the edges in the image, like an edge detector. So a convincing map is not, on its own, evidence about the model. Plain gradients and Grad-CAM did pass this test.",
      "head": "Some saliency maps barely changed"
     },
     {
-     "id": "21.12",
+     "id": "21.8",
      "gap": 0.8,
      "text": "The second limit is about shortcuts. Zech and colleagues trained a pneumonia detector on chest X-rays from two hospital systems. At one hospital about a third of the patients had pneumonia, and at the other about one in a hundred.",
      "head": "Limit 2: a model can learn a {k:shortcut}"
     },
     {
-     "id": "21.13",
+     "id": "21.9",
      "gap": 0.8,
      "text": "A network could tell which hospital an X-ray came from almost perfectly, from markers and scanner details rather than from the lungs. Since the hospital predicts pneumonia, the detector could use the hospital as a shortcut.",
      "head": "The network could tell which {k:hospital} an X-ray came from"
     },
     {
-     "id": "21.14",
+     "id": "21.10",
      "gap": 1.0,
      "text": "A heatmap might light up the hospital marker in the corner, and expose the shortcut. But it cannot remove it. On X-rays from a third hospital, the detector did worse. The only fix was new data and retraining.",
      "head": "An explanation can expose the {k:shortcut}, but the fix is new data"
     },
     {
-     "id": "21.15",
+     "id": "21.11",
      "gap": 0.8,
      "text": "The third limit is vocabulary. A heatmap says where the score was sensitive. It does not say what the model saw there. On the gull: the yellow bill, the red spot, or the shape of the head?",
      "head": "Limit 3: a heatmap says {x:where}, not {c:what}"
     },
     {
-     "id": "21.16",
+     "id": "21.12",
      "gap": 1.0,
      "text": "Experts reason in named findings: a narrowed joint space, a bone spur, black wingtips. Even when an expert spots the mistake, the model has no named part to correct. There is no setting for wingtip colour that a person could switch from grey to black.",
      "head": "Experts speak in {c:findings}, and the model has no knob for them"
     },
     {
-     "id": "21.17",
+     "id": "21.13",
      "gap": 1.0,
      "text": "Ante-hoc models take the other route. The prediction is computed from quantities a person can read. A sparse linear model on named features is one example. A short decision tree is another. Prototype networks compare parts of an image with stored example parts.",
      "head": "Ante-hoc: the prediction is computed from quantities a person can read"
     },
     {
-     "id": "21.18",
+     "id": "21.14",
      "gap": 1.0,
      "text": "Rudin argued that for high-stakes decisions we should prefer models like these over black boxes explained afterwards.",
      "head": "The case for models that are interpretable by design"
     },
     {
-     "id": "21.19",
+     "id": "21.15",
      "gap": 0.8,
      "text": "A concept bottleneck model is an ante-hoc model for deep networks. First, predict named properties of the photo, its concepts. Then predict the answer from those concepts alone.",
      "head": "A concept bottleneck predicts {c:concepts} first, then the {y:answer}",
      "tags": "[calm]"
     },
     {
-     "id": "21.20",
+     "id": "21.16",
      "gap": 1.2,
      "text": "In symbols: x is the input, c hat is the vector of predicted concepts, and y hat is the prediction. A concept predictor, g, maps x to c hat. A task head, f, maps c hat to y hat.",
      "head": "The same path in symbols"

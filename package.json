@@ -13,7 +13,7 @@
     "deck:build": "node tools/deck.mjs",
     "deck:pdf": "node tools/deck.mjs && node tools/deck_pdf.mjs deck deck/concept-bottleneck-models.pdf",
     "content": "sh tools/content.sh",
-    "check": "npx tsc --noEmit -p . && ~/base/bin/python -m pytest -q math/test_narration.py math/numerical_validation.py"
+    "check": "npx tsc --noEmit -p . && ~/base/bin/python -m pytest -q math/test_narration.py math/numerical_validation.py && node --test tools/test_deck_content.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.532",
