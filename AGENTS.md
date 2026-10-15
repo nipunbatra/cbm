@@ -42,7 +42,8 @@ Keys in the deck: right arrow, space or click = next build; left = back; up/down
    deck to inspect changed slides: docs/beats.txt and film stills refer to the last audio build.
 3. Edit the scene; keep one idea per slide, at least a third of the canvas empty, words before symbols, every
    number-bearing visual tagged with an `EvTag` (computed, measured, dataset, reported, illustrative, constructed,
-   schematic). Photos need their `Credit`.
+   schematic). Photos need their `Credit`. At a model or method's introduction, show and say its full name before
+   relying on an abbreviation.
 4. Check: `npm run check`; render a slide's final frame with
    `TMPDIR="/Volumes/Extreme SSD/cbm-film/tmp" node tools/stills.mjs s21 <seconds>` (beat end minus 0.05 s from
    docs/beats.txt), or just look at it in `npm run deck`.

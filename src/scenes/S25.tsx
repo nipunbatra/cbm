@@ -209,7 +209,7 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
             );
           })}
         </Svg>
-        <HText x={960} y={640} ax="center" ay="middle" size={60} weight={700} o={s1t}>Classification by description</HText>
+        <HText x={960} y={640} ax="center" ay="middle" size={60} weight={700} o={s1t}>Classification by description (CBD)</HText>
         <HText x={960} y={720} ax="center" size={30} color={C.chalk2} o={s1t}>Menon and Vondrick, ICLR 2023</HText>
         <Rich x={960} y={820} ax="center" size={32} text="no {c:concept labels}, no {y:class labels}, no training" o={s1n} />
       </Slide>

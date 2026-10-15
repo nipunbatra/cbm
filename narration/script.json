@@ -32,7 +32,7 @@
     {
      "id": "1.2",
      "gap": 0.6,
-     "text": "Here is a photograph of a gull, and a real model, CLIP.",
+     "text": "Here is a photograph of a gull, and a real model, CLIP. The name stands for Contrastive Language-Image Pre-training.",
      "head": "A real {x:photograph} and a real model, CLIP"
     },
     {
@@ -927,7 +927,7 @@
     {
      "id": "10.4",
      "gap": 0.8,
-     "text": "Post-hoc models, label-free models, LaBo and VLG-CBM drop the concept labels on the task images. They still learn from images with class labels. A pretrained model supplies visual knowledge, and concept names can come from people or a language model.",
+     "text": "Post-hoc models, label-free models, Language in a Bottle, or LaBo, and vision-language-guided concept bottleneck models, or VLG-CBMs, drop the concept labels on the task images. They still learn from images with class labels. A pretrained model supplies visual knowledge, and concept names can come from people or a language model.",
      "head": "Rung two: keep {y:class labels}, drop per-image {c:concept labels}"
     },
     {
@@ -939,7 +939,7 @@
     {
      "id": "10.6",
      "gap": 0.8,
-     "text": "Take LaBo as an example of rung two. A language model supplies descriptions, such as black and white stripes. Pretrained CLIP compares each image with these descriptions and produces match scores. During training, class labels teach a task head how to combine those scores. For a new photo, the learned head predicts the class. We need class-labelled images, but no person has to label every concept in every image. The diagram illustrates the path, without showing measured scores.",
+     "text": "Take Language in a Bottle, or LaBo, as an example of rung two. A language model supplies descriptions, such as black and white stripes. Pretrained CLIP compares each image with these descriptions and produces match scores. During training, class labels teach a task head how to combine those scores. For a new photo, the learned head predicts the class. We need class-labelled images, but no person has to label every concept in every image. The diagram illustrates the path, without showing measured scores.",
      "head": "Rung two: {y:class labels} teach the {f:task head}"
     },
     {
@@ -989,7 +989,7 @@
     {
      "id": "15.1",
      "gap": 0.8,
-     "text": "First, Concept Embedding Models. One number per concept is a narrow channel, and when the vocabulary is incomplete, accuracy suffers, as we saw in Part 8.",
+     "text": "First, concept embedding models, or CEMs. One number per concept is a narrow channel, and when the vocabulary is incomplete, accuracy suffers, as we saw in Part 8.",
      "head": "One number per {c:concept} is a narrow channel"
     },
     {
@@ -1099,7 +1099,7 @@
     {
      "id": "16.1",
      "gap": 0.6,
-     "text": "Second, post-hoc concept bottleneck models. Instead of training a concept predictor from scratch, they reuse a pretrained encoder that already exists, so nobody has to label every concept on the task training images. We still need a source for the concept bank, which we will build next.",
+     "text": "Second, post-hoc concept bottleneck models, or PCBMs. Instead of training a concept predictor from scratch, they reuse a pretrained encoder that already exists, so nobody has to label every concept on the task training images. We still need a source for the concept bank, which we will build next.",
      "head": "Reuse a {x:pretrained encoder}; build a {c:concept bank}"
     },
     {
@@ -1231,7 +1231,7 @@
     {
      "id": "16.23",
      "gap": 0.8,
-     "text": "The concept list may miss useful evidence in the image. PCBM-h adds a residual: an extra linear head that reads the same image features directly. Add its class scores to the concept head's scores, then apply softmax. For our zebra, the score is about 2.03 plus 0.31, giving 2.34 before softmax. During training, keep the concept model fixed and fit only the extra head using class labels. At test time, both paths read the same image. This can improve prediction when the concept list is incomplete.",
+     "text": "The concept list may miss useful evidence in the image. The hybrid post-hoc concept bottleneck model, or PCBM-h, adds a residual: an extra linear head that reads the same image features directly. Add its class scores to the concept head's scores, then apply softmax. For our zebra, the score is about 2.03 plus 0.31, giving 2.34 before softmax. During training, keep the concept model fixed and fit only the extra head using class labels. At test time, both paths read the same image. This can improve prediction when the concept list is incomplete.",
      "head": "PCBM-h adds an {k:extra path} for evidence the concepts miss"
     },
     {
@@ -1263,7 +1263,7 @@
     {
      "id": "17.1",
      "gap": 0.8,
-     "text": "The third variant is the label-free concept bottleneck model. A supervised bottleneck needs a person to label every concept on every photo, 112 of them for each bird in CUB. Label-free models need no human concept labels.",
+     "text": "The third variant is the label-free concept bottleneck model, or LF-CBM. A supervised bottleneck needs a person to label every concept on every photo, 112 of them for each bird in CUB. Label-free models need no human concept labels.",
      "head": "Concept labels are expensive: can a bottleneck do without them?"
     },
     {
@@ -1527,7 +1527,7 @@
     {
      "id": "24.5",
      "gap": 0.8,
-     "text": "Their method, VLG-CBM, grounds the concepts first. It uses an open-vocabulary object detector: a detector that can search for any phrase you give it, not only a fixed list of objects. It looks for each concept in each training image, and draws a box where it finds it.",
+     "text": "Their method is the Vision-Language-Guided Concept Bottleneck Model, or VLG-CBM. It grounds the concepts first. It uses an open-vocabulary object detector: a detector that can search for any phrase you give it, not only a fixed list of objects. It looks for each concept in each training image, and draws a box where it finds it.",
      "head": "VLG-CBM asks a detector to find each {c:concept}"
     },
     {
@@ -1601,7 +1601,7 @@
     {
      "id": "25.1",
      "gap": 0.8,
-     "text": "The last step on the ladder removes training altogether. Menon and Vondrick call it classification by description.",
+     "text": "The last step on the ladder removes training altogether. Menon and Vondrick call it classification by description. We shorten this to CBD in our comparison table.",
      "head": "The last rung: no training data at all"
     },
     {

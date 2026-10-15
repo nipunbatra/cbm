@@ -213,3 +213,15 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     footer and bookmark destination was checked; the other 311 pages retain identical content streams and
     extracted text. Visually checked the revised page and its neighbours. Prior PDFs remain available.
     No audio generation, saved timeline rebuild, film render or publication was performed.
+35. **Expand model names at introduction (PDF revision 5 page 224).** Added Vision-Language-Guided Concept
+    Bottleneck Model beside VLG-CBM on s24.5 and in its narration. Expanded LaBo and VLG-CBM on the initial
+    supervision ladder, and made the CLIP, CEM, PCBM, PCBM-h, LF-CBM and CBD name mappings explicit at their
+    introductions. CBD is identified as this lecture's comparison-table shorthand. No slides were added.
+    Recorded the full-name convention in AGENTS.md. Content, type checking, 24 Python tests and three deck
+    tests passed. Inspected all ten affected slides and VLG-CBM's notes in the live deck; no browser errors.
+36. **Annotation PDF revision 13.** Saved `review/cbm-lecture-review-2026-10-15-r13.pdf`, with 312 pages and
+    27 section bookmarks. Name expansions appear on pages 3, 136-138, 145, 162, 184, 188, 229 and 240.
+    Page 229 corresponds to the annotated revision 5 page 224. Verified all footers, bookmark destinations,
+    expanded names and unchanged content streams/text for the other 302 pages. Visually inspected all ten
+    revised PDF pages. Earlier PDFs remain available. Saved timelines and the beat list are unchanged;
+    no audio generation, film render or publication was performed.

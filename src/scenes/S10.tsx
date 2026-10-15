@@ -469,12 +469,15 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
       ))}
       <Rich x={1760} y={AXY + 16} ax="right" size={28} color={C.chalk2} text="less supervision" o={oo(sL, lessO)} />
 
+      <Rich x={160} y={936} size={28} text="Language in a Bottle (LaBo)" o={oo(sL, rungO[1])} />
+      <Rich x={160} y={978} size={28} text="Vision-Language-Guided Concept Bottleneck Model (VLG-CBM)" o={oo(sL, rungO[1])} />
+
       {/* slides 6 and 7: keep the common pipeline in place, change the combination */}
       {workflow.map(({ k, o, input, scores, head, result, takeaway }) => (
         <React.Fragment key={k}>
           <SlideHead text={bh(P, k)} o={o} />
           <HText x={160} y={302} size={28} weight={600} color={C.chalk2} o={o}>
-            {k === 6 ? 'Example: LaBo' : 'Classification by description'}
+            {k === 6 ? 'Example: Language in a Bottle (LaBo)' : 'Classification by description'}
           </HText>
           <HText x={160} y={610} size={28} color={C.input} o={o * input}>image to classify</HText>
           <HText x={160} y={670} size={26} color={C.concept} o={o * input}>descriptions from a language model</HText>

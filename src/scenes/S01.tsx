@@ -218,6 +218,7 @@ export const S01: React.FC<SceneProps> = ({ t, P }) => {
       {/* ============================================================ 1.2 photo + CLIP */}
       <Slide o={sl(2)}>
         <SlideHead text={bh(P, 2)} />
+        <Rich x={160} y={260} size={28} text="Contrastive Language-Image Pre-training (CLIP)" o={s2clip} />
         <PhotoR R={PH2} src="gull.jpg" o={s2ph} />
         <Credit x={PH2.x} y={PH2.y + PH2.h + 10} text={CREDIT['gull.jpg']} o={s2ph} />
         <Svg>

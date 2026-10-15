@@ -14,7 +14,7 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
    A neural network makes a prediction. How can a person inspect, and correct, the intermediate evidence it used?
 
 2. **A real photograph and a real model, CLIP**  
-   Here is a photograph of a gull, and a real model, CLIP.
+   Here is a photograph of a gull, and a real model, CLIP. The name stands for Contrastive Language-Image Pre-training.
 
 3. **CLIP compares the photo with one sentence per species**  
    It is asked to choose among six gull species, by comparing the image with a short description of each.
@@ -437,13 +437,13 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
    The newer methods form a ladder of shrinking supervision. On the first rung, CBMs and concept embedding models need the image, the concept labels and the class.
 
 4. **Rung two: keep class labels, drop per-image concept labels**  
-   Post-hoc models, label-free models, LaBo and VLG-CBM drop the concept labels on the task images. They still learn from images with class labels. A pretrained model supplies visual knowledge, and concept names can come from people or a language model.
+   Post-hoc models, label-free models, Language in a Bottle, or LaBo, and vision-language-guided concept bottleneck models, or VLG-CBMs, drop the concept labels on the task images. They still learn from images with class labels. A pretrained model supplies visual knowledge, and concept names can come from people or a language model.
 
 5. **Rung three: no training for this task**  
    Classification by description drops training on the new task. It still uses a pretrained model. We supply class descriptions and a new image, without fitting a model to labelled examples of these classes.
 
 6. **Rung two: class labels teach the task head**  
-   Take LaBo as an example of rung two. A language model supplies descriptions, such as black and white stripes. Pretrained CLIP compares each image with these descriptions and produces match scores. During training, class labels teach a task head how to combine those scores. For a new photo, the learned head predicts the class. We need class-labelled images, but no person has to label every concept in every image. The diagram illustrates the path, without showing measured scores.
+   Take Language in a Bottle, or LaBo, as an example of rung two. A language model supplies descriptions, such as black and white stripes. Pretrained CLIP compares each image with these descriptions and produces match scores. During training, class labels teach a task head how to combine those scores. For a new photo, the learned head predicts the class. We need class-labelled images, but no person has to label every concept in every image. The diagram illustrates the path, without showing measured scores.
 
 7. **Rung three: combine the match scores with a fixed rule**  
    Now keep the pretrained CLIP model, but replace the learned head with a fixed rule. A language model supplies descriptions for each class. CLIP compares a new photo with each description. We average the match scores within each class and choose the class with the highest average. No class-labelled examples or fitting are needed for this task. The difference is the combination: rung two learns it from class labels; rung three uses a fixed average.
@@ -466,7 +466,7 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 ## Concept embedding models  (s15)
 
 1. **One number per concept is a narrow channel**  
-   First, Concept Embedding Models. One number per concept is a narrow channel, and when the vocabulary is incomplete, accuracy suffers, as we saw in Part 8.
+   First, concept embedding models, or CEMs. One number per concept is a narrow channel, and when the vocabulary is incomplete, accuracy suffers, as we saw in Part 8.
 
 2. **What does a prototype mean here?**  
    A prototype usually means a representative example. Here the clearer term is embedding: a short list of learned numbers. CEM computes a present vector and an absent vector for the current image. Both exist even when stripes are clearly visible. They are not stored example photos or fixed class averages. The coordinates are learned features, not individually labelled properties. These numbers are illustrative.
@@ -519,7 +519,7 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 ## Post-hoc concept bottleneck models  (s16)
 
 1. **Reuse a pretrained encoder; build a concept bank**  
-   Second, post-hoc concept bottleneck models. Instead of training a concept predictor from scratch, they reuse a pretrained encoder that already exists, so nobody has to label every concept on the task training images. We still need a source for the concept bank, which we will build next.
+   Second, post-hoc concept bottleneck models, or PCBMs. Instead of training a concept predictor from scratch, they reuse a pretrained encoder that already exists, so nobody has to label every concept on the task training images. We still need a source for the concept bank, which we will build next.
 
 2. **Intuition: the encoder already arranges photos along directions**  
    First, the intuition. A pretrained encoder already arranges photos in its feature space, and some directions in that space follow visual properties, such as how striped an animal is.
@@ -585,7 +585,7 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
    Lower the stripes score to its usual value on other animals, and zebra falls to 0.14.
 
 23. **PCBM-h adds an extra path for evidence the concepts miss**  
-   The concept list may miss useful evidence in the image. PCBM-h adds a residual: an extra linear head that reads the same image features directly. Add its class scores to the concept head's scores, then apply softmax. For our zebra, the score is about 2.03 plus 0.31, giving 2.34 before softmax. During training, keep the concept model fixed and fit only the extra head using class labels. At test time, both paths read the same image. This can improve prediction when the concept list is incomplete.
+   The concept list may miss useful evidence in the image. The hybrid post-hoc concept bottleneck model, or PCBM-h, adds a residual: an extra linear head that reads the same image features directly. Add its class scores to the concept head's scores, then apply softmax. For our zebra, the score is about 2.03 plus 0.31, giving 2.34 before softmax. During training, keep the concept model fixed and fit only the extra head using class labels. At test time, both paths read the same image. This can improve prediction when the concept list is incomplete.
 
 24. **An edit leaves the extra path unchanged**  
    Now lower the stripes score, just as before. The concept head sees the edit, but the residual still reads the same image features, so its contribution stays unchanged. After the same edit, the concept model gives zebra probability 0.14; with the residual it is 0.20. The prediction can still change, but some evidence bypasses the concepts. The trade-off is better predictive capacity with less control through named concepts.
@@ -599,7 +599,7 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 ## Label-free concept bottleneck models  (s17)
 
 1. **Concept labels are expensive: can a bottleneck do without them?**  
-   The third variant is the label-free concept bottleneck model. A supervised bottleneck needs a person to label every concept on every photo, 112 of them for each bird in CUB. Label-free models need no human concept labels.
+   The third variant is the label-free concept bottleneck model, or LF-CBM. A supervised bottleneck needs a person to label every concept on every photo, 112 of them for each bird in CUB. Label-free models need no human concept labels.
 
 2. **The intuition: a student learns to copy a teacher's scores**  
    Here is the intuition. CLIP is the teacher: it has learned from images paired with captions, so it can score how well any phrase matches any image. The student is a frozen ResNet with one linear layer on top, and it learns to copy the teacher's scores. A language model writes the exam questions: the phrases to score.
@@ -726,7 +726,7 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
    Here is why accuracy alone is not enough. Start with a photo and a pretrained image encoder. In this baseline, the concept layer has randomly chosen weights that stay fixed: it was never taught concepts such as yellow bill. Its outputs still depend on the image. Train only the final head using images and their class labels, then test on new images. When the head can use many of these outputs, the paper finds that accuracy can approach that of concept-based models. Useful image information has survived, even though the layer was never trained to detect named concepts. So check whether a high yellow-bill score really corresponds to a yellow bill, as well as checking the predicted class.
 
 5. **VLG-CBM asks a detector to find each concept**  
-   Their method, VLG-CBM, grounds the concepts first. It uses an open-vocabulary object detector: a detector that can search for any phrase you give it, not only a fixed list of objects. It looks for each concept in each training image, and draws a box where it finds it.
+   Their method is the Vision-Language-Guided Concept Bottleneck Model, or VLG-CBM. It grounds the concepts first. It uses an open-vocabulary object detector: a detector that can search for any phrase you give it, not only a fixed list of objects. It looks for each concept in each training image, and draws a box where it finds it.
 
 6. **A box means 1, no box means 0**  
    A concept counts as present only where a box was found. For our gull, the bill, head and wingtips each get a one, and the call gets a zero. We call this vector c det: the concept labels from the detector.
@@ -761,7 +761,7 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 ## Classification by description  (s25)
 
 1. **The last rung: no training data at all**  
-   The last step on the ladder removes training altogether. Menon and Vondrick call it classification by description.
+   The last step on the ladder removes training altogether. Menon and Vondrick call it classification by description. We shorten this to CBD in our comparison table.
 
 2. **Each class gets a checklist, and CLIP ticks it softly**  
    The intuition is a checklist. A language model writes a short checklist for every class. CLIP ticks each item softly, with a score for how well the photo matches it. The class with the best average tick wins.

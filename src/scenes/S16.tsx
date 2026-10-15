@@ -507,6 +507,7 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
 
       {/* slide 1 */}
       <SlideHead text={bh(P, current(1))} o={s1} />
+      <Rich x={160} y={280} size={28} text="Post-hoc Concept Bottleneck Model (PCBM)" o={s1} />
       <Rich x={560} y={590} ax="center" size={28} color={C.chalk2} text="needs {c:concept labels}" o={oo(s1, pred1)} />
       <Rich x={1360} y={590} ax="center" size={28} color={C.chalk2} text="{x:frozen}: never trained here" o={oo(s1, enc1)} />
       <Rich x={960} y={740} ax="center" size={34} text="no need to label every {c:concept} on every training {x:image}" o={oo(s1, l1)} />

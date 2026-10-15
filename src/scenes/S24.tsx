@@ -301,6 +301,7 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
       {/* ============================================================ 24.5 the detector */}
       <Slide o={sl(5)}>
         <SlideHead text={bh(P, 5)} />
+        <Rich x={160} y={260} size={28} text="Vision-Language-Guided Concept Bottleneck Model (VLG-CBM)" />
         <PhotoR R={PH4} src="gull.jpg" />
         <Credit x={PH4.x} y={PH4.y + PH4.h + 8} text={CREDIT['gull.jpg']} />
         <Svg>

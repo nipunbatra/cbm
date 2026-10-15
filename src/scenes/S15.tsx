@@ -486,6 +486,7 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
 
       {/* slide 1 */}
       <SlideHead text={bh(P, 1)} o={s1} />
+      <Rich x={160} y={280} size={28} text="Concept Embedding Model (CEM)" o={s1} />
       <Credit x={PH1.x} y={PH1.y + PH1.h + 10} text={`Photo: ${EXC.artist}, Wikimedia Commons, ${EXC.license}`} o={oo(s1, enc1)} />
       <Rich x={920} y={566} size={32} text="{c:one number} per concept: a narrow channel" o={oo(s1, narrow)} />
       <EvTag x={1760} y={890} ax="right" kind="illustrative" text="hand-chosen values" o={oo(s1, rowO(0))} />

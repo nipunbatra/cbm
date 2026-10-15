@@ -1,6 +1,6 @@
 ## s01 | The black box | 0.4 | 0.8
 [[Can a person inspect, and {e:correct}, the evidence a network used?]] A neural network makes a prediction. How can a person inspect, and correct, the intermediate evidence it used? || 1.2
-[[A real {x:photograph} and a real model, CLIP]] Here is a photograph of a gull, and a real model, CLIP. || 0.6
+[[A real {x:photograph} and a real model, CLIP]] Here is a photograph of a gull, and a real model, CLIP. The name stands for Contrastive Language-Image Pre-training. || 0.6
 [[CLIP compares the {x:photo} with one sentence per species]] It is asked to choose among six gull species, by comparing the image with a short description of each. || 0.6
 [[The {x:photo} goes in, a {y:score} for every species comes out]] Image in, an encoder, and a score for every species. It prefers American herring gull, with a softmax share of 0.54. Glaucous-winged gull comes second, at 0.21. || 0.8
 [[The answer is right. What made the model prefer it?]] The answer happens to be right. But what made the model prefer it? || 1.0

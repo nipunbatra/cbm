@@ -48,6 +48,7 @@ export const S16Residual: React.FC<SceneProps> = ({t,P}) => {
       </React.Fragment>;
     })}
 
+    <Rich x={160} y={280} size={28} text="Hybrid Post-hoc Concept Bottleneck Model (PCBM-h)" o={first} />
     <HText x={960} y={755} ax="center" size={28} color={C.chalk2} o={first*cue(23,'zebra')}>Worked photo: zebra class score, before softmax</HText>
     <Rich x={960} y={805} ax="center" size={44} text={`{f:${PC.logits_example[0].toFixed(2)}} + {k:${PC.hybrid.residual_logits_example[0].toFixed(2)}} ≈ {y:${PC.hybrid.total_logits_example[0].toFixed(2)}}`} o={first*cue(23,'zebra')} />
     <Rich x={960} y={910} ax="center" size={30} text="Train the {k:extra head} with class labels; keep the concept model fixed." o={first*cue(23,'training')} />

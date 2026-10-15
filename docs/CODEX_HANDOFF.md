@@ -126,10 +126,19 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   takeaway is that high class accuracy does not establish concept meaning. Check that a yellow-bill score
   corresponds to a visible yellow bill. The claim follows the untrained CBL in VLG-CBM Section 4.1 and Figure 3.
   Content, 24 Python tests, three deck tests and live visual checks passed. Saved film timing is unchanged.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r12.pdf`, still 312 pages and 27 section bookmarks.
+- Annotation PDF revision 12: `review/cbm-lecture-review-2026-10-15-r12.pdf`, still 312 pages and 27 section bookmarks.
   Page 228 is revised; all other 311 page content streams and extracted text are unchanged. All page numbers
   and bookmark destinations are retained. Previous annotation PDFs remain available. No audio, film or
   publication work was performed.
+
+- PDF revision 5 page 224 review: VLG-CBM is expanded to Vision-Language-Guided Concept Bottleneck Model
+  on s24.5 and in the narration. The initial overview and CLIP, CEM, PCBM, PCBM-h, LF-CBM and CBD introductions
+  now make their abbreviation mappings explicit. AGENTS.md records the rule to show and say each full name
+  when introducing it. No slides were added. Content, 24 Python tests, three deck tests and live visual checks passed.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r13.pdf`, 312 pages and 27 section bookmarks.
+  Model names are expanded on ten pages; VLG-CBM is on page 229 (revision 5 page 224). All page numbers and
+  bookmark destinations are unchanged, and the other 302 page content streams and extracted text match revision 12.
+  Earlier PDFs are preserved. Saved film timing, audio and publication are untouched.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

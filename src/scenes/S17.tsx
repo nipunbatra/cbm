@@ -392,6 +392,7 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
       {/* ============================================================ 17.1 motivation */}
       <Slide o={sl(1)}>
         <SlideHead text={bh(P, 1)} />
+        <Rich x={160} y={280} size={28} text="Label-Free Concept Bottleneck Model (LF-CBM)" />
         <Svg>
           <Person x={800} y={560} s={2.2} o={s1p} />
           <Clipboard x={1080} y={560} ticks={s1ticks} o={s1clip} />
