@@ -551,49 +551,55 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 11. **Back to 512 features: one score for each phrase**  
    Back to the real animal example. Encode each phrase once and save its vector in the concept bank. For a photo, the image encoder produces 512 features. Multiply these features by the matching entries of a phrase vector, then add, just as in our two-dimensional calculation. Repeat for all eight phrases to get eight concept scores. Both vectors have length one, so this dot product is cosine similarity. For our zebra, the raw stripes score is 0.274. These scores are not probabilities.
 
-12. **Before fitting the head, put scores on a common scale**  
-   A raw score is easier to read when we compare it with what is usual for that concept. For each phrase, record the average and spread of its scores over the training photos. Then ask how many spreads above or below that average a photo lies. This is standardisation. Save those training statistics and reuse them for new images. No class label is used in this scaling step.
+12. **Use the same concept prompts for every image**  
+   Keep the prompts fixed and change only the image. Here are three held-out photos: a zebra, a horse and a giraffe. Each column uses exactly the same phrase for every photo. Each cell is the raw cosine similarity between that photo and that phrase. This gives one score per image and concept. These scores are not probabilities.
 
-13. **Standardise each score: subtract the mean, divide by the spread**  
-   The raw scores sit close together, so each one is standardised. Subtract its average over the 24 training photos, then divide by its spread, the standard deviation. For stripes, that gives 1.41.
+13. **Each prompt gets its own training average and spread**  
+   Each prompt has its own usual score and its own spread. To find them, score all 24 training photos with the same prompts. Compute the average and standard deviation separately down each column, across images. Save those training statistics and reuse them for every new photo. The three test photos on the previous slide do not set the scale.
 
-14. **For this zebra, stripes scores highest**  
+14. **Standardise each score: subtract the mean, divide by the spread**  
+   Each cell is standardised separately. Take the zebra and stripes cell. Subtract its average over the 24 training photos, then divide by its spread, the standard deviation. For stripes, that gives 1.41.
+
+15. **The same photos and prompts, now on a common scale**  
+   Now apply the same rule to every cell, using its column's saved mean and spread. The photos and prompts have not changed; only the units have changed. The zebra's stripes score becomes 1.41, while the giraffe's long-neck score becomes 1.70. A positive value means above that prompt's training average, zero means at the average, and a negative value means below it. A negative score does not prove that the concept is absent. Within each column, the order of the images stays the same. The head receives these standardised values.
+
+16. **For this zebra, stripes scores highest**  
    These eight numbers are the concept bottleneck. Each belongs to a named phrase. For this zebra photo, black and white stripes scores highest, 1.4 standard deviations above its average on the training photos.
 
-15. **Train the task head using concept scores and class labels**  
+17. **Train the task head using concept scores and class labels**  
    Now use the task training photos, each with its animal class label. The frozen encoder and concept bank turn each photo into eight scores, using the saved training scale. Feed those scores to a linear head. Compare its prediction with the true class and update only the head weights and constants. The encoder, concept directions and scaling stay fixed. This learns which named concepts help distinguish zebra, horse and giraffe.
 
-16. **Sparse: only 4 of 24 weights are non-zero**  
+18. **Sparse: only 4 of 24 weights are non-zero**  
    The head is also sparse. An L1 penalty adds the size of every weight to the loss, so weights that do not help are pushed to exactly zero. Of 24 possible weights, 8 concepts times 3 classes, only 4 are non-zero: zebra reads stripes, giraffe reads a long neck, and horse reads a flowing mane.
 
-17. **The zebra score: stripes score times weight, plus a constant**  
+19. **The zebra score: stripes score times weight, plus a constant**  
    For this zebra, only the stripes weight feeds the zebra score: the stripes score times its weight, plus the constant, gives about 2.03. The softmax turns the three scores into shares, and zebra gets 0.77.
 
-18. **At test time: one new image, with all weights fixed**  
+20. **At test time: one new image, with all weights fixed**  
    At test time, give the system a new image. The frozen image encoder produces its features. The saved phrase vectors turn them into raw concept scores, and the saved training statistics put the scores on the same scale. The trained head produces class scores; softmax gives probabilities. No concept labels or class label are supplied, and nothing is fitted again. This is the complete prediction path.
 
-19. **All 12 held-out photos are classified correctly**  
+21. **All 12 held-out photos are classified correctly**  
    All 12 held-out photos are classified correctly. This is a tiny teaching example, not a benchmark.
 
-20. **Edit the stripes score, and zebra falls**  
+22. **Edit the stripes score, and zebra falls**  
    Lower the stripes score to its usual value on other animals, and zebra falls to 0.14.
 
-21. **PCBM-h adds a residual that reads the raw features**  
+23. **PCBM-h adds a residual that reads the raw features**  
    The hybrid version, PCBM-h, adds a residual: a second linear model that reads the raw features and recovers what the concepts miss. Its class scores are added to the head's scores before the softmax.
 
-22. **Why the residual helps accuracy**  
+24. **Why the residual helps accuracy**  
    Why does that help? Eight phrases cannot describe everything the encoder sees, and the residual picks up the rest. In the paper, PCBM-h comes close to the original model on every dataset reported, while the pure concept model falls further behind.
 
-23. **Why the residual weakens interventions**  
+25. **Why the residual weakens interventions**  
    The same side path weakens interventions. An edit changes a concept score, but the residual reads the raw features directly, so it keeps its vote for zebra whatever we write in the stripes slot.
 
-24. **The residual is a side path that an edit cannot reach**  
+26. **The residual is a side path that an edit cannot reach**  
    On our photo, after the same edit, the hybrid still gives zebra 0.20 rather than 0.14, because part of its evidence never passed through a named concept.
 
-25. **Compared with the plain CBM: the concepts come from phrases**  
+27. **Compared with the plain CBM: the concepts come from phrases**  
    Compared with the plain CBM, three of the four things changed. The concepts come from a bank of phrases instead of people, a frozen encoder and a projection replace the trained predictor, and in the hybrid a residual also reaches the head. Each concept is still one number.
 
-26. **Post-hoc concept bottleneck models in symbols**  
+28. **Post-hoc concept bottleneck models in symbols**  
    In symbols, for concept j out of k: g is a frozen encoder followed by a projection onto the direction v j. f is sparse and linear, plus a residual, r, in the hybrid. Only f is trained, from images and class labels.
 
 ## Label-free concept bottleneck models  (s17)

@@ -169,3 +169,20 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     302 slides outside the revised drawings. Visually checked 19 PDF pages, including the new sequence,
     section transition and final page. All earlier annotation PDFs are preserved. No audio generation,
     saved timeline rebuild, film render or publishing was performed.
+29. **Standardisation across images and prompts (PDF revision 4 page 170).** Expanded s16.12-13 into four slides,
+    now s16.12-15: the same three prompts on zebra, horse and giraffe test photos; a mean and spread per prompt
+    from all 24 training photos; the existing worked formula; a matching table showing every raw score becoming
+    a standardised score. Explain zero, positive and negative values, and that below average does not prove
+    absence. Keep the test photos out of the scaling statistics and show their complete images. The section
+    now has 28 slides and the lecture 314. Added worked/standardisation.py for offline frozen CLIP inference,
+    its raw output with photo/checkpoint hashes, and D.pcbm_scaling arithmetic in math/data.py. Reproduced the
+    existing zebra values and training statistics; all previous data is unchanged. No head was retrained.
+    Content, type checking, 24 Python tests and three deck tests passed, including independent column statistics,
+    split separation, photo provenance and preserved image ordering. Inspected the new slides, notes and builds
+    in the deck. Saved film timelines and the beat list are unchanged.
+30. **Annotation PDF revision 10.** Saved `review/cbm-lecture-review-2026-10-15-r10.pdf`, with 314 pages and 27
+    section bookmarks. The expanded standardisation example is on pages 173-176; the annotated revision 4
+    page 170 is now page 175. Revision 9 pages 175-312 become pages 177-314. Verified every footer, all 311
+    retained slides' body text, and the new numerical tables. Visually checked nine PDF pages including the
+    example, adjacent slides, section transition and final page. Earlier PDFs remain available. No audio,
+    saved timeline rebuild, film render or publication was performed.

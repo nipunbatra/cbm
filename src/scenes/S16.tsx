@@ -1,13 +1,13 @@
-// s16 Part 10 · Post-hoc concept bottleneck models (Yuksekgonul et al. 2023). Review revision, 26 beats.
+// s16 Part 10 · Post-hoc concept bottleneck models (Yuksekgonul et al. 2023). Review revision, 28 beats.
 // Real numbers from D.worked.pcbm (CLIP ViT-B/32 on the 36 Commons photos, a teaching example).
 // 16.1 motivation: a concept predictor trained from scratch (crossed out) vs a pretrained, frozen encoder (padlock).
 // 16.2 to 16.3 intuition (one stage, a sketch): photos arranged in the encoder's feature space, a 'more striped'
 //      direction; the bank names it (and 'a long neck'); the worked photo's distance along stripes is its score.
 // 16.4 the worked photo -> frozen CLIP image encoder -> e(x) in R^512 (its real first entries and the last one).
 // 16.5 to 16.9: labelled concept examples, a 2-D space, the CAV, scoring, and the alternative CLIP route.
-// 16.10: two-entry dot product. 16.11: eight real phrase scores. 16.12 to 16.14: scaling and the bottleneck.
-// 16.15 to 16.18: fit the head, inspect sparse weights, calculate an answer, then the full test-time path.
-// 16.19 to 16.26: held-out photos, intervention, optional residual, comparison and summary.
+// 16.10: dot product. 16.11: real phrase scores. 16.12 to 16.15: multi-image scaling. 16.16: bottleneck.
+// 16.17 to 16.20: fit the head, inspect sparse weights, calculate an answer, then the full test-time path.
+// 16.21 to 16.28: held-out photos, intervention, optional residual, comparison and summary.
 // Legacy drawings use old-to-current beat mapping; the expanded primer uses current beat IDs.
 import React from 'react';
 import { C, F } from '../kit/theme';
@@ -17,6 +17,7 @@ import { lerp } from '../kit/anim';
 import { TexSteps } from '../kit/slots';
 import { D } from '../kit/data';
 import { S16Primer } from './S16Primer';
+import { S16Standardisation } from './S16Standardisation';
 
 const WK = D.worked;
 const PC = WK.pcbm;
@@ -164,7 +165,7 @@ const TAB = { x: 640, y: 700, rh: 48, cx: [1020, 1220, 1420] };
 const HO = { x0: 330, y0: 330, dx: 215, dy: 165, w: 195, h: 130 }; // slide 15: the 12 held-out photos, 2 rows of 6
 
 export const S16: React.FC<SceneProps> = ({ t, P }) => {
-  const current = (k: number) => [0, 1, 2, 3, 4, 0, 0, 0, 10, 0, 13, 14, 0, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26][k];
+  const current = (k: number) => [0, 1, 2, 3, 4, 0, 0, 0, 10, 0, 14, 16, 0, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28][k];
   const b = (k: number) => bs(P, current(k));
   const w = (k: number, word: string, n = 0) => bw(P, current(k), word, n);
   const at = (x: number, d = 0.4) => inv(x, x + d, t);
@@ -691,6 +692,7 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <Rich x={196} y={850} size={30} color={C.chalk2} text="{c:3 of 4} changed; each concept is still one number" o={oo(sR, cmpSame)} />
 
       <S16Primer t={t} P={P} />
+      <S16Standardisation t={t} P={P} />
       <ArchMap on={['g', 'c']} o={inv(0, 0.5, t)} />
     </Stage>
   );

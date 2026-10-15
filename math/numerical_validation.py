@@ -244,6 +244,34 @@ def test_saliency_maps_match_pixel_nudges(example):
     assert max(max(row) for row in toy['saliency'][target]) <= toy['saliency_max']
 
 
+def test_pcbm_multi_image_standardisation():
+    """Column-wise training statistics are reused for held-out photos without leakage."""
+    from statistics import fmean, pstdev
+    scale = D['pcbm_scaling']
+    pc = D['worked']['pcbm']
+    assert scale['bank'] == pc['bank']
+    assert scale['train_files'] == D['worked']['train']
+    assert set(scale['photos']).issubset(D['worked']['test'])
+    assert set(scale['train_files']).isdisjoint(scale['photos'])
+    for f, expected in scale['photo_sha256'].items():
+        assert hashlib.sha256((ROOT / 'worked/photos' / f).read_bytes()).hexdigest() == expected
+    for j in range(len(scale['bank'])):
+        column = [row[j] for row in scale['train_raw']]
+        mean = fmean(column)
+        spread = pstdev(column) + scale['epsilon']
+        assert close(mean, scale['mean'][j], 1e-7)
+        assert close(spread, scale['spread'][j], 1e-7)
+        assert close(mean, pc['mean'][j], 5.1e-5)
+        assert close(spread, pc['std'][j], 5.1e-5)
+        for i, row in enumerate(scale['raw']):
+            expected = (row[j] - mean) / spread
+            assert close(expected, scale['standardised'][i][j], 5e-6)
+        assert np.array_equal(np.argsort(np.array(scale['raw'])[:,j]),
+                              np.argsort(np.array(scale['standardised'])[:,j]))
+    assert np.allclose(scale['raw'][0], pc['scores_raw_example'], atol=5.1e-5)
+    assert np.allclose(scale['standardised'][0], pc['z_example'], atol=8e-5)
+
+
 def test_pcbm_two_feature_direction_and_scores():
     """The CAV is normal to the separating line and scores towards positive examples."""
     toy = D['pcbm_toy']

@@ -95,10 +95,21 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   and distinguish fitting the task head from the complete fixed test-time path. New `D.pcbm_toy` values come
   from `math/data.py`; earlier model results are unchanged. Content, 23 Python tests, three deck tests and
   visual checks passed. Saved film timing and the beat list remain unchanged.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r9.pdf`, 312 pages and 27 section bookmarks.
+- Annotation PDF revision 9: `review/cbm-lecture-review-2026-10-15-r9.pdf`, 312 pages and 27 section bookmarks.
   The slower explanation is on pages 166-179. The annotated old revision 4 page 164 is now page 165.
   Revision 8 pages 184-308 become pages 188-312. All 302 slides outside the revised drawings retain their body
   text. Earlier PDFs are preserved. No audio, saved timeline rebuild, film render or publication was performed.
+
+- PDF revision 4 page 170 review: s16.12-15 now compare the same three prompts across zebra, horse and giraffe
+  test photos. Show raw scores, separate training statistics for each prompt, the worked formula, then matching
+  raw-to-standardised values. Explain that below average does not prove absence. `worked/standardisation.py`
+  reproduces raw CLIP scores offline without training; `math/data.py` calculates `D.pcbm_scaling`. Original
+  model results are unchanged. Tests verify statistics, split separation, photo hashes and preserved ordering.
+  Content, 24 Python tests, three deck tests and visual checks passed. Saved film timings remain unchanged.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r10.pdf`, 314 pages and 27 section bookmarks.
+  Standardisation is on pages 173-176; the annotated revision 4 page 170 is now page 175. Revision 9 pages
+  175-312 become pages 177-314. All 311 retained slides have unchanged body text. Earlier PDFs are preserved.
+  No audio generation, saved timeline rebuild, film render or publication was performed.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

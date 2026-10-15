@@ -51,6 +51,25 @@ below. Numerical tests check the separator, direction, scoring and dot product.
 - Edit stripes z 1.4062 → -0.6594 (mean of non-zebra training photos): [0.1373, 0.4303, 0.4324].
 - PCBM-h residual logits [0.3075, -0.2969, -0.0107]; hybrid shares [0.8431, 0.0671, 0.0898] → after the same edit [0.1999, 0.3423, 0.4578].
 
+**Multi-image standardisation review (s16.12-15, 15 October).** `worked/standardisation.py` reproduces raw cosine
+scores with the same local CLIP checkpoint, exact phrase bank and original split. It performs frozen inference
+only and writes `worked/standardisation.json`, including checkpoint and photo hashes. `math/data.py` computes
+the means, population standard deviations (plus the original 1e-6 stabiliser) and transformed values as
+`D.pcbm_scaling`. Existing worked results are not overwritten. All eight prompts are stored; the slides show
+the first three for readability. The first test photo of each class is used, with complete photos shown.
+
+| Held-out photo | black and white stripes | a long neck | a flowing mane |
+|---|---|---|---|
+| zebra_12.jpg | 0.274 → +1.41 | 0.243 → +0.10 | 0.234 → +0.32 |
+| horse_17.jpg | 0.168 → -1.10 | 0.199 → -1.08 | 0.186 → -1.80 |
+| giraffe_17.jpg | 0.208 → -0.16 | 0.301 → +1.70 | 0.218 → -0.38 |
+
+Values are rounded for display. Each column uses its own mean and spread across all 24 training images, never
+the three shown test images. The transform preserves image ordering within a prompt. Negative means below
+that prompt's training average, not proof of absence; these values are not probabilities. Independent tests
+recompute statistics and transformed scores, check split separation and photo hashes, and reproduce the
+existing zebra scores and training statistics.
+
 ## Part 10.3: Label-free CBM (real computation)
 
 Language model: `gemini-3.1-pro-preview` (2026-10-10, temperature 0). Prompts and raw JSON replies for zebra:

@@ -37,17 +37,20 @@ const Plane: React.FC<{ boundary?: number; direction?: number; points?: number; 
 </>;
 
 export const S16Primer: React.FC<SceneProps> = ({t,P}) => {
-  const so = (k: number) => {
+  // This primer's original beat IDs shift after the expanded scaling example.
+  const current = (k: number) => k >= 13 ? k + 2 : k;
+  const so = (original: number) => {
+    const k = current(original);
     const z = Math.min(be(P,k)+.02, bs(P,k+1)-.34);
     return inv(bs(P,k)-.05, bs(P,k)+.25,t) * (1-inv(z,z+.3,t));
   };
-  const cue = (k: number, word: string) => inv(bw(P,k,word)-.1,bw(P,k,word)+.3,t);
-  const s5=so(5),s6=so(6),s7=so(7),s8=so(8),s9=so(9),s11=so(11),s12=so(12),s15=so(15),s18=so(18);
+  const cue = (k: number, word: string) => inv(bw(P,current(k),word)-.1,bw(P,current(k),word)+.3,t);
+  const s5=so(5),s6=so(6),s7=so(7),s8=so(8),s9=so(9),s11=so(11),s15=so(15),s18=so(18);
   const c5=cue(5,'Pass'), c7=cue(7,'Across'), c8=cue(8,'second'), c9=cue(9,'Both');
-  const c11=cue(11,'Repeat'), c12=cue(12,'Then'), c15=cue(15,'Compare'), c18=cue(18,'softmax');
+  const c11=cue(11,'Repeat'), c15=cue(15,'Compare'), c18=cue(18,'softmax');
   const a=TOY.new_features[0], v=TOY.direction;
   return <>
-    {[5,6,7,8,9,11,12,15,18].map(k=><SlideHead key={k} text={bh(P,k)} o={so(k)} />)}
+    {[5,6,7,8,9,11,15,18].map(k=><SlideHead key={k} text={bh(P,current(k))} o={so(k)} />)}
 
     <PhotoR R={{x:190,y:350,w:300,h:200}} src={`worked/${stripes}`} frac={crop(stripes,2/3)} o={s5} />
     <PhotoR R={{x:190,y:650,w:300,h:200}} src={`worked/${plain}`} frac={crop(plain,2/3)} o={s5} />
@@ -125,22 +128,6 @@ export const S16Primer: React.FC<SceneProps> = ({t,P}) => {
     <HText x={180} y={835} w={810} size={28} color={C.chalk2} o={s11*cue(11,'length')}>Unit-length vectors: dot product = cosine similarity</HText>
     <Credit x={180} y={915} text={credit(WK.example)} o={s11} />
     <EvTag x={180} y={950} kind="computed" text="frozen CLIP ViT-B/32; saved phrase vectors" o={s11} />
-
-    <Svg o={s12}>
-      {[
-        ['this photo',PC.scores_raw_example[0],C.concept],
-        ['training average',PC.mean[0],C.chalk2],
-        ['training spread',PC.std[0],C.chalk2],
-      ].map(([label,value,col],i)=><g key={String(label)}>
-        <rect x={200+i*540} y={440} width={440} height={200} rx={14} fill={rgba(String(col),.06)} stroke={String(col)} strokeWidth={2} />
-        <Txt x={420+i*540} y={495} size={30} fill={String(col)}>{String(label)}</Txt>
-        <Txt x={420+i*540} y={575} size={54} mono fill={String(col)}>{Number(value).toFixed(3)}</Txt>
-      </g>)}
-    </Svg>
-    <Rich x={200} y={340} text="For the {c:stripes} score:" size={34} o={s12} />
-    <Rich x={960} y={720} ax="center" size={38} text="How many spreads above or below the average?" o={s12*c12} />
-    <HText x={960} y={825} ax="center" size={30} color={C.chalk2} o={s12*cue(12,'Save')}>Calculate on training photos. Save and reuse at test time.</HText>
-    <EvTag x={200} y={950} kind="computed" text={`${WK.n_train} training photos; spread = standard deviation`} o={s12} />
 
     <Svg o={s15}>
       <Block x={330} y={475} w={300} h={130} title="training photos" sub="animal images" kind="input" />

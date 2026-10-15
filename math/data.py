@@ -222,6 +222,16 @@ WK['llm'] = {'model': LLM['model'], 'date': LLM['date'],
 WK['extras'] = json.load(open(ROOT / 'worked/extras.json'))  # worked/extras.py: real e(x) entries, LF-CBM targets
 D['worked'] = WK
 
+# Standardisation review: same fixed prompts on several held-out images.
+# Raw similarities are reproduced by worked/standardisation.py; scaling is computed here.
+_scale = json.load(open(ROOT / 'worked/standardisation.json'))
+_tr = np.array(_scale['train_raw'], dtype=np.float32)
+_raw = np.array(_scale['raw'], dtype=np.float32)
+_mean = _tr.mean(0)
+_spread = _tr.std(0) + _scale['epsilon']
+D['pcbm_scaling'] = {**_scale, 'mean': _mean.tolist(), 'spread': _spread.tolist(),
+                     'standardised': ((_raw - _mean) / _spread).tolist()}
+
 # ---------------------------------------------------------------- CUB (revision of 11 October): our own linear run
 # cub/cbm_cub.py on frozen CLIP ViT-B/32 features of CUB-200-2011 (Koh et al.'s 112 attributes, official split)
 CUBR = json.load(open(ROOT / 'cub/cub_results.json'))
