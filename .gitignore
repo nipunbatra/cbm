@@ -1,8 +1,8 @@
 # shared dependencies and large or generated outputs (recreated by tools/setup_worktree.sh or by the build)
-node_modules
-out
-qa
-deck/
+/node_modules
+/out
+/qa
+/deck/
 narration/seg
 narration/*.wav
 public/*.wav
