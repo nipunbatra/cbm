@@ -468,17 +468,17 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 1. **One number per concept is a narrow channel**  
    First, Concept Embedding Models. One number per concept is a narrow channel, and when the vocabulary is incomplete, accuracy suffers, as we saw in Part 8.
 
-2. **Intuition: two prototypes per concept, and a dimmer between them**  
-   Here is the intuition. Give each concept two prototypes, typical points that stand for stripes present and for stripes absent. The probability works like a dimmer switch that slides the concept between the two.
+2. **What does a prototype mean here?**  
+   A prototype usually means a representative example. Here the clearer term is embedding: a short list of learned numbers. CEM computes a present vector and an absent vector for the current image. Both exist even when stripes are clearly visible. They are not stored example photos or fixed class averages. The coordinates are learned features, not individually labelled properties. These numbers are illustrative.
 
-3. **The prototypes come from the image, so detail can travel**  
-   Both prototypes are computed from the image itself, so they can differ from one photo to the next. That lets detail beyond yes or no travel to the head.
+3. **Learned layers turn the image into the two vectors**  
+   Where do the vectors come from? An image encoder first extracts features. For stripes, two learned layers turn those features into the present and absent vectors. Every concept has its own pair of layers. Training learns the weights of these layers. With those weights fixed, a different image can still produce different vectors. Nobody supplies target values for the vector coordinates.
 
 4. **Each concept gets two embeddings: active and inactive**  
    Now the mechanics. An embedding is a short list of numbers that describes something; here each one has two numbers. From the image, the model computes two embeddings for every concept: one describing it as active, one as inactive.
 
-5. **The model also predicts the probability p that the concept is present**  
-   It also predicts the probability, p, that the concept is present. Suppose that, as in Part 4, it misses the stripes on this photo: p is only 0.1.
+5. **A learned scorer predicts the probability p**  
+   A learned scoring layer reads both vectors and predicts the probability, p, that the concept is present. Suppose that, as in Part 4, it misses the stripes on this photo: p is only 0.1. The concept labels will teach this probability during training.
 
 6. **The concept embedding mixes the two, weighted by p**  
    The concept's embedding mixes the two: p times the active embedding, plus one minus p times the inactive one.
@@ -486,17 +486,17 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 7. **With p = 0.1, the mixed vector sits close to inactive**  
    With p equal to 0.1, take the first entry: 0.1 times 0.82, plus 0.9 times 0.22, gives 0.28. The second entry works the same way, and the mixed vector sits close to inactive.
 
-8. **The head reads all three mixed vectors and wrongly favours horse**  
-   The head, a linear layer as in Part 4, reads all three concepts, six numbers in all. The stripes vector says inactive, so the head favours horse.
+8. **At test time, the head reads the mixed vectors**  
+   At test time, only the new image is needed. The trained model computes both vectors and a probability for every concept, then mixes them. The head reads all three mixed vectors, six numbers in all. Our illustrative linear head produces class scores, and softmax gives the displayed probabilities. Here it favours horse. All weights stay fixed, and no true concept or class label is used for this ordinary prediction.
 
-9. **To intervene, a person sets p**  
-   To intervene, a person sets p, not the vector. Setting p to 1 swaps in the active embedding, and zebra now leads.
+9. **An optional correction changes p, with weights fixed**  
+   To intervene, a person sets p, not the vector coordinates. Setting p to 1 swaps in the active embedding already computed for this image. The same head now makes zebra lead in this example. The two candidate vectors and all network weights stay fixed; there is no retraining.
 
-10. **Training with random interventions (RandInt)**  
-   During training, CEM randomly replaces some predicted probabilities with their true values, about one concept in four, so the head learns to respond to corrections.
+10. **Training uses concept labels and class labels**  
+   During training, each image comes with concept labels and a class label. For this zebra, stripes is labelled present and the class is zebra. A concept loss compares the predicted probability with the concept label. A task loss compares the class prediction with the class label. Backpropagation from these losses updates the encoder, the vector-generating layers, the probability scorer and the task head together. We supervise the probability and the final answer, rather than supplying the vector coordinates.
 
-11. **Gain: a vector carries more than one number**  
-   The gain is capacity: a vector can carry detail that one number cannot.
+11. **Training also practises concept corrections**  
+   During training, CEM randomly replaces some predicted probabilities with their true values, about one concept in four, so the head learns to respond to corrections. This is called RandInt. The true value changes the mixture sent to the head. The concept loss still supervises the original predicted probability. At ordinary test time, use the predicted probabilities, without these random replacements.
 
 12. **When it helps: the vocabulary is incomplete**  
    When does that matter? Recall Part 8. With only colour and size as concepts, the blue circle and the blue square got the same concept values, so no head could tell them apart.
@@ -507,8 +507,8 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 14. **Cost: the coordinates of the vector have no names**  
    The cost is inspectability: the coordinates of that vector have no names, so part of what the head uses cannot be inspected. The detail that separated the circle from the square is exactly the part nobody can read.
 
-15. **Compared with the plain CBM: each concept becomes a vector**  
-   Compared with the plain CBM, two of the four things changed. Each concept is now a vector instead of one number, and the head reads those vectors. People still label every concept, and a trained predictor still detects them.
+15. **Training learns the weights. Testing uses them**  
+   Compare the two stages. The input during training is an image with concept and class labels. At test time it is just a new image. The weights are updated during training and kept fixed at test time. The vectors and probabilities are computed from each image in both cases. Corrections use known labels during RandInt, or an optional expert correction at test time.
 
 16. **Concept embedding models in symbols**  
    In symbols, for concept j out of k: g now outputs a probability and two embeddings, each m numbers long. c hat j is the mixed vector, and f reads all of them. Training still needs images, concept labels and class labels.

@@ -994,15 +994,15 @@
     },
     {
      "id": "15.2",
-     "gap": 0.6,
-     "text": "Here is the intuition. Give each concept two prototypes, typical points that stand for stripes present and for stripes absent. The probability works like a dimmer switch that slides the concept between the two.",
-     "head": "Intuition: two prototypes per {c:concept}, and a dimmer between them"
+     "gap": 0.8,
+     "text": "A prototype usually means a representative example. Here the clearer term is embedding: a short list of learned numbers. CEM computes a present vector and an absent vector for the current image. Both exist even when stripes are clearly visible. They are not stored example photos or fixed class averages. The coordinates are learned features, not individually labelled properties. These numbers are illustrative.",
+     "head": "What does a prototype mean here?"
     },
     {
      "id": "15.3",
      "gap": 0.8,
-     "text": "Both prototypes are computed from the image itself, so they can differ from one photo to the next. That lets detail beyond yes or no travel to the head.",
-     "head": "The prototypes come from the {x:image}, so detail can travel"
+     "text": "Where do the vectors come from? An image encoder first extracts features. For stripes, two learned layers turn those features into the present and absent vectors. Every concept has its own pair of layers. Training learns the weights of these layers. With those weights fixed, a different image can still produce different vectors. Nobody supplies target values for the vector coordinates.",
+     "head": "Learned layers turn the {x:image} into the two {c:vectors}"
     },
     {
      "id": "15.4",
@@ -1013,8 +1013,8 @@
     {
      "id": "15.5",
      "gap": 0.8,
-     "text": "It also predicts the probability, p, that the concept is present. Suppose that, as in Part 4, it misses the stripes on this photo: p is only 0.1.",
-     "head": "The model also predicts the probability {c:p} that the concept is present"
+     "text": "A learned scoring layer reads both vectors and predicts the probability, p, that the concept is present. Suppose that, as in Part 4, it misses the stripes on this photo: p is only 0.1. The concept labels will teach this probability during training.",
+     "head": "A learned scorer predicts the probability {c:p}"
     },
     {
      "id": "15.6",
@@ -1031,26 +1031,26 @@
     {
      "id": "15.8",
      "gap": 0.8,
-     "text": "The head, a linear layer as in Part 4, reads all three concepts, six numbers in all. The stripes vector says inactive, so the head favours horse.",
-     "head": "The {f:head} reads all three mixed vectors and wrongly favours {y:horse}"
+     "text": "At test time, only the new image is needed. The trained model computes both vectors and a probability for every concept, then mixes them. The head reads all three mixed vectors, six numbers in all. Our illustrative linear head produces class scores, and softmax gives the displayed probabilities. Here it favours horse. All weights stay fixed, and no true concept or class label is used for this ordinary prediction.",
+     "head": "At test time, the {f:head} reads the mixed vectors"
     },
     {
      "id": "15.9",
      "gap": 0.8,
-     "text": "To intervene, a person sets p, not the vector. Setting p to 1 swaps in the active embedding, and zebra now leads.",
-     "head": "To {e:intervene}, a person sets {e:p}"
+     "text": "To intervene, a person sets p, not the vector coordinates. Setting p to 1 swaps in the active embedding already computed for this image. The same head now makes zebra lead in this example. The two candidate vectors and all network weights stay fixed; there is no retraining.",
+     "head": "An optional {e:correction} changes {e:p}, with weights fixed"
     },
     {
      "id": "15.10",
      "gap": 0.8,
-     "text": "During training, CEM randomly replaces some predicted probabilities with their true values, about one concept in four, so the head learns to respond to corrections.",
-     "head": "Training with random {e:interventions} (RandInt)"
+     "text": "During training, each image comes with concept labels and a class label. For this zebra, stripes is labelled present and the class is zebra. A concept loss compares the predicted probability with the concept label. A task loss compares the class prediction with the class label. Backpropagation from these losses updates the encoder, the vector-generating layers, the probability scorer and the task head together. We supervise the probability and the final answer, rather than supplying the vector coordinates.",
+     "head": "Training uses {c:concept labels} and {y:class labels}"
     },
     {
      "id": "15.11",
-     "gap": 0.6,
-     "text": "The gain is capacity: a vector can carry detail that one number cannot.",
-     "head": "Gain: a vector carries more than one number"
+     "gap": 0.8,
+     "text": "During training, CEM randomly replaces some predicted probabilities with their true values, about one concept in four, so the head learns to respond to corrections. This is called RandInt. The true value changes the mixture sent to the head. The concept loss still supervises the original predicted probability. At ordinary test time, use the predicted probabilities, without these random replacements.",
+     "head": "Training also practises {e:concept corrections}"
     },
     {
      "id": "15.12",
@@ -1073,8 +1073,8 @@
     {
      "id": "15.15",
      "gap": 0.8,
-     "text": "Compared with the plain CBM, two of the four things changed. Each concept is now a vector instead of one number, and the head reads those vectors. People still label every concept, and a trained predictor still detects them.",
-     "head": "Compared with the plain CBM: each {c:concept} becomes a vector"
+     "text": "Compare the two stages. The input during training is an image with concept and class labels. At test time it is just a new image. The weights are updated during training and kept fixed at test time. The vectors and probabilities are computed from each image in both cases. Corrections use known labels during RandInt, or an optional expert correction at test time.",
+     "head": "Training learns the weights. Testing uses them"
     },
     {
      "id": "15.16",

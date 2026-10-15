@@ -108,3 +108,20 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     footers and 27 section bookmarks, and visually checked all six changed PDF pages. The matching diagrams are
     on pages 138-139; the annotated old page 150 corresponds to page 139. Earlier PDFs are preserved. No audio,
     film rebuild or publishing was performed.
+21. **CEM embeddings, training and testing (PDF revision 4 page 146; s15).** Replaced the ambiguous prototype/dimmer
+    introduction with a definition of image-specific vectors and an image -> encoder -> two learned layers diagram.
+    Both vectors are computed for each image; they are not stored photos or class averages. Explained the learned
+    probability scorer and added a joint-training diagram with concept and task labels feeding their separate
+    losses. Moved RandInt to the next slide, clarified ordinary test-time mixing and optional expert correction,
+    and replaced the redundant recap with a training-versus-test comparison. Kept the existing 16-slide section.
+    Checked the mechanism against the original CEM paper, Sections 3.1-3.2, and recorded the source clarification
+    in docs/lineage_facts.md. All animal vectors and head values remain explicitly illustrative. The head-input
+    view now uses three decimals consistently, avoiding the previous 0.71 versus 0.70 display of the same 0.705.
+    Verified mixing, correction and fixed-head softmax against D.worked.cem. Content, type checking, 21 Python tests
+    and three deck tests passed. Visually checked revised slides, narration and arrow builds; no browser errors.
+    Saved film timelines and the beat list retain their original hashes.
+22. **Annotation PDF revision 6.** Saved `review/cbm-lecture-review-2026-10-15-r6.pdf`, retaining the earlier reviews.
+    Replaced pages 146, 147, 149, 152, 153, 154, 155 and 159; the other 299 page content streams are unchanged from
+    revision 5. Verified all 307 footers and 27 section bookmarks, and visually checked all eight changed PDF pages.
+    Page 146 defines the vectors, page 154 explains training and page 159 compares training with testing. Previous
+    annotation PDFs remain available. No audio, saved timeline, film or publication work was performed.

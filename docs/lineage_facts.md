@@ -114,6 +114,16 @@ CUB curves, read off Fig. 4-Right, y error (x-axis 0 to ≈28 groups):
 
 **RandInt:** during training, each concept is intervened on independently with probability **p_int = 0.25** (Sec 3.2, App. A.5/A.6).
 
+**Slide-review clarification (15 October 2026):** [Sections 3.1 and 3.2 of the original paper](https://arxiv.org/html/2209.09056v2#S3.SS1)
+confirm that the two embeddings are outputs of concept-specific learned layers applied to the current image's
+features. They are not stored example photos or fixed class centroids. The shared scoring layer reads both
+embeddings to predict concept probability. Joint training uses concept and task losses; there are no supplied
+coordinate targets for the embeddings. At ordinary test time the weights stay fixed, all embeddings and probabilities
+are computed from the new image, and mixing uses predicted probabilities. RandInt changes the mixing probability
+during training while the concept loss still supervises the original prediction. The lecture's animal CEM vectors
+and head remain illustrative, not outputs of a trained animal CEM.
+
+
 **CUB setup:**
 - k = 112, Koh's splits, ResNet-34 backbone (App. A.6).
 - Concept loss weight α = 5.

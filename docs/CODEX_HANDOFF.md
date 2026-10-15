@@ -59,9 +59,18 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   LaBo illustrates rung two: a pretrained CLIP scorer plus a task head learned from class-labelled images.
   Classification by description illustrates rung three: pretrained CLIP plus fixed averages within each class,
   with no fitting for the new task. The ladder and following concept-check takeaway now support that distinction.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r5.pdf`, still 307 pages and 27 section bookmarks.
+- Annotation PDF revision 5: `review/cbm-lecture-review-2026-10-15-r5.pdf`, still 307 pages and 27 section bookmarks.
   Pages 135-140 are updated; all other page content streams are unchanged from revision 4. The matching diagrams
   are on pages 138-139, corresponding to old pages 149-150. Previous annotation PDFs remain available.
+
+- PDF revision 4 page 146 review: s15 now defines the CEM vectors as image-specific network outputs, shows the
+  learned layers that produce them, and explains the probability scorer. New training and training-versus-test
+  diagrams distinguish labels and losses from ordinary prediction with fixed weights. RandInt remains a separate
+  training step, and the optional expert correction is explicit. The section still has 16 slides; its numerical
+  animal example remains illustrative. Mechanism checked against the original CEM paper, Sections 3.1-3.2.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r6.pdf`, still 307 pages and 27 section bookmarks.
+  Updated CEM pages: 146, 147, 149, 152, 153, 154, 155 and 159. All other page content streams match revision 5.
+  Page 146 defines the vectors; page 154 shows training; page 159 compares training with testing.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each
@@ -82,4 +91,6 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 - One idea per slide, generous space, colour-coded words that match their symbols, words before symbols, a small
   worked example for every new operation, plain British English without em or en dashes.
 - Numbers support the story; they are not the story. Never invent a number: compute it in `math/data.py` or tag it.
+- For each newer architecture, define unfamiliar terms, show how its representations are obtained, explain the
+  training inputs and what is learned, and distinguish test-time computation from training.
 - Ask before publishing anything. Review images rather than PDFs when sending to him remotely.
