@@ -145,10 +145,20 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   the stripes entry through standardisation before showing the student's value. The narration distinguishes
   matching patterns from copying raw values and identifies the zebra as a held-out example. No data or slide
   counts changed. Content, 24 Python tests, three deck tests and live visual checks passed.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r14.pdf`, 312 pages and 27 section bookmarks.
+- Annotation PDF revision 14: `review/cbm-lecture-review-2026-10-15-r14.pdf`, 312 pages and 27 section bookmarks.
   The continuous row example is on pages 194-196 (revision 6 pages 189-191). All numbering and bookmarks are
   preserved; the other 309 page content streams and extracted text match revision 13. Earlier PDFs and saved
   film timing remain unchanged. No audio generation, film render or publication was performed.
+
+- PDF revision 7 page 242 review: removed the CUB accuracy-comparison slide from s25 and its narration.
+  The worked gull example now leads directly into the use case with no labelled images. The section has
+  13 slides and the lecture 311. All other examples and source data are unchanged. Content, 24 Python tests,
+  three deck tests and live transition/narration checks passed. Saved film timing remains unchanged.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r15.pdf`, 311 pages and 27 section bookmarks.
+  Revision 14 page 248 is removed; pages 249-312 become 248-311. The removed page corresponds to revision 7
+  page 242. All 311 retained slides have unchanged body text. Page numbers and bookmark destinations were
+  checked, and the transition and final page were inspected visually. Earlier PDFs and saved film timing remain
+  available. No audio generation, film render or publication was performed.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

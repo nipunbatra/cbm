@@ -1647,36 +1647,30 @@
     },
     {
      "id": "25.9",
-     "gap": 0.8,
-     "text": "On all of CUB, the descriptors help only slightly over plain class names, where CLIP compares the photo with the species name alone: in our run, 53.1 percent against 52.9.",
-     "head": "On all of CUB, descriptors help only slightly"
-    },
-    {
-     "id": "25.10",
      "gap": 1.0,
      "text": "So when is this attractive? When you have no labelled images at all. And a new class needs only a new description: write its checklist, and it can be scored at once, with no retraining.",
      "head": "Attractive when there are no labels at all"
     },
     {
-     "id": "25.11",
+     "id": "25.10",
      "gap": 1.0,
      "text": "But the descriptors themselves can be wrong: the language model says a California gull has a black head, which it does not.",
      "head": "A descriptor can be wrong"
     },
     {
-     "id": "25.12",
+     "id": "25.11",
      "gap": 1.2,
      "text": "That is one of several risks. A descriptor can also be non-visual: no single photo shows a bird's wingspan. It can describe the setting rather than the bird. And nobody checks the ticks: CLIP gives every item some score, true or not.",
      "head": "The risks: nobody checks the {c:checklist} or the ticks"
     },
     {
-     "id": "25.13",
+     "id": "25.12",
      "gap": 1.0,
      "text": "Compared with LaBo, the head is no longer learned. LaBo trained a linear layer on CLIP's sentence scores; here the class score is a fixed average, so nothing is trained and no labelled image is needed.",
      "head": "What changed compared with LaBo: the {f:head} is no longer learned"
     },
     {
-     "id": "25.14",
+     "id": "25.13",
      "gap": 1.2,
      "text": "In symbols: g is CLIP, c hat d is the similarity to descriptor d, and f is a fixed average over each class's descriptors. The data: none. The cost: nothing guarantees that the descriptors are correct, or grounded.",
      "head": "Classification by description in symbols"

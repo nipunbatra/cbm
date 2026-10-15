@@ -238,3 +238,14 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     and bookmark destinations, identical five-score rows on pages 194-195, and unchanged content streams/text
     for the other 309 pages. Visually checked all three revised PDF pages. Earlier PDFs, saved timelines and
     the beat list are preserved. No audio generation, film render or publication was performed.
+39. **Remove the CUB accuracy comparison (PDF revision 7 page 242).** Removed former s25.9, including
+    its class-name/descriptor accuracy bars, paper comparison and narration. The worked gull example now
+    leads directly into when classification by description is useful. Renumbered the remaining five s25
+    slides and their animation cues; source data and the other examples are unchanged. The lecture has
+    311 slides. Content, type checking, 24 Python tests and three deck tests passed. Checked the transition,
+    narration and final section card in the deck; no browser warnings or errors. Saved film timing is unchanged.
+40. **Annotation PDF revision 15.** Saved `review/cbm-lecture-review-2026-10-15-r15.pdf`, with 311 pages and
+    27 section bookmarks. Revision 14 page 248 (revision 7 page 242) is removed; old revision 14 pages 249-312
+    become pages 248-311. Verified every footer and bookmark destination and unchanged body text for all 311
+    retained slides. Visually checked the transition, neighbouring slides, section boundary and final page.
+    Earlier PDFs are preserved. No audio generation, saved timeline rebuild, film render or publication occurred.

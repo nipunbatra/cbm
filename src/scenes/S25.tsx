@@ -8,11 +8,10 @@
 // 25.6 the class score in symbols, words first; D_k defined.
 // 25.7 our gull: per-descriptor cosines for Herring Gull and their average, the sum written out.
 // 25.8 the five class averages as one compact line; the winner's (Slaty-backed Gull) and Herring Gull's descriptor bars; near miss.
-// 25.9 CUB accuracy: class names vs descriptors (ours; paper small); "class names only" explained.
-// 25.10 when it is attractive: no labelled images; a new class needs only a new checklist (Ivory Gull, real descriptors).
-// 25.11 the wrong California Gull descriptor.
-// 25.12 the risks, four rows: wrong / non-visual / the setting / unchecked ticks (the wrong item's real CLIP score).
-// 25.13 recap: what changed compared with LaBo.  25.14 VariantCard + the cost line.
+// 25.9 when it is attractive: no labelled images; a new class needs only a new checklist (Ivory Gull, real descriptors).
+// 25.10 the wrong California Gull descriptor.
+// 25.11 the risks, four rows: wrong / non-visual / the setting / unchecked ticks (the wrong item's real CLIP score).
+// 25.12 recap: what changed compared with LaBo.  25.13 VariantCard + the cost line.
 import React from 'react';
 import { C, F } from '../kit/theme';
 import { E, Header, HText, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, bw, bh, inv, type SceneProps } from '../kit/core';
@@ -32,9 +31,6 @@ const shortName = (s: string) => s.replace(/ Gull$/, '');
 const GAP = TOP[0][1] - (TOP.find((r) => r[0] === 'Herring Gull') as [string, number])[1];
 const CAL: string = CBD.gull_descriptors['California Gull'][0];
 const NCAL: number = CBD.gull_descriptors['California Gull'].length;
-const ACC_CBD: number = CBD.acc, ACC_NAME: number = CBD.classname_acc;
-const MENON = D.lit.menon_b32;
-const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
 // 25.2 the checklist intuition: real descriptors from the released file, illustrative soft ticks
 const CHECK: { name: string; items: string[]; ticks: number[] }[] = [
@@ -76,7 +72,7 @@ const VROWS: VariantRows = {
   data: '\\text{none: a language model writes the descriptors } D_k',
 };
 
-// 25.13 recap rows: LaBo vs classification by description
+// 25.12 recap rows: LaBo vs classification by description
 const RECAP: { lab: string; labo: string; cbd: string }[] = [
   { lab: 'the {f:task head}', labo: 'a linear layer', cbd: 'a fixed average' },
   { lab: 'what is trained', labo: 'the {f:head}', cbd: 'nothing' },
@@ -119,7 +115,7 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
   const b = (k: number) => bs(P, k);
   const w = (k: number, word: string, n = 0) => bw(P, k, word, n);
   const at = (x: number, d = 0.4) => inv(x, x + d, t);
-  const NB = 14;
+  const NB = P.beats.length;
   const sl = (k: number) => inv(b(k) - 0.05, b(k) + 0.25, t) * (k < NB ? 1 - inv(b(k + 1) - 0.35, b(k + 1) - 0.05, t) : 1);
 
   // ---------------- 25.1
@@ -154,25 +150,23 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
   const s6hg = (i: number) => E.out(at(b(8) + 0.1 + i * 0.06, 0.5)); // Herring Gull: just seen, comes back at once
   const s6sb = (i: number) => E.out(at(w(8, 'slaty') - 0.1 + i * 0.12, 0.6));
   const s6win = at(w(8, 'edges') - 0.2, 0.5), s6gap = at(w(8, 'tiny') - 0.2, 0.5), s6miss = at(w(8, 'photo') - 0.2, 0.5);
-  // ---------------- 25.9
-  const s7a = at(b(9) + 0.1, 0.5), s7p = E.out(at(w(9, 'descriptors') - 0.2, 0.8)), s7cn = at(w(9, 'compares') - 0.2, 0.5), s7n = at(w(9, 'run') - 0.2);
-  // ---------------- 25.10 when it is attractive
-  const s9none = at(w(10, 'no') - 0.2, 0.5), s9x = at(w(10, 'labelled') - 0.1, 0.6);
-  const s9list = at(w(10, 'new') - 0.3, 0.5), s9new = at(w(10, 'write') - 0.2, 0.5);
-  const s9lines = Math.floor(Math.max(0, (t - w(10, 'write')) * 5));
-  const s9score = at(w(10, 'scored') - 0.2, 0.5), s9retrain = at(w(10, 'retraining') - 0.3, 0.5);
-  // ---------------- 25.11
-  const s8card = at(w(11, 'California') - 0.4, 0.5), s8x = E.out(at(w(11, 'does') - 0.1, 0.6)), s8w = at(w(11, 'wrong') - 0.2);
-  // ---------------- 25.12 the risks
-  const s11r = [at(b(12) + 0.1, 0.5), at(w(12, 'non') - 0.2, 0.5), at(w(12, 'setting') - 0.3, 0.5), at(w(12, 'nobody') - 0.2, 0.5)];
-  const s11score = at(w(12, 'true') - 0.4, 0.5);
-  // ---------------- 25.13 recap: compared with LaBo
-  const s13h = at(b(13) + 0.1, 0.5);
-  const s13r = [at(w(13, 'head') - 0.2, 0.5), at(w(13, 'nothing') - 0.2, 0.5), at(w(13, 'labelled') - 0.2, 0.5)];
-  const s13cbd = [at(w(13, 'fixed') - 0.2, 0.5), at(w(13, 'nothing') + 0.2, 0.5), at(w(13, 'needed') - 0.2, 0.5)];
-  // ---------------- 25.14
-  const cardP = [w(14, 'g'), w(14, 'hat'), w(14, 'f'), w(14, 'data') - 0.6, w(14, 'data')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
-  const s9cost = at(w(14, 'cost') - 0.2, 0.5);
+  // ---------------- 25.9 when it is attractive
+  const s9none = at(w(9, 'no') - 0.2, 0.5), s9x = at(w(9, 'labelled') - 0.1, 0.6);
+  const s9list = at(w(9, 'new') - 0.3, 0.5), s9new = at(w(9, 'write') - 0.2, 0.5);
+  const s9lines = Math.floor(Math.max(0, (t - w(9, 'write')) * 5));
+  const s9score = at(w(9, 'scored') - 0.2, 0.5), s9retrain = at(w(9, 'retraining') - 0.3, 0.5);
+  // ---------------- 25.10
+  const s8card = at(w(10, 'California') - 0.4, 0.5), s8x = E.out(at(w(10, 'does') - 0.1, 0.6)), s8w = at(w(10, 'wrong') - 0.2);
+  // ---------------- 25.11 the risks
+  const s11r = [at(b(11) + 0.1, 0.5), at(w(11, 'non') - 0.2, 0.5), at(w(11, 'setting') - 0.3, 0.5), at(w(11, 'nobody') - 0.2, 0.5)];
+  const s11score = at(w(11, 'true') - 0.4, 0.5);
+  // ---------------- 25.12 recap: compared with LaBo
+  const s13h = at(b(12) + 0.1, 0.5);
+  const s13r = [at(w(12, 'head') - 0.2, 0.5), at(w(12, 'nothing') - 0.2, 0.5), at(w(12, 'labelled') - 0.2, 0.5)];
+  const s13cbd = [at(w(12, 'fixed') - 0.2, 0.5), at(w(12, 'nothing') + 0.2, 0.5), at(w(12, 'needed') - 0.2, 0.5)];
+  // ---------------- 25.13
+  const cardP = [w(13, 'g'), w(13, 'hat'), w(13, 'f'), w(13, 'data') - 0.6, w(13, 'data')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
+  const s9cost = at(w(13, 'cost') - 0.2, 0.5);
 
   // layouts
   const PH3: Rect = { x: 200, y: 360, w: 380, h: 380 };
@@ -332,7 +326,7 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
         <Rich x={960} y={780} ax="center" size={32} text="Nothing is fitted to the target data." o={s4fit} />
       </Slide>
 
-      {/* ============================================================ 25.6 our gull, Herring Gull descriptor scores */}
+      {/* ============================================================ 25.7 our gull, Herring Gull descriptor scores */}
       <Slide o={sl(7)}>
         <SlideHead text={bh(P, 7)} />
         <PhotoR R={PH5} src="gull.jpg" o={s5ph} />
@@ -360,7 +354,7 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="computed" text="CLIP ViT-B/32 on our gull photo, released CUB descriptors" o={s5bar(0)} />
       </Slide>
 
-      {/* ============================================================ 25.7 the winner's reasons beside Herring Gull's */}
+      {/* ============================================================ 25.8 the winner's reasons beside Herring Gull's */}
       <Slide o={sl(8)}>
         <SlideHead text={bh(P, 8)} />
         <Rich x={960} y={292} ax="center" size={26} color={C.chalk2} o={s6line}
@@ -402,35 +396,9 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="computed" text="CLIP ViT-B/32 on our gull photo, released CUB descriptors" o={s6hg(0)} />
       </Slide>
 
-      {/* ============================================================ 25.8 CUB accuracy */}
+      {/* ============================================================ 25.9 when it is attractive */}
       <Slide o={sl(9)}>
         <SlideHead text={bh(P, 9)} />
-        <Svg>
-          <Txt x={640} y={420} size={24} anchor="start" fill={C.mute} mono o={s7a}>ACCURACY ON CUB, 200 SPECIES</Txt>
-          {[{ lab: 'class names only', v: ACC_NAME, o: s7a, k: 1 }, { lab: 'with descriptors', v: ACC_CBD, o: s7a, k: s7p }].map((r, i) => {
-            const y = 500 + i * 100;
-            return (
-              <g key={i} opacity={r.o < 0.999 ? r.o : undefined}>
-                <Txt x={600} y={y} size={32} anchor="end" weight={i ? 700 : 500} fill={i ? C.chalk : C.chalk2}>{r.lab}</Txt>
-                <rect x={640} y={y - 26} width={900} height={52} rx={6} fill={C.bg3} />
-                <rect x={640} y={y - 26} width={900 * r.v * r.k} height={52} rx={6} fill={C.chalk} opacity={i ? 0.95 : 0.55} />
-                <Txt x={1560} y={y} size={32} anchor="start" mono weight={700} fill={C.chalk} o={i ? inv(0.4, 1, s7p) : 1}>{pct(r.v)}</Txt>
-              </g>
-            );
-          })}
-          <line x1={640} x2={640} y1={456} y2={644} stroke={C.line2} strokeWidth={2} opacity={s7a} />
-          <Txt x={640} y={668} size={22} mono fill={C.mute} o={s7a}>0%</Txt>
-          <Txt x={1540} y={668} size={22} mono fill={C.mute} o={s7a}>100%</Txt>
-        </Svg>
-        <Rich x={960} y={712} ax="center" size={28} text="class names only: {x:CLIP} compares the photo with the species name alone" o={s7cn} />
-        <Rich x={960} y={784} ax="center" size={26} color={C.chalk2}
-          text={`Menon and Vondrick report ${MENON.classname.toFixed(2)}% and ${MENON.cbd.toFixed(2)}% with the same CLIP model`} o={s7n} />
-        <EvTag x={1760} y={880} ax="right" kind="computed" text="our run: CLIP ViT-B/32, no training, CUB test split, released descriptors" o={s7a} />
-      </Slide>
-
-      {/* ============================================================ 25.9 when it is attractive */}
-      <Slide o={sl(10)}>
-        <SlideHead text={bh(P, 10)} />
         {[2, 1, 0].map((k) => (
           <PhotoR key={k} R={{ x: 220 + k * 34, y: 360 + k * 34, w: 300, h: 300 }} src="gull.jpg" o={s9none} shadow={k === 0} />
         ))}
@@ -449,8 +417,8 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
       </Slide>
 
       {/* ============================================================ 25.10 a wrong descriptor */}
-      <Slide o={sl(11)}>
-        <SlideHead text={bh(P, 11)} />
+      <Slide o={sl(10)}>
+        <SlideHead text={bh(P, 10)} />
         <Rich x={460} y={380} size={30} color={C.chalk2} text="The language model says:" o={s8w} />
         <JsonCard x={460} y={440} w={1000} name="California Gull" items={[CAL]} n={s8card > 0.001 ? 1 : 0} o={s8card} more />
         <Svg o={s8card}>
@@ -463,8 +431,8 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
       </Slide>
 
       {/* ============================================================ 25.11 the risks */}
-      <Slide o={sl(12)}>
-        <SlideHead text={bh(P, 12)} />
+      <Slide o={sl(11)}>
+        <SlideHead text={bh(P, 11)} />
         {[
           { lab: 'wrong', ex: `"${CAL}"`, sub: 'California Gull', strike: true },
           { lab: 'non-visual', ex: `"${WINGSPAN}"`, sub: 'Herring Gull: no single photo shows a wingspan', strike: false },
@@ -490,9 +458,9 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="computed" text="CLIP ViT-B/32 on our gull photo, released CUB descriptors" o={s11score} />
       </Slide>
 
-      {/* ============================================================ 25.13 recap: what changed compared with LaBo */}
-      <Slide o={sl(13)}>
-        <SlideHead text={bh(P, 13)} />
+      {/* ============================================================ 25.12 recap: what changed compared with LaBo */}
+      <Slide o={sl(12)}>
+        <SlideHead text={bh(P, 12)} />
         <Rich x={980} y={360} ax="center" size={30} weight={700} color={C.chalk2} text="LaBo" o={s13h} />
         <Rich x={1460} y={360} ax="center" size={30} weight={700} text="by description" o={s13h} />
         <Svg o={s13h}>
@@ -511,9 +479,9 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
         })}
       </Slide>
 
-      {/* ============================================================ 25.14 the card */}
-      <Slide o={sl(14)}>
-        <SlideHead text={bh(P, 14)} />
+      {/* ============================================================ 25.13 the card */}
+      <Slide o={sl(13)}>
+        <SlideHead text={bh(P, 13)} />
         <div style={{ position: 'absolute', inset: 0, transform: 'scale(0.86)', transformOrigin: '960px 270px' }}>
           <VariantCard name="Classification by description (Menon and Vondrick, ICLR 2023)" rows={VROWS} p={cardP} y0={270} />
         </div>

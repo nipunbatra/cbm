@@ -784,22 +784,19 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 8. **Slaty-backed gull edges ahead**  
    But the slaty-backed gull's descriptors average slightly higher, so it edges ahead by a tiny margin. Our photo shows a herring gull, so this prediction is a near miss.
 
-9. **On all of CUB, descriptors help only slightly**  
-   On all of CUB, the descriptors help only slightly over plain class names, where CLIP compares the photo with the species name alone: in our run, 53.1 percent against 52.9.
-
-10. **Attractive when there are no labels at all**  
+9. **Attractive when there are no labels at all**  
    So when is this attractive? When you have no labelled images at all. And a new class needs only a new description: write its checklist, and it can be scored at once, with no retraining.
 
-11. **A descriptor can be wrong**  
+10. **A descriptor can be wrong**  
    But the descriptors themselves can be wrong: the language model says a California gull has a black head, which it does not.
 
-12. **The risks: nobody checks the checklist or the ticks**  
+11. **The risks: nobody checks the checklist or the ticks**  
    That is one of several risks. A descriptor can also be non-visual: no single photo shows a bird's wingspan. It can describe the setting rather than the bird. And nobody checks the ticks: CLIP gives every item some score, true or not.
 
-13. **What changed compared with LaBo: the head is no longer learned**  
+12. **What changed compared with LaBo: the head is no longer learned**  
    Compared with LaBo, the head is no longer learned. LaBo trained a linear layer on CLIP's sentence scores; here the class score is a fixed average, so nothing is trained and no labelled image is needed.
 
-14. **Classification by description in symbols**  
+13. **Classification by description in symbols**  
    In symbols: g is CLIP, c hat d is the similarity to descriptor d, and f is a fixed average over each class's descriptors. The data: none. The cost: nothing guarantees that the descriptors are correct, or grounded.
 
 ## Comparing the variants  (s19)
