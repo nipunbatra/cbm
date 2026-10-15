@@ -584,22 +584,16 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 22. **Edit the stripes score, and zebra falls**  
    Lower the stripes score to its usual value on other animals, and zebra falls to 0.14.
 
-23. **PCBM-h adds a residual that reads the raw features**  
-   The hybrid version, PCBM-h, adds a residual: a second linear model that reads the raw features and recovers what the concepts miss. Its class scores are added to the head's scores before the softmax.
+23. **PCBM-h adds an extra path for evidence the concepts miss**  
+   The concept list may miss useful evidence in the image. PCBM-h adds a residual: an extra linear head that reads the same image features directly. Add its class scores to the concept head's scores, then apply softmax. For our zebra, the score is about 2.03 plus 0.31, giving 2.34 before softmax. During training, keep the concept model fixed and fit only the extra head using class labels. At test time, both paths read the same image. This can improve prediction when the concept list is incomplete.
 
-24. **Why the residual helps accuracy**  
-   Why does that help? Eight phrases cannot describe everything the encoder sees, and the residual picks up the rest. In the paper, PCBM-h comes close to the original model on every dataset reported, while the pure concept model falls further behind.
+24. **An edit leaves the extra path unchanged**  
+   Now lower the stripes score, just as before. The concept head sees the edit, but the residual still reads the same image features, so its contribution stays unchanged. After the same edit, the concept model gives zebra probability 0.14; with the residual it is 0.20. The prediction can still change, but some evidence bypasses the concepts. The trade-off is better predictive capacity with less control through named concepts.
 
-25. **Why the residual weakens interventions**  
-   The same side path weakens interventions. An edit changes a concept score, but the residual reads the raw features directly, so it keeps its vote for zebra whatever we write in the stripes slot.
-
-26. **The residual is a side path that an edit cannot reach**  
-   On our photo, after the same edit, the hybrid still gives zebra 0.20 rather than 0.14, because part of its evidence never passed through a named concept.
-
-27. **Compared with the plain CBM: the concepts come from phrases**  
+25. **Compared with the plain CBM: the concepts come from phrases**  
    Compared with the plain CBM, three of the four things changed. The concepts come from a bank of phrases instead of people, a frozen encoder and a projection replace the trained predictor, and in the hybrid a residual also reaches the head. Each concept is still one number.
 
-28. **Post-hoc concept bottleneck models in symbols**  
+26. **Post-hoc concept bottleneck models in symbols**  
    In symbols, for concept j out of k: g is a frozen encoder followed by a projection onto the direction v j. f is sparse and linear, plus a residual, r, in the hybrid. Only f is trained, from images and class labels.
 
 ## Label-free concept bottleneck models  (s17)

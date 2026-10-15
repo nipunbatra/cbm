@@ -1,4 +1,4 @@
-// s16 Part 10 · Post-hoc concept bottleneck models (Yuksekgonul et al. 2023). Review revision, 28 beats.
+// s16 Part 10 · Post-hoc concept bottleneck models (Yuksekgonul et al. 2023). Review revision, 26 beats.
 // Real numbers from D.worked.pcbm (CLIP ViT-B/32 on the 36 Commons photos, a teaching example).
 // 16.1 motivation: a concept predictor trained from scratch (crossed out) vs a pretrained, frozen encoder (padlock).
 // 16.2 to 16.3 intuition (one stage, a sketch): photos arranged in the encoder's feature space, a 'more striped'
@@ -7,7 +7,7 @@
 // 16.5 to 16.9: labelled concept examples, a 2-D space, the CAV, scoring, and the alternative CLIP route.
 // 16.10: dot product. 16.11: real phrase scores. 16.12 to 16.15: multi-image scaling. 16.16: bottleneck.
 // 16.17 to 16.20: fit the head, inspect sparse weights, calculate an answer, then the full test-time path.
-// 16.21 to 16.28: held-out photos, intervention, optional residual, comparison and summary.
+// 16.21 to 16.26: held-out photos, intervention, optional residual, comparison and summary.
 // Legacy drawings use old-to-current beat mapping; the expanded primer uses current beat IDs.
 import React from 'react';
 import { C, F } from '../kit/theme';
@@ -18,6 +18,7 @@ import { TexSteps } from '../kit/slots';
 import { D } from '../kit/data';
 import { S16Primer } from './S16Primer';
 import { S16Standardisation } from './S16Standardisation';
+import { S16Residual } from './S16Residual';
 
 const WK = D.worked;
 const PC = WK.pcbm;
@@ -31,8 +32,6 @@ const B: number[] = PC.b;
 const LOG: number[] = PC.logits_example;
 const PRB: number[] = PC.probs_example;
 const ED = PC.edit;
-const HY = PC.hybrid;
-const RES: number[] = HY.residual_logits_example;
 const CLS: string[] = WK.classes;
 const EX: string = WK.example;
 const EXC = WK.photo_credit[EX];
@@ -160,12 +159,10 @@ const ZX = 820, ZS = 170;
 const MR = (i: number) => 366 + i * 54; // slide 7 matrix rows
 const MX = 800, MCW = 140;
 const ST9 = { y: 470 }; // slide 9 row
-const PIPE = { y: 380, ry: 540 }; // slides 10 to 11
-const TAB = { x: 640, y: 700, rh: 48, cx: [1020, 1220, 1420] };
 const HO = { x0: 330, y0: 330, dx: 215, dy: 165, w: 195, h: 130 }; // slide 15: the 12 held-out photos, 2 rows of 6
 
 export const S16: React.FC<SceneProps> = ({ t, P }) => {
-  const current = (k: number) => [0, 1, 2, 3, 4, 0, 0, 0, 10, 0, 14, 16, 0, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28][k];
+  const current = (k: number) => [0, 1, 2, 3, 4, 0, 0, 0, 10, 0, 14, 16, 0, 18, 19, 21, 22, 0, 0, 0, 0, 25, 26][k];
   const b = (k: number) => bs(P, current(k));
   const w = (k: number, word: string, n = 0) => bw(P, current(k), word, n);
   const at = (x: number, d = 0.4) => inv(x, x + d, t);
@@ -197,12 +194,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
   const iEx = at(w(3, 'score') - 0.2, 0.4);
   const iProj = E.io(inv(w(3, 'far') - 0.1, w(3, 'far') + 0.9, t));
   const iQ = at(w(3, 'far') + 0.2);
-
-  // ---------------- new 16.15 and 16.16 (inside the PCBM-h stage)
-  const h15 = so(18), h16 = so(19);
-  const h15a = at(w(18, 'Eight') - 0.1), h15b = at(w(18, 'rest') - 0.2), h15c = at(w(18, 'paper') - 0.1), h15d = at(w(18, 'pure') - 0.1);
-  const h16e = at(w(19, 'edit') - 0.1, 0.5), h16r = at(w(19, 'directly') - 0.3), h16v = at(w(19, 'vote') - 0.1);
-  const tabVis = 1 - at(b(18) - 0.34, 0.3) * (1 - at(b(20) - 0.05, 0.3));
 
   // ---------------- 16.2
   const s2 = so(4);
@@ -275,26 +266,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
   const hi9 = at(w(16, 'animals'), 0.25) * (1 - at(w(16, 'animals') + 0.6, 0.4));
   const eq9 = at(w(16, 'animals') - 0.1);
   const shk9 = at(w(16, 'falls') - 0.1, 0.8);
-
-  // ---------------- 16.10 to 16.11
-  const sH = span(17, 20);
-  const s10 = so(17), s11 = so(20);
-  const pipe10 = at(b(17) + 0.05, 0.5);
-  const res10 = at(w(17, 'residual') - 0.1, 0.5);
-  const path10 = E.io(inv(w(17, 'second') - 0.1, w(17, 'second') + 0.9, t));
-  const up10 = E.io(inv(w(17, 'recovers') - 0.1, w(17, 'recovers') + 0.7, t));
-  const tab10 = at(w(17, 'reads') - 0.1, 0.5);
-  const tabR = at(w(17, 'what') - 0.1);
-  const tabT = at(w(17, 'miss') - 0.1);
-  const add17 = at(w(17, 'added') - 0.1);
-  const side11 = at(b(20) + 0.1);
-  const ed11 = E.io(inv(w(20, 'After') - 0.1, w(20, 'edit') + 0.4, t));
-  const sh11 = at(w(20, 'zebra') - 0.1, 0.7);
-  const ghost11 = at(w(20, 'rather') - 0.1);
-  const bec11 = at(w(20, 'because') - 0.1);
-  const logC = LOG.map((v, k) => (k === 0 ? lerp(v, ED.logits[0], ed11) : v));
-  const tot = logC.map((v, k) => v + RES[k]);
-  const shares11 = HY.probs_example.map((v: number, k: number) => lerp(v, HY.edited_probs[k], sh11));
 
   // ---------------- 16.12
   const s12 = so(22);
@@ -529,50 +500,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
         {/* ---------------- slide 21: recap ---------------- */}
         <CompareSvg o={sR} rowO={cmpRow} hiO={cmpHi} changed={CMP_CHANGED} />
 
-        {/* ---------------- slides 10 and 11: PCBM-h ---------------- */}
-        {sH > 0.001 ? (
-          <g opacity={sH < 0.999 ? sH : undefined}>
-            <g opacity={pipe10}>
-              <Block x={300} y={PIPE.y} w={240} h={110} kind="input" title="features" sub={`e(x), ${FEAT_DIM} numbers`} size={28} subSize={20} />
-              <Flow pts={[[422, PIPE.y], [548, PIPE.y]]} color={C.input} p={1} t={t} live={1} n={1} head={13} dotR={5} />
-              <Block x={680} y={PIPE.y} w={250} h={110} kind="concept" title="8 concept scores" size={26} color={h16e > 0.5 ? C.edit : undefined} />
-              <Flow pts={[[807, PIPE.y], [920, PIPE.y]]} color={h16e > 0.5 ? C.edit : C.concept} p={1} t={t} live={1} n={1} head={13} dotR={5} />
-              <Block x={1050} y={PIPE.y} w={240} h={110} kind="head" title="sparse head" size={26} />
-              <Flow pts={[[1172, PIPE.y], [1300, PIPE.y]]} color={C.chalk} p={1} t={t} live={1} n={1} head={13} dotR={5} />
-              <circle cx={1340} cy={PIPE.y} r={34} fill={C.bg2} stroke={C.chalk} strokeWidth={3} />
-              <Txt x={1340} y={PIPE.y - 2} size={40} weight={700} fill={C.chalk}>+</Txt>
-              <Flow pts={[[1376, PIPE.y], [1480, PIPE.y]]} color={C.chalk} p={1} t={t} live={1} n={1} head={13} dotR={5} />
-              <Txt x={1500} y={PIPE.y} size={30} anchor="start" weight={700} fill={C.chalk}>shares</Txt>
-            </g>
-            <Flow pts={[[300, PIPE.y + 57], [300, PIPE.ry], [560, PIPE.ry]]} color={C.leak} dash="3 10" sw={4} p={path10} t={t} live={path10} n={3} head={14} dotR={5} />
-            <Block x={700} y={PIPE.ry} w={270} h={100} kind="leak" title="residual" sub={`linear, reads all ${FEAT_DIM}`} size={28} subSize={20} o={res10} hi={Math.max(side11, h15 * h15b, h16 * h16r) * (0.5 + 0.5 * Math.sin(t * 4))} />
-            <Flow pts={[[837, PIPE.ry], [1340, PIPE.ry], [1340, PIPE.y + 38]]} color={C.leak} dash="3 10" sw={4} p={up10} t={t} live={up10} n={3} head={14} dotR={5} />
-            {/* the logits table */}
-            <g opacity={tab10 * tabVis}>
-              {CLS.map((c, k) => <Txt key={c} x={TAB.cx[k]} y={TAB.y - 40} size={28} weight={600} fill={C.chalk}>{c}</Txt>)}
-              <Txt x={TAB.x} y={TAB.y} size={26} anchor="start" fill={ed11 > 0.05 ? C.edit : C.chalk2}>concepts</Txt>
-              {logC.map((v, k) => <Txt key={k} x={TAB.cx[k]} y={TAB.y} size={28} mono weight={600} fill={k === 0 && ed11 > 0.05 ? C.edit : C.chalk}>{sg(v, 3)}</Txt>)}
-              <g opacity={tabR}>
-                <Txt x={TAB.x} y={TAB.y + TAB.rh} size={26} anchor="start" fill={C.leak}>+ residual</Txt>
-                {RES.map((v, k) => <Txt key={k} x={TAB.cx[k]} y={TAB.y + TAB.rh} size={28} mono weight={600} fill={C.leak}>{sg(v, 3)}</Txt>)}
-              </g>
-              <g opacity={tabT}>
-                <line x1={TAB.x} y1={TAB.y + 1.5 * TAB.rh} x2={TAB.cx[2] + 90} y2={TAB.y + 1.5 * TAB.rh} stroke={C.line2} strokeWidth={2} />
-                <Txt x={TAB.x} y={TAB.y + 2 * TAB.rh} size={26} anchor="start" fill={C.chalk}>= total</Txt>
-                {tot.map((v, k) => <Txt key={k} x={TAB.cx[k]} y={TAB.y + 2 * TAB.rh} size={28} mono weight={700} fill={k === 0 && ed11 > 0.05 ? C.edit : C.chalk}>{sg(v, 3)}</Txt>)}
-                <Txt x={TAB.x} y={TAB.y + 3 * TAB.rh} size={26} anchor="start" weight={700} fill={C.chalk}>shares</Txt>
-                {shares11.map((v: number, k: number) => <Txt key={k} x={TAB.cx[k]} y={TAB.y + 3 * TAB.rh} size={30} mono weight={700} fill={C.chalk}>{v.toFixed(2)}</Txt>)}
-                {ghost11 > 0.001 ? (
-                  <g opacity={ghost11}>
-                    <rect x={TAB.cx[0] - 70} y={TAB.y + 3 * TAB.rh - 26} width={140} height={52} rx={8} fill="none" stroke={C.chalk} strokeWidth={2} />
-                    <Txt x={TAB.cx[2] + 80} y={TAB.y + 3 * TAB.rh} size={22} anchor="start" mono fill={C.chalk2}>{`PCBM alone: ${ED.probs[0].toFixed(2)}`}</Txt>
-                  </g>
-                ) : null}
-              </g>
-            </g>
-            <Person x={680} y={PIPE.y - 96} s={0.7} o={at(w(19, 'edit') - 0.3)} />
-          </g>
-        ) : null}
       </Svg>
 
       {/* ================= HTML text ================= */}
@@ -660,25 +587,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <Rich x={960} y={790} ax="center" size={28} color={C.chalk2} text="the new zebra logit; the photo and the head stay the same" o={oo(s9, eq9)} />
       <EvTag x={1760} y={890} ax="right" kind="computed" text="the same head, one score edited" o={oo(s9, per9)} />
 
-      {/* new slides 15 and 16, on the PCBM-h stage */}
-      <SlideHead text={bh(P, current(18))} o={h15} />
-      <SlideHead text={bh(P, current(19))} o={h16} />
-      <Rich x={300} y={PIPE.ry + 80} size={26} color={C.leak} text="evidence no phrase names" o={oo(h15, h15b)} />
-      <Rich x={300} y={720} w={1300} size={32} text="eight phrases cannot describe everything the {x:encoder} sees" o={oo(h15, h15a)} />
-      <Rich x={300} y={772} w={1300} size={32} text="the {k:residual} picks up the rest" o={oo(h15, h15b)} />
-      <Rich x={300} y={836} size={28} color={C.chalk2} text="in the paper: {k:PCBM-h} comes close to the original model; PCBM alone falls behind" o={oo(h15, h15c)} />
-      <EvTag x={1760} y={900} ax="right" kind="reported" text="Yuksekgonul et al., ICLR 2023, Table 1" o={oo(h15, h15c)} />
-      <Rich x={300} y={720} w={1300} size={32} text="an {e:edit} changes a {c:concept score}" o={oo(h16, h16e)} />
-      <Rich x={300} y={772} w={1300} size={32} text="the {k:residual} reads the raw {x:features} directly, so the edit never reaches it" o={oo(h16, h16r)} />
-      <Rich x={1380} y={PIPE.ry - 20} size={28} color={C.leak} text="still votes for zebra" o={oo(h16, h16v)} />
-
-      {/* slides 14 and 17 */}
-      <SlideHead text={bh(P, current(17))} o={s10} />
-      <SlideHead text={bh(P, current(20))} o={s11} />
-      <Rich x={1500} y={PIPE.ry - 20} w={300} size={26} color={C.chalk2} text="class scores are added, then the softmax" o={oo(s10, add17)} />
-      <Rich x={1500} y={PIPE.ry - 40} w={300} size={28} text="part of the evidence {k:never passed through a named concept}" o={oo(s11, bec11)} />
-      <EvTag x={TAB.x} y={TAB.y + 3 * TAB.rh + 40} kind="computed" text="CLIP ViT-B/32 on 36 Commons photos, teaching example" o={oo(sH, tab10 * tabVis)} />
-
       {/* slide 18 */}
       <SlideHead text={bh(P, current(22))} o={s12} />
       <div style={{ position: 'absolute', inset: 0, transform: 'scale(0.86)', transformOrigin: '960px 290px' }}>
@@ -693,6 +601,7 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
 
       <S16Primer t={t} P={P} />
       <S16Standardisation t={t} P={P} />
+      <S16Residual t={t} P={P} />
       <ArchMap on={['g', 'c']} o={inv(0, 0.5, t)} />
     </Stage>
   );

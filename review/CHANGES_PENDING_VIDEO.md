@@ -186,3 +186,17 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     retained slides' body text, and the new numerical tables. Visually checked nine PDF pages including the
     example, adjacent slides, section transition and final page. Earlier PDFs remain available. No audio,
     saved timeline rebuild, film render or publication was performed.
+31. **Reduce PCBM-h to two slides (PDF revision 5 page 177).** Replaced four residual slides with s16.23-24.
+    Keep one two-path diagram: image features feed the concept model and an extra linear residual head; add
+    class scores before softmax. One saved zebra score addition illustrates the operation. Explain that the
+    concept model stays fixed while the extra head is fitted with class labels, and both paths run at test time.
+    The second slide marks the stripes edit and the unchanged residual path, comparing the saved zebra
+    probabilities 0.14 and 0.20 after the same edit. State that prediction can change while some evidence bypasses
+    named concepts. The section now has 26 slides and the lecture 312. Content, type checking, 24 Python tests
+    and three deck tests passed. Inspected both slides, narration, progressive builds and the renumbered final
+    card in the deck; no browser warnings or errors. Saved film timelines and beat-list hashes are unchanged.
+32. **Annotation PDF revision 11.** Saved `review/cbm-lecture-review-2026-10-15-r11.pdf`, preserving all previous
+    reviews. It has 312 pages and 27 section bookmarks. The two residual slides are on pages 184-185; revision 10
+    pages 188-314 move to 186-312. Verified every footer and unchanged body text on all 310 retained slides.
+    Visually checked the new slides, adjacent pages, section transition and final page. No audio generation,
+    saved timeline rebuild, film render or publication was performed.

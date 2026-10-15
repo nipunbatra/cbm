@@ -106,10 +106,20 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   reproduces raw CLIP scores offline without training; `math/data.py` calculates `D.pcbm_scaling`. Original
   model results are unchanged. Tests verify statistics, split separation, photo hashes and preserved ordering.
   Content, 24 Python tests, three deck tests and visual checks passed. Saved film timings remain unchanged.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r10.pdf`, 314 pages and 27 section bookmarks.
+- Annotation PDF revision 10: `review/cbm-lecture-review-2026-10-15-r10.pdf`, 314 pages and 27 section bookmarks.
   Standardisation is on pages 173-176; the annotated revision 4 page 170 is now page 175. Revision 9 pages
   175-312 become pages 177-314. All 311 retained slides have unchanged body text. Earlier PDFs are preserved.
   No audio generation, saved timeline rebuild, film render or publication was performed.
+
+- PDF revision 5 page 177 review: reduced the PCBM-h residual explanation from four slides to two, now s16.23-24.
+  The same diagram shows the extra head adding class scores before softmax, then a concept edit leaving that
+  extra path unchanged. Retain one worked score addition and the saved 0.14 versus 0.20 zebra probabilities.
+  Narration distinguishes fitting the extra head from test-time use. The section now has 26 slides and the lecture
+  312. Content, 24 Python tests, three deck tests and live visual checks passed. Saved film timing is unchanged.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r11.pdf`, 312 pages and 27 section bookmarks.
+  The two residual slides are on pages 184-185; revision 10 pages 188-314 move to 186-312. All 310 retained
+  slides have unchanged body text. Visually checked both new slides, adjacent pages and the final page.
+  Earlier PDFs are preserved. No audio, saved timeline rebuild, film render or publication was performed.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each
