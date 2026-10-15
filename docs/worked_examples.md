@@ -35,6 +35,14 @@ Koh et al. used 112 binary concepts per CUB bird photograph.
 
 ## Part 10.2: Post-hoc CBM (real computation)
 
+The slower introduction in s16.5-10 first uses `D.pcbm_toy` from `math/data.py`. Its two features are hand-chosen,
+not measured CLIP coordinates: striped points have first coordinate 1 or 2, unstriped points -2 or -1, with the
+same second-coordinate range. The symmetric groups give the maximum-margin boundary at first coordinate 0,
+and the unit CAV `(1, 0)`. New points `(1.5, 2)` and `(-0.5, 2)` therefore score 1.5 and -0.5. The following
+CLIP dot-product illustration uses unit vectors `(0.6, 0.8)` and `(0.8, 0.6)`, giving `0.48 + 0.48 = 0.96`.
+All these numbers are computed or explicitly constructed; they are distinct from the real animal computation
+below. Numerical tests check the separator, direction, scoring and dot product.
+
 - Frozen CLIP ViT-B/32 image encoder (512-d). Concept bank (CLIP text directions): black and white stripes, a long neck, a flowing mane, brown patches on a pale coat, hooves, a saddle, green grass, a wooden fence.
 - Worked photo `zebra_12.jpg`: raw cosine scores black and white stripes 0.274, a long neck 0.243, a flowing mane 0.234, brown patches on a pale coat 0.257, hooves 0.243, a saddle 0.223, green grass 0.217, a wooden fence 0.211.
 - Standardised on the 24 training photos: black and white stripes 1.41, a long neck 0.10, a flowing mane 0.32, brown patches on a pale coat 0.72, hooves 0.34, a saddle -0.09, green grass 0.54, a wooden fence 1.12.

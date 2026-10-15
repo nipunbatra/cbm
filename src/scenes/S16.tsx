@@ -1,25 +1,14 @@
-// s16 Part 10 · Post-hoc concept bottleneck models (Yuksekgonul et al. 2023). Revision 2 + intuition, 18 beats.
+// s16 Part 10 · Post-hoc concept bottleneck models (Yuksekgonul et al. 2023). Review revision, 26 beats.
 // Real numbers from D.worked.pcbm (CLIP ViT-B/32 on the 36 Commons photos, a teaching example).
 // 16.1 motivation: a concept predictor trained from scratch (crossed out) vs a pretrained, frozen encoder (padlock).
 // 16.2 to 16.3 intuition (one stage, a sketch): photos arranged in the encoder's feature space, a 'more striped'
 //      direction; the bank names it (and 'a long neck'); the worked photo's distance along stripes is its score.
 // 16.4 the worked photo -> frozen CLIP image encoder -> e(x) in R^512 (its real first entries and the last one).
-// 16.5 route one: a CAV from labelled examples (scatter, linear boundary, normal direction; as TCAV in Part 1).
-// 16.6 route two: a phrase -> CLIP text encoder -> a direction among the image features.
-// 16.7 our concept bank: eight phrases -> CLIP text encoder -> directions v_j in the same space (sketch).
-// 16.8 the dot product on two entries (illustrative unit vectors (0.6, 0.8) and (0.8, 0.6): 0.48 + 0.48 = 0.96).
-// 16.9 the projection c_j = <e(x), v_j> (sketch) and the worked photo's real cosine vector (8 named entries).
-// 16.10 standardising: the stripes score on a number line with the training mean and spread; (0.274 - 0.215) / 0.042.
-// 16.11 standardised scores z of all eight phrases; stripes 1.41.
-// 16.12 the linear head trained with class labels on the 24 training photos; softmax(W c + b), W and b in words.
-// 16.13 sparse: the 8 x 3 weight matrix, 4 of 24 non-zero (D.worked.pcbm.W); the L1 penalty in words.
-// 16.14 zebra score arithmetic (words, then numbers) -> scores -> shares 0.77.   16.15 12 / 12 held-out photos.
-// 16.16 amber edit: stripes 1.41 -> -0.66 (mean on non-zebra training photos) -> zebra 0.14.
-// 16.17 to 16.20 one stage, PCBM-h: a purple dotted residual path from e(x) around the concepts; logits table (17);
-//      why it helps accuracy (18, reported, no numbers); why it weakens edits (19, amber edit, residual still votes);
-//      after the same edit the hybrid still gives zebra 0.20 (PCBM alone 0.14) (20).
-// 16.21 recap: s10's four rows, plain CBM vs post-hoc CBM, three changed rows in teal.   16.22 the VariantCard.
-// Variable names s2..s12 below keep their old meaning (the slide they draw); the beat numbers are the new ones.
+// 16.5 to 16.9: labelled concept examples, a 2-D space, the CAV, scoring, and the alternative CLIP route.
+// 16.10: two-entry dot product. 16.11: eight real phrase scores. 16.12 to 16.14: scaling and the bottleneck.
+// 16.15 to 16.18: fit the head, inspect sparse weights, calculate an answer, then the full test-time path.
+// 16.19 to 16.26: held-out photos, intervention, optional residual, comparison and summary.
+// Legacy drawings use old-to-current beat mapping; the expanded primer uses current beat IDs.
 import React from 'react';
 import { C, F } from '../kit/theme';
 import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, clamp, inv, type SceneProps } from '../kit/core';
@@ -27,6 +16,7 @@ import { ArchMap, Block, Credit, Cross, EvTag, Flow, MathSvg, Person, PhotoR, Pi
 import { lerp } from '../kit/anim';
 import { TexSteps } from '../kit/slots';
 import { D } from '../kit/data';
+import { S16Primer } from './S16Primer';
 
 const WK = D.worked;
 const PC = WK.pcbm;
@@ -78,45 +68,6 @@ const Lock: React.FC<{ x: number; y: number; s?: number; o?: number }> = ({ x, y
     </g>
   );
 
-// the sketch of the shared space: image features at 55 degrees, concept directions fanned out by how weakly they match
-const FANG = 55;
-const rawMax = Math.max(...RAW), rawMin = Math.min(...RAW);
-const DANG = RAW.map((r, i) => FANG + (i % 2 === 0 ? 1 : -1) * (8 + ((rawMax - r) / (rawMax - rawMin)) * 30));
-const Fan: React.FC<{ ox: number; oy: number; len: number; o?: number; dirO?: (i: number) => number; feat?: number; proj?: number; hi?: number; t: number; labels?: number }> = ({
-  ox, oy, len, o = 1, dirO = () => 1, feat = 1, proj = 0, hi = 0, t, labels = 1,
-}) => {
-  if (o <= 0.001) return null;
-  const xy = (a: number, l: number): [number, number] => [ox + Math.cos((a * Math.PI) / 180) * l, oy - Math.sin((a * Math.PI) / 180) * l];
-  const fl = len * 0.92;
-  const ang = ((DANG[0] - FANG) * Math.PI) / 180;
-  const L = fl * Math.cos(ang);
-  const tip = xy(FANG, fl), footFull = xy(DANG[0], L), foot = xy(DANG[0], L * proj);
-  return (
-    <g opacity={o < 0.999 ? o : undefined}>
-      {DANG.map((a, i) => {
-        const [x2, y2] = xy(a, len);
-        const isS = i === 0;
-        const dim = isS ? 1 : 1 - 0.6 * hi;
-        return (
-          <g key={i} opacity={dirO(i) * dim}>
-            <line x1={ox} y1={oy} x2={x2} y2={y2} stroke={C.concept} strokeWidth={isS ? 3.5 : 2} opacity={isS ? 0.95 : 0.5} />
-            <circle cx={x2} cy={y2} r={isS ? 7 : 5} fill={C.concept} opacity={isS ? 1 : 0.65} />
-          </g>
-        );
-      })}
-      <MathSvg x={xy(DANG[0], len)[0] + 12} y={xy(DANG[0], len)[1] - 18} tex="\ccon{v_1}" size={30} anchor="start" o={dirO(0) * labels} />
-      <Flow pts={[[ox, oy], tip]} color={C.input} sw={5} p={feat} o={feat} head={18} t={t} />
-      <MathSvg x={tip[0] + 16} y={tip[1] + 6} tex="\cin{e(x)}" size={30} anchor="start" o={feat * labels} />
-      {proj > 0.001 ? (
-        <g>
-          <line x1={tip[0]} y1={tip[1]} x2={lerp(tip[0], footFull[0], proj)} y2={lerp(tip[1], footFull[1], proj)} stroke={C.chalk2} strokeWidth={2.5} strokeDasharray="6 6" />
-          <line x1={ox} y1={oy} x2={foot[0]} y2={foot[1]} stroke={C.concept} strokeWidth={11} strokeLinecap="round" opacity={0.55} />
-        </g>
-      ) : null}
-    </g>
-  );
-};
-
 // ---- 16.2 and 16.3 the intuition: photos arranged in feature space along directions (a sketch, positions drawn)
 const SO: [number, number] = [300, 860]; // origin of the sketch
 const deg = (a: number): [number, number] => [Math.cos((a * Math.PI) / 180), -Math.sin((a * Math.PI) / 180)];
@@ -138,24 +89,9 @@ const EXD = 1120, EXE = -170; // the worked photo: how far along stripes, and it
 const EXP = at2(U_ST, EXD, EXE);
 const TW = 112, THH = 75; // thumbnail size
 
-// ---- 16.5 route one: a concept activation vector from labelled examples (illustrative 2-D sketch, as in Part 1)
-const CMID: [number, number] = [600, 620];
-const CVD: [number, number] = [Math.SQRT1_2, -Math.SQRT1_2];
-const rr = (k: number) => { const x = Math.sin(k * 12.9898) * 43758.5453; return x - Math.floor(x); };
-const cloud = (cx: number, cy: number, seed: number, n: number) => Array.from({ length: n }, (_, k) => {
-  const a = rr(seed + k * 1.7) * Math.PI * 2, r = 20 + 70 * Math.sqrt(rr(seed + k * 3.3));
-  return [cx + Math.cos(a) * r * 1.2, cy + Math.sin(a) * r * 0.85] as [number, number];
-});
-const WITH = cloud(CMID[0] + 190, CMID[1] - 110, 11, 13);
-const WITHOUT = cloud(CMID[0] - 190, CMID[1] + 110, 47, 13);
-const CVB: [number, number] = [CMID[0] - 120, CMID[1] - 120];
-// ---- 16.6 route two: a phrase through CLIP's text encoder gives a direction among the image features
-const R6 = { pillX: 170, y: 560, encX: 760, ox: 1130, oy: 840 };
-const IMGDOTS = cloud(1440, 600, 91, 22);
-
 // ---- 16.8 the dot product on two entries (illustrative unit vectors)
-const DE: [number, number] = [0.6, 0.8], DV: [number, number] = [0.8, 0.6];
-const DOT = DE[0] * DV[0] + DE[1] * DV[1];
+const DE: [number, number] = D.pcbm_toy.clip.image, DV: [number, number] = D.pcbm_toy.clip.phrase;
+const DOT: number = D.pcbm_toy.clip.score;
 const DP = { ox: 260, oy: 820, s: 440 }; // plot origin and scale (1 unit = s px)
 // ---- 16.10 the stripes score on a number line (real mean, spread and score)
 const NL = { x0: 300, x1: 1620, v0: 0.17, v1: 0.3, y: 470 };
@@ -218,10 +154,6 @@ const VROWS: VariantRows = {
 const PH2 = { x: 160, y: 380, w: 390, h: 260 };
 const ENC2 = { x: 820, y: 510, w: 260, h: 130 };
 const V2 = { x: 1200, y: 360, rh: 62, w: 150 };
-const BR = (i: number) => 340 + i * 62; // slide 3 phrase rows
-const TE = { x: 820, y: 557, w: 190, h: 300 };
-const FAN3 = { ox: 1180, oy: 830, len: 470 };
-const FAN4 = { ox: 220, oy: 860, len: 520 };
 const ZR = (i: number) => 360 + i * 54; // slide 5 rows
 const ZX = 820, ZS = 170;
 const MR = (i: number) => 366 + i * 54; // slide 7 matrix rows
@@ -232,14 +164,15 @@ const TAB = { x: 640, y: 700, rh: 48, cx: [1020, 1220, 1420] };
 const HO = { x0: 330, y0: 330, dx: 215, dy: 165, w: 195, h: 130 }; // slide 15: the 12 held-out photos, 2 rows of 6
 
 export const S16: React.FC<SceneProps> = ({ t, P }) => {
-  const b = (k: number) => bs(P, k);
-  const w = (k: number, word: string, n = 0) => bw(P, k, word, n);
+  const current = (k: number) => [0, 1, 2, 3, 4, 0, 0, 0, 10, 0, 13, 14, 0, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26][k];
+  const b = (k: number) => bs(P, current(k));
+  const w = (k: number, word: string, n = 0) => bw(P, current(k), word, n);
   const at = (x: number, d = 0.4) => inv(x, x + d, t);
   const NB = P.beats.length;
   const span = (k0: number, k1: number) => {
     const fin = inv(b(k0) - 0.05, b(k0) + 0.25, t);
-    if (k1 >= NB) return fin;
-    const z = Math.min(be(P, k1) + 0.02, b(k1 + 1) - 0.34);
+    if (current(k1) >= NB) return fin;
+    const z = Math.min(be(P, current(k1)) + 0.02, bs(P, current(k1) + 1) - 0.34);
     return fin * (1 - inv(z, z + 0.3, t));
   };
   const so = (k: number) => span(k, k);
@@ -264,16 +197,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
   const iProj = E.io(inv(w(3, 'far') - 0.1, w(3, 'far') + 0.9, t));
   const iQ = at(w(3, 'far') + 0.2);
 
-  // ---------------- new 16.5 route one (CAV) and 16.6 route two (CLIP text)
-  const r5 = so(5), r6 = so(6);
-  const r5w = at(w(5, 'with') - 0.15, 0.5), r5n = at(w(5, 'without') - 0.1, 0.5);
-  const r5b = E.io(inv(w(5, 'boundary') - 0.1, w(5, 'boundary') + 0.5, t));
-  const r5v = E.io(inv(w(5, 'across') - 0.2, w(5, 'across') + 0.5, t));
-  const r5t = at(w(5, 'activation') - 0.2), r5c = at(w(5, 'needs') - 0.1);
-  const r6p = at(b(6) + 0.05, 0.4), r6n = at(w(6, 'needs') - 0.1);
-  const r6e = at(w(6, 'text') - 0.2, 0.5), r6s = at(w(6, 'same') - 0.2, 0.5);
-  const r6v = E.io(inv(w(6, 'direction') - 0.4, w(6, 'direction') + 0.4, t));
-
   // ---------------- new 16.15 and 16.16 (inside the PCBM-h stage)
   const h15 = so(18), h16 = so(19);
   const h15a = at(w(18, 'Eight') - 0.1), h15b = at(w(18, 'rest') - 0.2), h15c = at(w(18, 'paper') - 0.1), h15d = at(w(18, 'pure') - 0.1);
@@ -288,23 +211,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
   const clip2 = at(w(4, 'CLIPs') - 0.1);
   const vec2 = at(w(4, 'photograph') - 0.1, 0.5);
   const eq2 = at(w(4, '512') - 0.1);
-
-  // ---------------- 16.3
-  const s3 = so(7);
-  const fan3 = at(w(7, 'text') - 0.1, 0.5);
-  const phT = (i: number) => lerp(w(7, 'eight'), w(7, 'fence') - 0.1, i / 7);
-  const dir3 = (i: number) => at(phT(i) + 0.25, 0.3);
-  const feat3 = at(w(7, 'fence') + 0.1, 0.5);
-  const te3 = at(w(7, 'text') - 0.2, 0.5);
-  const ph3 = (i: number) => at(phT(i) - 0.1, 0.3);
-  const l3 = at(w(7, 'eight') - 0.1);
-
-  // ---------------- 16.4
-  const s4 = so(9);
-  const proj4 = E.io(inv(w(9, 'projection') - 0.1, w(9, 'projection') + 0.8, t));
-  const wd4 = at(b(9) + 0.05), eq4 = at(w(9, 'projection') + 0.2);
-  const raw4 = (i: number) => at(lerp(w(9, 'once') - 0.1, w(9, 'directions'), i / 7), 0.3);
-  const cos4 = at(w(9, 'Both') - 0.1);
 
   // ---------------- 16.5
   const s5 = so(11);
@@ -333,14 +239,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
     [`{} \\approx \\ccon{${Z[0].toFixed(2)}}`, w(10, 'gives') - 0.1],
   ];
   const tr5 = at(w(11, 'training') - 0.2);
-
-  // ---------------- 16.6
-  const s6 = so(12);
-  const th6 = (k: number) => at(w(12, 'class') - 0.4 + k * 0.03, 0.3);
-  const head6 = at(w(12, 'linear') - 0.1, 0.5);
-  const fl6 = at(w(12, 'trained') - 0.1, 0.5);
-  const eq6 = at(w(12, 'row') - 0.1);
-  const l6 = at(w(12, 'constant') - 0.1), l6s = at(w(12, 'softmax') - 0.1);
 
   // ---------------- 16.7
   const s7 = so(13);
@@ -408,7 +306,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
   const cmpSame = at(w(21, 'still') - 0.1);
   const cardP = [w(22, 'g'), w(22, 'projection'), w(22, 'f', 3), w(22, 'Only'), w(22, 'images')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
 
-  const trainRows = CLS.map((c) => TRAIN.filter((f) => f.startsWith(c)));
 
   return (
     <Stage>
@@ -418,9 +315,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       )) : null}
       <PhotoR R={{ x: EXP[0] - TW * 0.6, y: EXP[1] - THH * 0.6, w: TW * 1.2, h: THH * 1.2 }} src={`worked/${EX}`} frac={thumbFrac(EX, THH / TW)} o={oo(sI, iEx)} radius={6} />
       <PhotoR R={PH2} src={`worked/${EX}`} o={oo(s2, ph2)} />
-      {s6 > 0.001 ? trainRows.map((files, r) => files.map((f, k) => (
-        <PhotoR key={f} R={{ x: 330 + k * 98, y: 340 + r * 92, w: 90, h: 64 }} src={`worked/${f}`} frac={thumbFrac(f, 64 / 90)} o={s6 * th6(r * 8 + k)} radius={5} shadow={false} />
-      ))) : null}
       {s15h > 0.001 ? TEST.map((f, k) => (
         <PhotoR key={f} R={{ x: HO.x0 + (k % 6) * HO.dx, y: HO.y0 + Math.floor(k / 6) * HO.dy, w: HO.w, h: HO.h }} src={`worked/${f}`} frac={thumbFrac(f, HO.h / HO.w)} o={s15h * th8(k)} radius={6} shadow={false} />
       )) : null}
@@ -471,40 +365,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
           );
         })() : null}
 
-        {/* ---------------- slide 5: route one, a CAV ---------------- */}
-        {r5 > 0.001 ? (
-          <g opacity={r5 < 0.999 ? r5 : undefined}>
-            <line x1={200} y1={880} x2={1000} y2={880} stroke={C.line2} strokeWidth={2.5} />
-            <line x1={200} y1={880} x2={200} y2={330} stroke={C.line2} strokeWidth={2.5} />
-            {WITHOUT.map(([x, y], i) => <circle key={`n${i}`} cx={x} cy={y} r={12} fill={C.mute} opacity={r5n * clamp(r5n * 2 - i / 26)} />)}
-            {WITH.map(([x, y], i) => <circle key={`s${i}`} cx={x} cy={y} r={12} fill={C.concept} opacity={r5w * clamp(r5w * 2 - i / 26)} />)}
-            <Txt x={CMID[0] + 190} y={CMID[1] + 16} size={26} weight={600} fill={C.concept} o={r5w}>with stripes</Txt>
-            <Txt x={CMID[0] - 190} y={CMID[1] + 236} size={26} weight={600} fill={C.chalk2} o={r5n}>without</Txt>
-            <line x1={CMID[0] - 240 * r5b} y1={CMID[1] - 240 * r5b} x2={CMID[0] + 240 * r5b} y2={CMID[1] + 240 * r5b} stroke={C.chalk2} strokeWidth={3} strokeDasharray="10 9" opacity={r5b} />
-            {r5v > 0.001 ? (
-              <Flow pts={[CVB, [CVB[0] + CVD[0] * 170 * r5v, CVB[1] + CVD[1] * 170 * r5v]]} color={C.concept} sw={6} head={22} />
-            ) : null}
-            <MathSvg x={CVB[0] + CVD[0] * 170 + 18} y={CVB[1] + CVD[1] * 170 - 22} tex="\ccon{v}_{\ccon{\text{stripes}}}" size={40} anchor="start" o={at(w(5, 'across') + 0.3)} />
-          </g>
-        ) : null}
-
-        {/* ---------------- slide 6: route two, CLIP text ---------------- */}
-        {r6 > 0.001 ? (
-          <g opacity={r6 < 0.999 ? r6 : undefined}>
-            <Pill x={R6.pillX} y={R6.y} text="black and white stripes" color={C.concept} size={26} anchorX="start" anchorY="middle" o={r6p} />
-            <Flow pts={[[R6.pillX + 420, R6.y], [R6.encX - 150, R6.y]]} color={C.concept} sw={3} head={13} p={r6e} t={t} live={r6e} n={1} dotR={5} />
-            <Block x={R6.encX} y={R6.y} w={270} h={130} kind="input" title="CLIP" sub="text encoder" size={32} subSize={22} o={r6e} />
-            <Flow pts={[[R6.encX + 145, R6.y + 30], [R6.ox - 8, R6.oy - 8]]} color={C.concept} sw={3} head={13} p={r6s} o={r6s} t={t} live={r6s} n={1} dotR={5} />
-            <g opacity={r6s}>
-              <line x1={R6.ox} y1={R6.oy} x2={1760} y2={R6.oy} stroke={C.line2} strokeWidth={2} />
-              <line x1={R6.ox} y1={R6.oy} x2={R6.ox} y2={340} stroke={C.line2} strokeWidth={2} />
-              {IMGDOTS.map(([x, y], i) => <circle key={i} cx={x} cy={y} r={9} fill={C.input} opacity={0.75} />)}
-            </g>
-            {r6v > 0.001 ? <Flow pts={[[R6.ox, R6.oy], [R6.ox + (1640 - R6.ox) * r6v, R6.oy - (R6.oy - 420) * r6v]]} color={C.concept} sw={6} head={22} /> : null}
-            <MathSvg x={1650} y={392} tex="\ccon{v}_{\ccon{\text{stripes}}}" size={40} anchor="end" o={at(w(6, 'direction') + 0.3)} />
-          </g>
-        ) : null}
-
         {/* ---------------- slide 4 (was 2) ---------------- */}
         {s2 > 0.001 ? (
           <g opacity={s2 < 0.999 ? s2 : undefined}>
@@ -514,37 +374,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
             <Flow pts={[[ENC2.x + ENC2.w / 2 + 10, ENC2.y], [V2.x - 70, ENC2.y]]} color={C.input} p={vec2} t={t} live={vec2} n={1} head={14} dotR={5} />
             <VecCol x={V2.x} y={V2.y} vals={E_REAL} rowH={V2.rh} w={V2.w} size={30} color={C.input} o={vec2} />
             {E_IDX.map((s, i) => <Txt key={i} x={V2.x - 20} y={V2.y + (i + 0.5) * V2.rh} size={20} mono anchor="end" fill={C.mute} o={vec2}>{s}</Txt>)}
-          </g>
-        ) : null}
-
-        {/* ---------------- slide 3 ---------------- */}
-        {s3 > 0.001 ? (
-          <g opacity={s3 < 0.999 ? s3 : undefined}>
-            {BANK.map((ph, i) => (
-              <g key={ph} opacity={ph3(i)}>
-                <Txt x={160} y={BR(i)} size={28} anchor="start" fill={C.concept} weight={i === 0 ? 700 : 500}>{ph}</Txt>
-                <Flow pts={[[560, BR(i)], [640, BR(i)], [TE.x - TE.w / 2 - 8, TE.y + (i - 3.5) * 30]]} color={C.concept} sw={2} head={0} p={1} t={t + i * 0.2} live={te3} n={1} dotR={4} />
-              </g>
-            ))}
-            <Block x={TE.x} y={TE.y} w={TE.w} h={TE.h} kind="input" o={te3} />
-            <Txt x={TE.x} y={TE.y - 40} size={30} weight={600} o={te3}>CLIP</Txt>
-            <Txt x={TE.x} y={TE.y} size={30} weight={600} o={te3}>text</Txt>
-            <Txt x={TE.x} y={TE.y + 40} size={30} weight={600} o={te3}>encoder</Txt>
-            <Flow pts={[[TE.x + TE.w / 2 + 8, TE.y], [FAN3.ox - 30, TE.y], [FAN3.ox - 30, FAN3.oy - 20]]} color={C.concept} p={fan3} o={fan3} t={t} live={fan3} n={1} head={12} dotR={4} />
-            <Fan ox={FAN3.ox} oy={FAN3.oy} len={FAN3.len} o={fan3} dirO={dir3} feat={feat3} t={t} />
-          </g>
-        ) : null}
-
-        {/* ---------------- slide 4 ---------------- */}
-        {s4 > 0.001 ? (
-          <g opacity={s4 < 0.999 ? s4 : undefined}>
-            <Fan ox={FAN4.ox} oy={FAN4.oy} len={FAN4.len} proj={proj4} hi={proj4} t={t} />
-            {BANK.map((ph, i) => (
-              <g key={ph} opacity={raw4(i)}>
-                <Txt x={1470} y={480 + i * 50} size={24} anchor="end" fill={C.concept} weight={i === 0 ? 700 : 500}>{short(ph)}</Txt>
-              </g>
-            ))}
-            <VecCol x={1500} y={455} vals={RAW} rowH={50} w={140} size={26} digits={3} cellO={raw4} ring={(i) => (i === 0 ? raw4(7) : 0)} ringColor={C.concept} />
           </g>
         ) : null}
 
@@ -563,15 +392,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
                 </g>
               );
             })}
-          </g>
-        ) : null}
-
-        {/* ---------------- slide 6: training the head ---------------- */}
-        {s6 > 0.001 ? (
-          <g opacity={s6 < 0.999 ? s6 : undefined}>
-            {CLS.map((c, r) => <Txt key={c} x={160} y={372 + r * 92} size={28} anchor="start" weight={600} fill={C.chalk} o={th6(r * 8)}>{c}</Txt>)}
-            <Flow pts={[[330 + 8 * 98 + 10, 464], [1240, 464]]} color={C.chalk2} p={fl6} o={fl6} t={t} live={fl6} n={2} head={14} dotR={5} />
-            <Block x={1420} y={464} w={340} h={150} kind="head" title="linear head" sub="8 concepts → 3 classes" size={30} subSize={22} o={head6} />
           </g>
         ) : null}
 
@@ -758,14 +578,14 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <Header t={t} part={10} title={P.title} />
 
       {/* slide 1 */}
-      <SlideHead text={bh(P, 1)} o={s1} />
+      <SlideHead text={bh(P, current(1))} o={s1} />
       <Rich x={560} y={590} ax="center" size={28} color={C.chalk2} text="needs {c:concept labels}" o={oo(s1, pred1)} />
       <Rich x={1360} y={590} ax="center" size={28} color={C.chalk2} text="{x:frozen}: never trained here" o={oo(s1, enc1)} />
-      <Rich x={960} y={740} ax="center" size={34} text="nobody labels {c:concepts} on the training {x:images}" o={oo(s1, l1)} />
+      <Rich x={960} y={740} ax="center" size={34} text="no need to label every {c:concept} on every training {x:image}" o={oo(s1, l1)} />
 
       {/* new slides 2 and 3: the intuition */}
-      <SlideHead text={bh(P, 2)} o={i2} />
-      <SlideHead text={bh(P, 3)} o={i3} />
+      <SlideHead text={bh(P, current(2))} o={i2} />
+      <SlideHead text={bh(P, current(3))} o={i3} />
       <Rich x={1760} y={SO[1] + U_ST[1] * L_ST - 26} ax="right" ay="bottom" size={28} color={C.chalk2} text="more striped" o={oo(i2, iStr)} />
       <Rich x={1760} y={SO[1] + U_ST[1] * L_ST - 26} ax="right" ay="bottom" size={30} weight={700} text="{c:black and white stripes}" o={oo(i3, iName)} />
       <Rich x={SO[0] + U_NK[0] * L_NK + 24} y={SO[1] + U_NK[1] * L_NK} ay="middle" size={30} weight={700} text="{c:a long neck}" o={oo(i3, iName)} />
@@ -774,45 +594,16 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <HText x={SO[0] + 40} y={SO[1] + 30} size={22} color={C.mute} o={oo(sI, iPh(0))}>{`feature space of the frozen encoder (sketch: ${FEAT_DIM} dimensions drawn as 2)`}</HText>
       <EvTag x={1760} y={890} ax="right" kind="schematic" text="photo positions drawn for teaching" o={oo(sI, iPh(0))} />
 
-      {/* new slide 5: route one */}
-      <SlideHead text={bh(P, 5)} o={r5} />
-      <HText x={1100} y={330} size={24} mono weight={600} color={C.mute} o={oo(r5, at(w(5, 'routes') - 0.1))}>Yuksekgonul et al., ICLR 2023: two routes</HText>
-      <Rich x={1100} y={400} w={660} size={34} text="a {c:concept activation vector} (CAV)" o={oo(r5, r5t)} />
-      <Rich x={1100} y={456} w={660} size={28} color={C.chalk2} text="the same construction TCAV uses (appendix)" o={oo(r5, r5t)} />
-      <Rich x={1100} y={620} w={660} size={30} text="needs some labelled examples per {c:concept}" o={oo(r5, r5c)} />
-      <Rich x={1100} y={672} w={660} size={30} color={C.chalk2} text="but no labels on the training {x:images}" o={oo(r5, r5c)} />
-      <EvTag x={200} y={900} kind="illustrative" text="two dimensions drawn" o={oo(r5, r5w)} />
-
-      {/* new slide 6: route two */}
-      <SlideHead text={bh(P, 6)} o={r6} />
-      <Rich x={R6.pillX} y={700} w={760} size={32} text="no example images needed" o={oo(r6, r6n)} />
-      <Rich x={R6.pillX} y={756} w={760} size={30} color={C.chalk2} text="the phrase itself gives the {c:direction}" o={oo(r6, at(w(6, 'direction') - 0.1))} />
-      <Rich x={1440} y={720} ax="center" size={26} color={C.input} text="image features" o={oo(r6, r6s)} />
-      <HText x={1760} y={300} ax="right" size={22} color={C.mute} o={oo(r6, r6s)}>{`sketch: ${FEAT_DIM} dimensions drawn as 2`}</HText>
-
       {/* slide 4 (was 2) */}
-      <SlideHead text={bh(P, 4)} o={s2} />
+      <SlideHead text={bh(P, current(4))} o={s2} />
       <Credit x={PH2.x} y={PH2.y + PH2.h + 10} text={`Photo: ${EXC.artist}, Wikimedia Commons, ${EXC.license}`} o={oo(s2, ph2)} />
       <Rich x={V2.x + V2.w / 2} y={300} ax="center" size={30} text="{x:image features}" o={oo(s2, vec2)} />
       <Tex x={V2.x + V2.w / 2} y={760} ax="center" size={56} tex={`\\cin{e}(\\cin{x}) \\in \\mathbb{R}^{${FEAT_DIM}}`} o={oo(s2, eq2)} />
       <Rich x={ENC2.x} y={600} ax="center" size={26} color={C.chalk2} text="{x:frozen}" o={oo(s2, clip2)} />
       <EvTag x={1760} y={890} ax="right" kind="computed" text={`CLIP ViT-B/32 image feature of this photo (normalised); 4 of ${FEAT_DIM} entries shown`} o={oo(s2, vec2)} />
 
-      {/* slide 3 */}
-      <SlideHead text={bh(P, 7)} o={s3} />
-      <Rich x={1180} y={860} size={30} text={`each phrase becomes a direction $\\ccon{v_j} \\in \\mathbb{R}^{${FEAT_DIM}}$`} o={oo(s3, l3 * fan3)} />
-      <HText x={1740} y={300} ax="right" size={22} color={C.mute} o={oo(s3, fan3)}>{`sketch: ${FEAT_DIM} dimensions drawn as 2`}</HText>
-
-      {/* slide 4 */}
-      <SlideHead text={bh(P, 9)} o={s4} />
-      <Rich x={1100} y={300} size={30} text="{c:score of concept j} = {x:features} · {c:direction j}" o={oo(s4, wd4)} />
-      <Tex x={1100} y={385} size={54} tex="\ch_j = \langle \cin{e(x)},\ \ccon{v_j} \rangle" o={oo(s4, eq4)} />
-      <HText x={760} y={820} ax="center" size={24} color={C.mute} o={oo(s4)}>{`sketch: ${FEAT_DIM} dimensions drawn as 2`}</HText>
-      <Rich x={160} y={900} size={26} color={C.chalk2} text="both vectors have length 1, so each score is a cosine" o={oo(s4, cos4)} />
-      <EvTag x={1760} y={890} ax="right" kind="computed" text="CLIP ViT-B/32, cosine scores of this photo" o={oo(s4, raw4(0))} />
-
       {/* new slide 8: the dot product on two entries */}
-      <SlideHead text={bh(P, 8)} o={d8} />
+      <SlideHead text={bh(P, current(8))} o={d8} />
       <Tex x={DP.ox + DE[0] * DP.s + 14} y={DP.oy - DE[1] * DP.s - 24} size={34} tex={`\\cin{e} = (${DE[0]},\\ ${DE[1]})`} o={oo(d8, d8e)} />
       <Tex x={DP.ox + DV[0] * DP.s + 18} y={DP.oy - DV[1] * DP.s + 6} size={34} tex={`\\ccon{v} = (${DV[0]},\\ ${DV[1]})`} o={oo(d8, d8v)} />
       <Rich x={900} y={330} w={860} size={32} text="{x:features} · {c:direction} = first × first + second × second" o={oo(d8, d8w)} />
@@ -823,7 +614,7 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <EvTag x={1760} y={890} ax="right" kind="illustrative" text={`two entries instead of ${FEAT_DIM}`} o={oo(d8, d8e)} />
 
       {/* new slide 10: standardising */}
-      <SlideHead text={bh(P, 10)} o={n10} />
+      <SlideHead text={bh(P, current(10))} o={n10} />
       <Rich x={nlx(RAW[0])} y={NL.y - 30} ax="center" ay="bottom" size={26} text={`{c:this photo ${RAW[0].toFixed(3)}}`} o={oo(n10, n10a)} />
       <Rich x={nlx(MEAN[0]) - 16} y={NL.y - 12} ax="right" ay="bottom" size={26} color={C.chalk2} text={`training mean ${MEAN[0].toFixed(3)}`} o={oo(n10, n10m)} />
       <Rich x={(nlx(MEAN[0]) + nlx(MEAN[0] + STD[0])) / 2} y={NL.y - 92} ax="center" ay="bottom" size={26} color={C.chalk2} text={`one spread ${STD[0].toFixed(3)}`} o={oo(n10, n10s)} />
@@ -833,22 +624,14 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <EvTag x={1760} y={890} ax="right" kind="computed" text={`stripes scores, mean and spread over the ${WK.n_train} training photos`} o={oo(n10, n10a)} />
 
       {/* slide 5 */}
-      <SlideHead text={bh(P, 11)} o={s5} />
+      <SlideHead text={bh(P, current(11))} o={s5} />
       <Rich x={300} y={300} size={28} color={C.chalk2} text="{c:concept scores} for this photo, standardised" o={oo(s5, z5(0))} />
       <Rich x={1220} y={480} w={520} size={30} color={C.chalk2} text="each bar: (score − training mean) ÷ training spread" o={oo(s5, z5(0))} />
       <Rich x={1220} y={600} w={520} size={30} text={`{c:stripes}: ${Z[0].toFixed(2)} spreads above its average`} o={oo(s5, tr5)} />
       <EvTag x={1760} y={890} ax="right" kind="computed" text="CLIP ViT-B/32 on 36 Commons photos, teaching example" o={oo(s5, z5(0))} />
 
-      {/* slide 6 */}
-      <SlideHead text={bh(P, 12)} o={s6} />
-      <Rich x={330} y={300} size={28} color={C.chalk2} text={`${WK.n_train} training photos with {y:class labels}`} o={oo(s6, th6(0))} />
-      <Tex x={960} y={720} ax="center" size={56} tex="\yh = \operatorname{softmax}(\chead{W}\,\ch + \chead{b})" o={oo(s6, eq6)} />
-      <Rich x={960} y={800} ax="center" size={30} color={C.chalk2} text="{f:W}: one row of weights per class   ·   {f:b}: one constant per class" o={oo(s6, l6)} />
-      <Rich x={960} y={850} ax="center" size={28} color={C.chalk2} text="softmax: scores → shares that sum to one (Part 4)" o={oo(s6, l6s)} />
-      <Credit x={330} y={340 + 3 * 92 - 18} text={COLLECTIVE} o={oo(s6, th6(0))} />
-
       {/* slide 7 */}
-      <SlideHead text={bh(P, 13)} o={s7} />
+      <SlideHead text={bh(P, current(13))} o={s7} />
       <HText x={1500} y={480} ax="center" size={96} mono weight={700} o={oo(s7, big7)}>{`${PC.nonzero} / ${PC.total_weights}`}</HText>
       <Rich x={1500} y={600} ax="center" size={30} color={C.chalk2} text="{f:weights} are non-zero" o={oo(s7, big7)} />
       <Rich x={1500} y={360} ax="center" size={28} color={C.chalk2} text="8 concepts × 3 classes = 24 weights" o={oo(s7, cnt7)} />
@@ -856,7 +639,7 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <EvTag x={1760} y={890} ax="right" kind="computed" text="L1 logistic head fit on 24 photos" o={oo(s7, mat7)} />
 
       {/* slide 8 */}
-      <SlideHead text={bh(P, 14)} o={s8} />
+      <SlideHead text={bh(P, current(14))} o={s8} />
       <Rich x={200} y={320} size={32} text="{c:stripes score} × {f:weight} + {f:constant} = {y:zebra score}" o={oo(s8, wd8)} />
       <TexSteps x={200} y={420} t={t} size={46} o={s8} parts={eq8} />
       <Rich x={625} y={760} ax="center" size={26} color={C.chalk2} text="class scores" o={oo(s8, lg8)} />
@@ -864,21 +647,21 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <EvTag x={1760} y={890} ax="right" kind="computed" text="CLIP ViT-B/32 on 36 Commons photos" o={oo(s8, lg8)} />
 
       {/* new slide 15: held-out photos */}
-      <SlideHead text={bh(P, 15)} o={s15h} />
+      <SlideHead text={bh(P, current(15))} o={s15h} />
       <Rich x={960} y={720} ax="center" size={34} text={`{y:${NCORRECT} of ${WK.n_test}} held-out photos correct`} o={oo(s15h, tk8)} />
       <Rich x={960} y={780} ax="center" size={28} color={C.chalk2} text="a tiny teaching example, not a benchmark" o={oo(s15h, tiny8)} />
       <Credit x={HO.x0} y={HO.y0 + HO.dy + HO.h + 10} text={COLLECTIVE} o={oo(s15h, th8(0))} />
 
       {/* slide 9 */}
-      <SlideHead text={bh(P, 16)} o={s9} />
+      <SlideHead text={bh(P, current(16))} o={s9} />
       <Rich x={200} y={560} w={760} size={28} color={C.chalk2} text={`set to {e:${sg(ED.z_to, 2)}}, its mean on non-zebra training photos`} o={oo(s9, cap9)} />
       <Tex x={960} y={720} ax="center" size={50} tex={`\\cedit{${tn(ED.z_to, 3)}} \\times \\chead{${W[0][0].toFixed(3)}} ${B[0] < 0 ? '-' : '+'} \\chead{${Math.abs(B[0]).toFixed(3)}} \\approx \\cedit{${tn(ED.logits[0], 3)}}`} o={oo(s9, eq9)} />
       <Rich x={960} y={790} ax="center" size={28} color={C.chalk2} text="the new zebra logit; the photo and the head stay the same" o={oo(s9, eq9)} />
       <EvTag x={1760} y={890} ax="right" kind="computed" text="the same head, one score edited" o={oo(s9, per9)} />
 
       {/* new slides 15 and 16, on the PCBM-h stage */}
-      <SlideHead text={bh(P, 18)} o={h15} />
-      <SlideHead text={bh(P, 19)} o={h16} />
+      <SlideHead text={bh(P, current(18))} o={h15} />
+      <SlideHead text={bh(P, current(19))} o={h16} />
       <Rich x={300} y={PIPE.ry + 80} size={26} color={C.leak} text="evidence no phrase names" o={oo(h15, h15b)} />
       <Rich x={300} y={720} w={1300} size={32} text="eight phrases cannot describe everything the {x:encoder} sees" o={oo(h15, h15a)} />
       <Rich x={300} y={772} w={1300} size={32} text="the {k:residual} picks up the rest" o={oo(h15, h15b)} />
@@ -889,24 +672,25 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <Rich x={1380} y={PIPE.ry - 20} size={28} color={C.leak} text="still votes for zebra" o={oo(h16, h16v)} />
 
       {/* slides 14 and 17 */}
-      <SlideHead text={bh(P, 17)} o={s10} />
-      <SlideHead text={bh(P, 20)} o={s11} />
+      <SlideHead text={bh(P, current(17))} o={s10} />
+      <SlideHead text={bh(P, current(20))} o={s11} />
       <Rich x={1500} y={PIPE.ry - 20} w={300} size={26} color={C.chalk2} text="class scores are added, then the softmax" o={oo(s10, add17)} />
       <Rich x={1500} y={PIPE.ry - 40} w={300} size={28} text="part of the evidence {k:never passed through a named concept}" o={oo(s11, bec11)} />
       <EvTag x={TAB.x} y={TAB.y + 3 * TAB.rh + 40} kind="computed" text="CLIP ViT-B/32 on 36 Commons photos, teaching example" o={oo(sH, tab10 * tabVis)} />
 
       {/* slide 18 */}
-      <SlideHead text={bh(P, 22)} o={s12} />
+      <SlideHead text={bh(P, current(22))} o={s12} />
       <div style={{ position: 'absolute', inset: 0, transform: 'scale(0.86)', transformOrigin: '960px 290px' }}>
         <VariantCard name="Post-hoc CBM (Yuksekgonul et al., ICLR 2023)" rows={VROWS} o={s12} p={cardP} y0={290} />
       </div>
       <Rich x={960} y={912} ax="center" size={28} color={C.chalk2} text="$j$: one concept   ·   $k$: number of concepts   ·   $\cleak{r}$: the residual" o={oo(s12, legO)} />
 
       {/* new slide 21: recap against the plain CBM */}
-      <SlideHead text={bh(P, 21)} o={sR} />
+      <SlideHead text={bh(P, current(21))} o={sR} />
       <CompareText o={sR} name="post-hoc CBM" cells={CMP_PC} rowO={cmpRow} hiO={cmpHi} changed={CMP_CHANGED} />
       <Rich x={196} y={850} size={30} color={C.chalk2} text="{c:3 of 4} changed; each concept is still one number" o={oo(sR, cmpSame)} />
 
+      <S16Primer t={t} P={P} />
       <ArchMap on={['g', 'c']} o={inv(0, 0.5, t)} />
     </Stage>
   );

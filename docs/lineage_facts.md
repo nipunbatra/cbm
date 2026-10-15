@@ -189,6 +189,16 @@ shape. `D.cem_shape` contains hand-chosen candidate vectors and a head, with com
 
 **PCBM-h:** a residual predictor is fit sequentially on top of the fixed PCBM.
 
+**Slide-review clarification, 2026-10-15:** checked Section 2 of the
+[PCBM paper](https://arxiv.org/html/2205.15480v2). CAV learning and CLIP text embeddings are alternative ways
+to obtain a concept bank. The first fits a linear concept classifier to positive and negative examples in a
+fixed feature space; the normal points towards the positive group. Concept examples need not be the task
+training images. The CLIP route embeds phrases into the paired image/text space. Once the bank is fixed,
+task class labels train a sparse head. Our animal computation uses the CLIP route, not a fitted CAV.
+The new two-feature diagram is constructed: its symmetric groups give a vertical maximum-margin line and
+a unit horizontal normal. It is not a dimensionality reduction of the real CLIP features. Scaling in our
+worked implementation uses training-only means and standard deviations, saved for test-time use.
+
 **Comparison to CBM:** CBM "can only reach a similar performance to PCBM with 20x more annotations" (App. C).
 
 ---

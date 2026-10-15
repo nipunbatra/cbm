@@ -85,9 +85,20 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   training signals, calculates predictions with one fixed illustrative head, then states the interpretability
   trade-off. Values come from `math/data.py` -> `D.cem_shape`, with numerical validation. These are hand-chosen
   vectors and a head, not a trained shape CEM. Existing data is unchanged. CEM now has 17 slides; the lecture 308.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r8.pdf`, 308 pages and 27 section bookmarks.
+- Annotation PDF revision 8: `review/cbm-lecture-review-2026-10-15-r8.pdf`, 308 pages and 27 section bookmarks.
   Pages 155-159 contain the expanded example. Revision 7 pages 158-306 become pages 160-308; pages 1-154 retain
   their numbers. All previous PDFs remain available for annotation references.
+
+- PDF revision 4 page 164 onwards review: expanded s16 to 26 slides. After the frozen encoder, show concept
+  examples, a constructed two-feature plot, the separating boundary and CAV, then scores for new images.
+  Make the CLIP text route explicitly an alternative, return to the eight real phrase scores, explain scaling,
+  and distinguish fitting the task head from the complete fixed test-time path. New `D.pcbm_toy` values come
+  from `math/data.py`; earlier model results are unchanged. Content, 23 Python tests, three deck tests and
+  visual checks passed. Saved film timing and the beat list remain unchanged.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r9.pdf`, 312 pages and 27 section bookmarks.
+  The slower explanation is on pages 166-179. The annotated old revision 4 page 164 is now page 165.
+  Revision 8 pages 184-308 become pages 188-312. All 302 slides outside the revised drawings retain their body
+  text. Earlier PDFs are preserved. No audio, saved timeline rebuild, film render or publication was performed.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

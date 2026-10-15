@@ -153,6 +153,24 @@ D['cem_shape'] = {
     'predictions': [D['incomplete']['objects'][i]['y'] for i in _shape_scores.argmax(axis=1)],
 }
 
+# PCBM primer: two-dimensional features, not a projection of the real CLIP run.
+# The two rectangles are symmetric. The hard-margin separator is halfway between
+# the nearest x coordinates; its unit normal points towards the positive group.
+_pc_pos = np.array([[1, 1], [2, 1], [1, 3], [2, 3]], float)
+_pc_neg = np.array([[-2, 1], [-1, 1], [-2, 3], [-1, 3]], float)
+_pc_boundary = (_pc_pos[:, 0].min() + _pc_neg[:, 0].max()) / 2
+_pc_direction = np.array([1., 0.])
+_pc_new = np.array([[1.5, 2.], [-0.5, 2.]])
+_pc_image, _pc_phrase = np.array([0.6, 0.8]), np.array([0.8, 0.6])
+D['pcbm_toy'] = {
+    'evidence': 'constructed 2-D features; separator and scores calculated',
+    'positive': _pc_pos.tolist(), 'negative': _pc_neg.tolist(), 'boundary': r(_pc_boundary),
+    'direction': _pc_direction.tolist(), 'new_features': _pc_new.tolist(),
+    'scores': (_pc_new @ _pc_direction).tolist(),
+    'clip': {'image': _pc_image.tolist(), 'phrase': _pc_phrase.tolist(),
+             'products': (_pc_image * _pc_phrase).tolist(), 'score': r(_pc_image @ _pc_phrase)},
+}
+
 # ---------------------------------------------------------------- Act 11: the measured shape experiment (read only)
 M = METRICS['models']; I = METRICS['interventions']; demo = METRICS['demo']
 ex = next(e for e in demo['examples'] if e['index'] == demo.get('selected_index', 10))

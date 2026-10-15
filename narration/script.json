@@ -1099,8 +1099,8 @@
     {
      "id": "16.1",
      "gap": 0.6,
-     "text": "Second, post-hoc concept bottleneck models. Instead of training a concept predictor from scratch, they reuse a pretrained encoder that already exists, so nobody labels concepts on the training images.",
-     "head": "Reuse a {x:pretrained encoder}; no {c:concept labels} needed"
+     "text": "Second, post-hoc concept bottleneck models. Instead of training a concept predictor from scratch, they reuse a pretrained encoder that already exists, so nobody has to label every concept on the task training images. We still need a source for the concept bank, which we will build next.",
+     "head": "Reuse a {x:pretrained encoder}; build a {c:concept bank}"
     },
     {
      "id": "16.2",
@@ -1122,108 +1122,132 @@
     },
     {
      "id": "16.5",
-     "gap": 0.6,
-     "text": "Where does a direction come from? Yuksekgonul and colleagues use two routes. The first is a concept activation vector: separate the features of images with and without the concept by a linear boundary, and take the direction across it. It needs some labelled examples for each concept, but no labels on the training images.",
-     "head": "Route one to a {c:direction}: labelled examples (a CAV)"
+     "gap": 0.8,
+     "text": "First choose a concept, such as stripes. Collect some images with stripes and some without stripes. These are concept examples: the labels say striped or not striped, rather than zebra or horse. They can come from a separate dataset. Pass both groups through the same frozen image encoder. Only the small concept classifier will be fitted here.",
+     "head": "Start with examples of one {c:concept}: stripes"
     },
     {
      "id": "16.6",
      "gap": 0.8,
-     "text": "The second route needs no example images at all. CLIP's text encoder places a phrase in the same space as the images, so the phrase itself gives the direction.",
-     "head": "Route two: embed the concept's name with CLIP's {x:text encoder}"
+     "text": "Let us replace 512 numbers with two, so each image becomes a point on a page. The axes are unnamed encoder features, not concepts. In this constructed example, striped images happen to sit on the right and unstriped images on the left. The colours show labels supplied by people. We have not trained or moved the encoder.",
+     "head": "For intuition, give each image just {x:two features}"
     },
     {
      "id": "16.7",
      "gap": 0.8,
-     "text": "We take the text route, with a concept bank of eight phrases, from black and white stripes to a wooden fence. Each phrase becomes a direction, v j.",
-     "head": "A {c:concept bank}: eight phrases, each a direction"
+     "text": "Fit a linear classifier to separate the two groups. In two dimensions its boundary is a line. Across that line, towards the striped examples, lies the direction we want. This perpendicular arrow is the concept activation vector, or CAV. It tells us which way increases the striped score. Keep this direction fixed when scoring other images.",
+     "head": "Fit a boundary, then name the direction across it: {c:CAV}"
     },
     {
      "id": "16.8",
+     "gap": 0.8,
+     "text": "Now take a new image. In our toy space its features are 1.5 and 2. The unit CAV points one step to the right and none upwards: its entries are 1, 0. Only the horizontal coordinate contributes: 1.5 times 1 plus 2 times 0 gives 1.5. A second image at minus 0.5, 2 scores minus 0.5. A higher score means further towards the striped side. These are concept scores, not probabilities or animal classes.",
+     "head": "Score a new image along the {c:striped direction}"
+    },
+    {
+     "id": "16.9",
+     "gap": 0.8,
+     "text": "There is another way to build the concept bank. With CLIP, write a phrase such as black and white stripes and pass it through the pretrained text encoder. It produces a vector in the same space as CLIP image features. Use that vector as the concept direction. This replaces the labelled-example route; it is not another step after fitting a CAV. Both CLIP encoders stay frozen. Our animal example uses this text route.",
+     "head": "An alternative: CLIP turns the {c:phrase} into a direction"
+    },
+    {
+     "id": "16.10",
      "gap": 0.8,
      "text": "How far along a direction does a photo lie? Multiply the features and the direction entry by entry, then add up the products: this is the dot product. With just two entries, it is the first entry times the first, plus the second times the second.",
      "head": "A projection: multiply matching entries, then add"
     },
     {
-     "id": "16.9",
-     "gap": 0.6,
-     "text": "A concept score is this projection, computed over all 512 entries, once for each of the eight directions. Both vectors have length one, so each score is also a cosine.",
-     "head": "A {c:concept score} is the projection onto each direction"
+     "id": "16.11",
+     "gap": 0.8,
+     "text": "Back to the real animal example. Encode each phrase once and save its vector in the concept bank. For a photo, the image encoder produces 512 features. Multiply these features by the matching entries of a phrase vector, then add, just as in our two-dimensional calculation. Repeat for all eight phrases to get eight concept scores. Both vectors have length one, so this dot product is cosine similarity. For our zebra, the raw stripes score is 0.274. These scores are not probabilities.",
+     "head": "Back to {x:512 features}: one score for each {c:phrase}"
     },
     {
-     "id": "16.10",
+     "id": "16.12",
+     "gap": 0.8,
+     "text": "A raw score is easier to read when we compare it with what is usual for that concept. For each phrase, record the average and spread of its scores over the training photos. Then ask how many spreads above or below that average a photo lies. This is standardisation. Save those training statistics and reuse them for new images. No class label is used in this scaling step.",
+     "head": "Before fitting the head, put scores on a {c:common scale}"
+    },
+    {
+     "id": "16.13",
      "gap": 0.8,
      "text": "The raw scores sit close together, so each one is standardised. Subtract its average over the 24 training photos, then divide by its spread, the standard deviation. For stripes, that gives 1.41.",
      "head": "Standardise each score: subtract the mean, divide by the spread"
     },
     {
-     "id": "16.11",
+     "id": "16.14",
      "gap": 0.8,
-     "text": "For this zebra photo, black and white stripes scores highest, 1.4 standard deviations above its average on the training photos.",
+     "text": "These eight numbers are the concept bottleneck. Each belongs to a named phrase. For this zebra photo, black and white stripes scores highest, 1.4 standard deviations above its average on the training photos.",
      "head": "For this zebra, {c:stripes} scores highest"
     },
     {
-     "id": "16.12",
-     "gap": 0.6,
-     "text": "A linear head is then trained with the class labels, on 24 photos. As in Part 4, each class score is a row of weights times the concept scores, plus a constant, b, and a softmax turns the scores into shares.",
-     "head": "A linear {f:head} is trained with the {y:class labels}"
+     "id": "16.15",
+     "gap": 0.8,
+     "text": "Now use the task training photos, each with its animal class label. The frozen encoder and concept bank turn each photo into eight scores, using the saved training scale. Feed those scores to a linear head. Compare its prediction with the true class and update only the head weights and constants. The encoder, concept directions and scaling stay fixed. This learns which named concepts help distinguish zebra, horse and giraffe.",
+     "head": "Train the {f:task head} using concept scores and {y:class labels}"
     },
     {
-     "id": "16.13",
+     "id": "16.16",
      "gap": 0.8,
      "text": "The head is also sparse. An L1 penalty adds the size of every weight to the loss, so weights that do not help are pushed to exactly zero. Of 24 possible weights, 8 concepts times 3 classes, only 4 are non-zero: zebra reads stripes, giraffe reads a long neck, and horse reads a flowing mane.",
      "head": "Sparse: only 4 of 24 {f:weights} are non-zero"
     },
     {
-     "id": "16.14",
+     "id": "16.17",
      "gap": 0.8,
      "text": "For this zebra, only the stripes weight feeds the zebra score: the stripes score times its weight, plus the constant, gives about 2.03. The softmax turns the three scores into shares, and zebra gets 0.77.",
      "head": "The {y:zebra} score: stripes score times weight, plus a constant"
     },
     {
-     "id": "16.15",
+     "id": "16.18",
+     "gap": 0.8,
+     "text": "At test time, give the system a new image. The frozen image encoder produces its features. The saved phrase vectors turn them into raw concept scores, and the saved training statistics put the scores on the same scale. The trained head produces class scores; softmax gives probabilities. No concept labels or class label are supplied, and nothing is fitted again. This is the complete prediction path.",
+     "head": "At test time: one new image, with all weights fixed"
+    },
+    {
+     "id": "16.19",
      "gap": 0.8,
      "text": "All 12 held-out photos are classified correctly. This is a tiny teaching example, not a benchmark.",
      "head": "All 12 held-out photos are classified correctly"
     },
     {
-     "id": "16.16",
+     "id": "16.20",
      "gap": 1.0,
      "text": "Lower the stripes score to its usual value on other animals, and zebra falls to 0.14.",
      "head": "{e:Edit} the stripes score, and zebra falls"
     },
     {
-     "id": "16.17",
+     "id": "16.21",
      "gap": 0.6,
      "text": "The hybrid version, PCBM-h, adds a residual: a second linear model that reads the raw features and recovers what the concepts miss. Its class scores are added to the head's scores before the softmax.",
      "head": "PCBM-h adds a {k:residual} that reads the raw features"
     },
     {
-     "id": "16.18",
+     "id": "16.22",
      "gap": 0.8,
      "text": "Why does that help? Eight phrases cannot describe everything the encoder sees, and the residual picks up the rest. In the paper, PCBM-h comes close to the original model on every dataset reported, while the pure concept model falls further behind.",
      "head": "Why the {k:residual} helps accuracy"
     },
     {
-     "id": "16.19",
+     "id": "16.23",
      "gap": 0.6,
      "text": "The same side path weakens interventions. An edit changes a concept score, but the residual reads the raw features directly, so it keeps its vote for zebra whatever we write in the stripes slot.",
      "head": "Why the {k:residual} weakens {e:interventions}"
     },
     {
-     "id": "16.20",
+     "id": "16.24",
      "gap": 1.0,
      "text": "On our photo, after the same edit, the hybrid still gives zebra 0.20 rather than 0.14, because part of its evidence never passed through a named concept.",
      "head": "The {k:residual} is a side path that an {e:edit} cannot reach"
     },
     {
-     "id": "16.21",
+     "id": "16.25",
      "gap": 0.8,
      "text": "Compared with the plain CBM, three of the four things changed. The concepts come from a bank of phrases instead of people, a frozen encoder and a projection replace the trained predictor, and in the hybrid a residual also reaches the head. Each concept is still one number.",
      "head": "Compared with the plain CBM: the {c:concepts} come from phrases"
     },
     {
-     "id": "16.22",
+     "id": "16.26",
      "gap": 1.2,
      "text": "In symbols, for concept j out of k: g is a frozen encoder followed by a projection onto the direction v j. f is sparse and linear, plus a residual, r, in the hybrid. Only f is trained, from images and class labels.",
      "head": "Post-hoc concept bottleneck models in symbols"

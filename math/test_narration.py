@@ -25,7 +25,7 @@ def spoken_numbers(text):
 
 def allowed():
     vals = set()
-    def add(x, digits=(0, 1, 2)):
+    def add(x, digits=(0, 1, 2, 3)):
         for d in digits:
             vals.add(f'{round(x, d):.{d}f}'.rstrip('0').rstrip('.') if d else str(int(round(x))))
     def walk(o):

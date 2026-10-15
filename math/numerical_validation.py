@@ -244,5 +244,26 @@ def test_saliency_maps_match_pixel_nudges(example):
     assert max(max(row) for row in toy['saliency'][target]) <= toy['saliency_max']
 
 
+def test_pcbm_two_feature_direction_and_scores():
+    """The CAV is normal to the separating line and scores towards positive examples."""
+    toy = D['pcbm_toy']
+    pos, neg = np.array(toy['positive']), np.array(toy['negative'])
+    direction = np.array(toy['direction'])
+    assert close(np.linalg.norm(direction), 1.0)
+    assert close(direction @ np.array([0., 1.]), 0.0)  # normal to the vertical boundary
+    assert (pos @ direction > toy['boundary']).all()
+    assert (neg @ direction < toy['boundary']).all()
+    assert close(pos[:, 0].min() - toy['boundary'], toy['boundary'] - neg[:, 0].max())
+    assert np.allclose(np.array(toy['new_features']) @ direction, toy['scores'])
+    # Movement along feature 2 cannot alter the horizontal CAV's score.
+    moved = np.array(toy['new_features']) + np.array([0., 3.])
+    assert np.allclose(moved @ direction, toy['scores'])
+    clip = toy['clip']
+    image, phrase = np.array(clip['image']), np.array(clip['phrase'])
+    assert close(np.linalg.norm(image), 1.0) and close(np.linalg.norm(phrase), 1.0)
+    assert np.allclose(image * phrase, clip['products'])
+    assert close(image @ phrase, clip['score'])
+
+
 if __name__ == '__main__':
     raise SystemExit(pytest.main(['-q', __file__]))

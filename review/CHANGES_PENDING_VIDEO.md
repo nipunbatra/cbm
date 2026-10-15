@@ -151,3 +151,21 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     move to 160-308. Verified every footer and unchanged body text for all 303 slides outside the expanded example.
     Visually checked pages 154-162 and the final page. Saved timeline and beat-list hashes remain unchanged.
     No audio generation, film render or publication was performed.
+27. **Slow down CAVs and the post-hoc prediction path (PDF revision 4 page 164 onwards).** Expanded s16 from 22
+    to 26 slides. Separate concept-labelled examples, two unnamed encoder features, a separating line, its CAV,
+    and two new-image scores before introducing the alternative CLIP text route. Return explicitly to the real
+    512-feature animal example and its eight phrase scores, explain training-only scaling, then show what the
+    class-labelled task data trains and the complete fixed test-time path. Corrected the opening claim so it
+    does not imply that the CAV route needs no concept labels. Added D.pcbm_toy with constructed features and
+    calculated separator/scores; moved the existing two-entry dot product into this data source. All previous
+    data is unchanged. Numerical validation checks the boundary, normal, scores and dot product. The narration
+    provenance check now accepts three-decimal rounding from source data, needed for the real raw cosine score.
+    Content, type checking, 23 Python tests and three deck tests passed. Inspected new slides, notes, builds,
+    the retained calculations and final card in the deck, with no browser errors. Source facts were checked
+    against PCBM Section 2. Saved film timelines and beat-list hashes are unchanged.
+28. **Annotation PDF revision 9.** Saved `review/cbm-lecture-review-2026-10-15-r9.pdf`, with 312 pages and 27
+    section bookmarks. The expanded PCBM explanation is on pages 166-179. Revision 4 page 164 corresponds to
+    page 165; revision 8 pages 184-308 move to 188-312. Verified every footer and unchanged body text for all
+    302 slides outside the revised drawings. Visually checked 19 PDF pages, including the new sequence,
+    section transition and final page. All earlier annotation PDFs are preserved. No audio generation,
+    saved timeline rebuild, film render or publishing was performed.

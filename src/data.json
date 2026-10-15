@@ -1903,6 +1903,79 @@
    "class B"
   ]
  },
+ "pcbm_toy": {
+  "evidence": "constructed 2-D features; separator and scores calculated",
+  "positive": [
+   [
+    1.0,
+    1.0
+   ],
+   [
+    2.0,
+    1.0
+   ],
+   [
+    1.0,
+    3.0
+   ],
+   [
+    2.0,
+    3.0
+   ]
+  ],
+  "negative": [
+   [
+    -2.0,
+    1.0
+   ],
+   [
+    -1.0,
+    1.0
+   ],
+   [
+    -2.0,
+    3.0
+   ],
+   [
+    -1.0,
+    3.0
+   ]
+  ],
+  "boundary": 0.0,
+  "direction": [
+   1.0,
+   0.0
+  ],
+  "new_features": [
+   [
+    1.5,
+    2.0
+   ],
+   [
+    -0.5,
+    2.0
+   ]
+  ],
+  "scores": [
+   1.5,
+   -0.5
+  ],
+  "clip": {
+   "image": [
+    0.6,
+    0.8
+   ],
+   "phrase": [
+    0.8,
+    0.6
+   ],
+   "products": [
+    0.48,
+    0.48
+   ],
+   "score": 0.96
+  }
+ },
  "measured": {
   "protocol": {
    "seed": 17,
