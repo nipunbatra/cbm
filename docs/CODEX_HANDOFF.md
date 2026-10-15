@@ -50,10 +50,18 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   s20 is omitted from `narration/order.txt` while its source and data remain available. The deck now has 27 sections
   and 307 slides, and proceeds directly from s09 to Part 10. The numerical leakage example, probes and remedies
   are no longer part of the current lecture. Other scenes' content and the saved film timing are unchanged.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r4.pdf`, rebuilt with all review changes, 307 pages
+- Annotation PDF revision 4: `review/cbm-lecture-review-2026-10-15-r4.pdf`, rebuilt with all review changes, 307 pages
   and 27 section bookmarks. Page 132 is the single leakage warning. In older PDFs, pages 133-143 are now removed;
   subtract 11 from old pages 144-318 to find the corresponding current page. Pages 1-131 keep their numbers.
   Earlier PDFs remain available, so comments attached to those copies can still be resolved by their slide IDs.
+
+- PDF revision 2 page 150 review: s10.6-7 now use matching diagrams instead of the spotter/field-guide analogy.
+  LaBo illustrates rung two: a pretrained CLIP scorer plus a task head learned from class-labelled images.
+  Classification by description illustrates rung three: pretrained CLIP plus fixed averages within each class,
+  with no fitting for the new task. The ladder and following concept-check takeaway now support that distinction.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r5.pdf`, still 307 pages and 27 section bookmarks.
+  Pages 135-140 are updated; all other page content streams are unchanged from revision 4. The matching diagrams
+  are on pages 138-139, corresponding to old pages 149-150. Previous annotation PDFs remain available.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

@@ -436,20 +436,20 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 3. **Rung one: images, concept labels and classes**  
    The newer methods form a ladder of shrinking supervision. On the first rung, CBMs and concept embedding models need the image, the concept labels and the class.
 
-4. **Rung two: drop the concept labels**  
-   Post-hoc models, label-free models, LaBo and VLG-CBM drop the concept labels.
+4. **Rung two: keep class labels, drop per-image concept labels**  
+   Post-hoc models, label-free models, LaBo and VLG-CBM drop the concept labels on the task images. They still learn from images with class labels. A pretrained model supplies visual knowledge, and concept names can come from people or a language model.
 
-5. **Rung three: drop training altogether**  
-   Classification by description drops training altogether.
+5. **Rung three: no training for this task**  
+   Classification by description drops training on the new task. It still uses a pretrained model. We supply class descriptions and a new image, without fitting a model to labelled examples of these classes.
 
-6. **Who supplies the concepts? On rung one, a tutor marks every picture**  
-   An everyday way to read the ladder is to ask who supplies the concepts. Think of learning to recognise animals. On rung one, a tutor marks every feature on every picture.
+6. **Rung two: class labels teach the task head**  
+   Take LaBo as an example of rung two. A language model supplies descriptions, such as black and white stripes. Pretrained CLIP compares each image with these descriptions and produces match scores. During training, class labels teach a task head how to combine those scores. For a new photo, the learned head predicts the class. We need class-labelled images, but no person has to label every concept in every image. The diagram illustrates the path, without showing measured scores.
 
-7. **Then a spotter with a field guide, then the field guide alone**  
-   On rung two, an experienced spotter, a pretrained model, does the looking, and a field guide, a language model or a list of phrases, supplies the names. On rung three, only the field guide is left: a language model writes the descriptions, and CLIP simply compares them with each photo.
+7. **Rung three: combine the match scores with a fixed rule**  
+   Now keep the pretrained CLIP model, but replace the learned head with a fixed rule. A language model supplies descriptions for each class. CLIP compares a new photo with each description. We average the match scores within each class and choose the class with the highest average. No class-labelled examples or fitting are needed for this task. The difference is the combination: rung two learns it from class labels; rung three uses a fixed average.
 
-8. **Less labelling, and fewer checks**  
-   Each step up saves labelling, and it also removes a check. A tutor who ticks a box has looked at the picture. On the higher rungs, nobody checks the concepts against the photos.
+8. **Fewer concept labels, so check the concepts another way**  
+   Dropping per-image concept labels saves labelling, but removes a direct check. A person who supplies a concept label has checked it against the image. On the higher rungs, a match score alone does not establish that the named concept is visible. We need to check this another way.
 
 9. **For each variant, ask: is the concept really in the image?**  
    So for each variant, watch for one question: who checks that a named concept is really visible in the image? We come back to it when we discuss grounding.

@@ -95,3 +95,16 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     warning is on page 132; old pages 133-143 are removed, and old pages 144-318 become pages 133-307. Verified every
     page footer and unchanged body text for all 306 retained slides, and visually checked the warning, its adjacent
     pages and the final page. Previous annotation PDFs are preserved. No audio, film or publishing work was done.
+19. **Clarify rungs two and three (PDF revision 2 page 150; s10.3-8).** Replaced the spotter/field-guide analogy
+    with matching diagrams on s10.6-7. Both retain the same image, descriptions and pretrained CLIP scorer. The
+    LaBo example learns a task head from class-labelled images; classification by description uses fixed averages
+    within each class. Explicitly distinguished no training for the new task from no pretraining. The ladder
+    retains class labels on rung two, and the next slide asks for concept checks when per-image labels are absent.
+    Diagrams are schematic, with no invented numerical scores. Updated narration and generated notes. Content,
+    type checking, 21 Python tests and three deck tests passed. Inspected the deck, notes and arrow builds, with
+    no browser errors. Saved film timelines and the beat list retain their original hashes.
+20. **Annotation PDF revision 5.** Saved `review/cbm-lecture-review-2026-10-15-r5.pdf`, with all earlier revisions
+    retained. Updated pages 135-140 only; the other 301 page content streams are unchanged. Verified 307 page
+    footers and 27 section bookmarks, and visually checked all six changed PDF pages. The matching diagrams are
+    on pages 138-139; the annotated old page 150 corresponds to page 139. Earlier PDFs are preserved. No audio,
+    film rebuild or publishing was performed.

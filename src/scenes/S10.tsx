@@ -1,12 +1,11 @@
-// s10 Part 10 · Modern concept bottleneck architectures (revision 2 + intuition, 12 beats; one idea per slide).
+// s10 Part 10 · Modern concept bottleneck architectures (12 beats; one idea per slide).
 // 10.1 the cost: six training photos, each with three 0 / 1 concept boxes that a person fills one by one.
 // 10.2 one supervised record: the worked photo (D.worked.example) and its JSON card; then CUB's 112 labels per
 //      photograph, drawn as Herring Gull's real class-level row (D.cub.herring_gull, 112 cells).
 // 10.3 to 10.5 the supervision ladder, one rung per slide, as a descending staircase of cards joined by labelled
-//      arrows: {x, c, y} CBM, CEM; {x, y} PCBM, LF-CBM, LaBo, VLG-CBM; nothing: CBD.
-// 10.6 to 10.7 an everyday picture of the ladder (one stage): who supplies the concepts? a tutor marks every picture;
-//      a spotter (pretrained model) looks while a field guide (language model or phrase list) names; the field guide
-//      alone (a language model writes, CLIP compares).
+//      arrows: {x, c, y} CBM, CEM; {x, y} PCBM, LF-CBM, LaBo, VLG-CBM; no task training: CBD.
+// 10.6 to 10.7 matching workflows: LaBo learns a task head from class-labelled images; classification by
+//      description averages scores with a fixed rule. Both retain pretrained CLIP and text descriptions.
 // 10.8 the trade-off: concept labels written by people (12 boxes, none, none) and who checks each concept against the
 //      photo (a person, ?, ?).   10.9 the question to carry: is the named concept really visible in the image?
 // 10.10 the four things a variant can change, with the plain CBM's answers (s19 reuses the rows).
@@ -88,7 +87,7 @@ type Rung = { tex: string; desc: string; who: string };
 const RUNGS: Rung[] = [
   { tex: '\\{\\cin{x},\\ \\ccon{c},\\ y\\}', desc: '{x:images}, {c:concept labels}, {y:class labels}', who: 'CBM, concept embedding model (CEM)' },
   { tex: '\\{\\cin{x},\\ y\\}', desc: '{x:images} and {y:class labels}', who: 'post-hoc CBM, label-free CBM, LaBo, VLG-CBM' },
-  { tex: '\\varnothing', desc: 'no training data', who: 'classification by description' },
+  { tex: '\\varnothing', desc: 'no training for this task', who: 'classification by description' },
 ];
 // a staircase of three wide cards, each step a little lower, connected by labelled arrows
 const LW = 400, LH = 372, LPAD = 32, LSTEP = 64;
@@ -98,39 +97,15 @@ const AXY = 872; // the "less supervision" axis
 /** arrow from card k - 1 into card k: horizontal, at a height both cards cover */
 const arrowY = (k: number) => LY(k) + 196;
 
-// ---------------------------------------------------------------- 10.6 and 10.7 who supplies the concepts (an everyday picture)
-// three columns under the same "less supervision" axis as the ladder: a tutor marks every picture; a spotter (a
-// pretrained model) looks while a field guide (a language model or a phrase list) names; the field guide alone.
-const WX = [420, 960, 1500]; // column centres
-const WTH = { w: 210, h: 140, y: 372 }; // thumbnail in each column
-const WCAP = 662; // caption line
-const WSUP: string[] = ['zebra_12.jpg', TRAIN.find((f) => f.startsWith('zebra') && f !== EX) ?? EX, TEST.find((f) => f.startsWith('zebra')) ?? EX];
-/** an open book: the field guide (teal: it supplies the concept names) */
-const Book: React.FC<{ x: number; y: number; s?: number; o?: number }> = ({ x, y, s = 1, o = 1 }) =>
-  o <= 0.001 ? null : (
-    <g transform={`translate(${x} ${y}) scale(${s})`} opacity={o < 0.999 ? o : undefined}>
-      {[-1, 1].map((d) => (
-        <path key={d} d={`M 0 -34 Q ${30 * d} -46 ${64 * d} -38 L ${64 * d} 38 Q ${30 * d} 30 0 42 Z`} fill={rgba(C.concept, 0.14)} stroke={C.concept}
-          strokeWidth={3} strokeLinejoin="round" />
-      ))}
-      {[-16, -2, 12].map((dy) => (
-        <g key={dy} stroke={C.concept} strokeWidth={2.5} opacity={0.75}>
-          <line x1={-52} x2={-14} y1={dy} y2={dy - 2} />
-          <line x1={14} x2={52} y1={dy - 2} y2={dy} />
-        </g>
-      ))}
-    </g>
-  );
-/** an eye: the spotter, i.e. a pretrained model (blue: input / encoder) */
-const Eye: React.FC<{ x: number; y: number; s?: number; o?: number; look?: number }> = ({ x, y, s = 1, o = 1, look = 0 }) =>
-  o <= 0.001 ? null : (
-    <g transform={`translate(${x} ${y}) scale(${s})`} opacity={o < 0.999 ? o : undefined}>
-      <path d="M -58 0 Q 0 -42 58 0 Q 0 42 -58 0 Z" fill={rgba(C.input, 0.12)} stroke={C.input} strokeWidth={3.5} strokeLinejoin="round" />
-      <circle cx={-10 * look} r={17} fill={C.input} />
-      <circle cx={-10 * look} r={7} fill={C.bg} />
-    </g>
-  );
-const TICK3 = [1, 1, 0]; // the worked zebra's true labels: stripes, horse-like shape, long neck
+// ---------------------------------------------------------------- 10.6 and 10.7 matching workflows
+// The same photograph, descriptions and frozen scorer stay in the same positions.
+// Only the combination changes: a learned task head versus a fixed class average.
+const RPH = { x: 160, y: 438, w: 240, h: 160 };
+const FLOW_BOXES = [
+  { x: 520, w: 280, color: C.input },
+  { x: 890, w: 250, color: C.concept },
+  { x: 1230, w: 320, color: C.head },
+];
 
 // ---------------------------------------------------------------- 10.8 and 10.9 the trade-off
 const QX = [820, 1160, 1500]; // rung columns
@@ -205,20 +180,20 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
   // the steps still to come, as dashed outlines, from "ladder" until each rung arrives
   const ghostO = (k: number) => lessO * (1 - rungO[k]);
 
-  // ---------------- 10.6 and 10.7 who supplies the concepts
-  const sW = span(6, 7);
-  const colO = [at(w(6, 'tutor') - 0.2, 0.5), at(w(7, 'spotter') - 0.2, 0.5), at(w(7, 'three') - 0.2, 0.5)];
-  const wGhost = (k: number) => at(b(6) + 0.3) * (1 - colO[k]);
-  const tickAt = (r: number) => at(w(6, 'every', 1) + 0.15 + r * 0.3, 0.25);
-  const guide2 = at(w(7, 'field') - 0.15, 0.5);
-  const sub2 = at(w(7, 'language') - 0.1);
-  const cmp3 = at(w(7, 'compares') - 0.2, 0.5);
-  const look = Math.sin(t * 1.3) * 0.5 + 0.5;
+  // ---------------- 10.6 and 10.7 matching workflows
+  const workflow = [6, 7].map((k) => ({
+    k, o: so(k),
+    input: at(b(k) + 0.15),
+    scores: at(w(k, 'CLIP') - 0.1),
+    head: at(w(k, k === 6 ? 'training' : 'average') - 0.1),
+    result: at(w(k, k === 6 ? 'predicts' : 'choose') - 0.1),
+    takeaway: at(w(k, k === 6 ? 'need' : 'difference') - 0.1),
+  }));
 
   // ---------------- 10.8 and 10.9 the trade-off
   const s8q = so(8), s9q = so(9);
   const qRow = [at(w(8, 'saves') - 0.15, 0.5), at(w(8, 'removes') - 0.1, 0.5)];
-  const qTick = at(w(8, 'tutor') - 0.1);
+  const qTick = at(w(8, 'person') - 0.1);
   const qQ = at(w(8, 'higher') - 0.1);
   const q9ph = at(b(9) - 0.05, 0.4);
   const q9chip = at(w(9, 'named') - 0.2);
@@ -252,11 +227,9 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
         <PhotoR key={f} R={{ x: cardX(k), y: CY, w: CW, h: CH }} src={`worked/${f}`} frac={thumbFrac(f, CH / CW)} o={s1 * cardO(k)} radius={8} />
       )) : null}
       <PhotoR R={PH2} src={`worked/${EX}`} o={s2 * ph2} />
-      {sW > 0.001 ? WX.map((cx, k) => {
-        const f = WSUP[k];
-        const x = k === 2 ? cx + 10 : cx - WTH.w + 20;
-        return <PhotoR key={k} R={{ x, y: WTH.y, w: WTH.w, h: WTH.h }} src={`worked/${f}`} frac={thumbFrac(f, WTH.h / WTH.w)} o={sW * colO[k]} radius={8} />;
-      }) : null}
+      {workflow.map(({ k, o, input }) => (
+        <PhotoR key={k} R={RPH} src={`worked/${EX}`} frac={thumbFrac(EX, RPH.h / RPH.w)} o={o * input} radius={8} />
+      ))}
       <PhotoR R={QPH} src={`worked/${EX}`} frac={thumbFrac(EX, QPH.h / QPH.w)} o={s9q * q9ph} />
       {s7 > 0.001 ? CLS.map((c, r) => {
         const files = [...TRAIN.filter((f) => f.startsWith(c)), ...TEST.filter((f) => f.startsWith(c))];
@@ -343,44 +316,23 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
           </g>
         ) : null}
 
-        {/* ---------------- slides 6 and 7: who supplies the concepts ---------------- */}
-        {sW > 0.001 ? (
-          <g opacity={sW < 0.999 ? sW : undefined}>
-            {[1, 2].map((k) => (
-              <rect key={`wg${k}`} x={WX[k] - 250} y={WTH.y - 30} width={500} height={WCAP - WTH.y + 150} rx={18} fill="none" stroke={C.line2} strokeWidth={2}
-                strokeDasharray="10 10" opacity={wGhost(k)} />
+        {/* ---------------- slides 6 and 7: shared inputs, different combination ---------------- */}
+        {workflow.map(({ k, o, input, scores, head, result }) => o > 0.001 ? (
+          <g key={k} opacity={o < 0.999 ? o : undefined}>
+            {FLOW_BOXES.map((box, i) => (
+              <rect key={i} x={box.x} y={438} width={box.w} height={160} rx={14}
+                fill={rgba(box.color, 0.1)} stroke={box.color} strokeWidth={i === 2 ? 3 : 2}
+                opacity={i === 2 ? head : scores} />
             ))}
-            {/* column 1: a tutor ticks three boxes under the picture */}
-            <g opacity={colO[0]}>
-              <Person x={WX[0] + 110} y={WTH.y + 70} s={0.9} />
-              {CONCEPTS3.map((c, r) => {
-                const bx = WX[0] - WTH.w + 20 + r * 74, by = WTH.y + WTH.h + 26;
-                const f1 = tickAt(r);
-                return (
-                  <g key={c}>
-                    <rect x={bx} y={by} width={50} height={50} rx={8} fill={TICK3[r] && f1 > 0 ? rgba(C.concept, 0.24 * f1) : C.bg3} stroke={f1 > 0.5 ? C.concept : C.line2} strokeWidth={2} />
-                    <Txt x={bx + 25} y={by + 26} size={26} mono weight={700} fill={TICK3[r] ? C.concept : C.mute} o={f1}>{String(TICK3[r])}</Txt>
-                  </g>
-                );
-              })}
-            </g>
-            {/* column 2: the spotter looks, the field guide names */}
-            <g opacity={colO[1]}>
-              <Eye x={WX[1] + 120} y={WTH.y + 40} s={0.9} look={look} />
-              <Flow pts={[[WX[1] + 58, WTH.y + 40], [WX[1] + 30, WTH.y + 40]]} color={C.input} sw={3} head={12} />
-              <Book x={WX[1] + 120} y={WTH.y + 150} s={0.8} o={guide2} />
-            </g>
-            {/* column 3: the field guide alone, compared with the photo */}
-            <g opacity={colO[2]}>
-              <Book x={WX[2] - 110} y={WTH.y + 70} />
-              <Txt x={WX[2] - 20} y={WTH.y + 66} size={44} weight={700} fill={C.chalk2} o={cmp3}>≈</Txt>
-            </g>
-            <g opacity={at(b(6) + 0.2)}>
-              <line x1={160} y1={AXY} x2={1736} y2={AXY} stroke={C.line2} strokeWidth={2.5} />
-              <path d={`M 1760 ${AXY} L 1736 ${AXY - 12} L 1736 ${AXY + 12} Z`} fill={C.line2} />
-            </g>
+            <rect x={160} y={714} width={400} height={88} rx={12} fill={rgba(C.concept, 0.08)} stroke={C.concept} strokeWidth={2} opacity={input} />
+            <Flow pts={[[420, 518], [500, 518]]} color={C.input} o={scores} />
+            <Flow pts={[[560, 758], [660, 758], [660, 618]]} color={C.concept} o={scores} />
+            <Flow pts={[[820, 518], [870, 518]]} color={C.concept} o={scores} />
+            <Flow pts={[[1160, 518], [1210, 518]]} color={C.head} o={head} />
+            <Flow pts={[[1570, 518], [1640, 518]]} color={C.chalk} o={result} />
+            {k === 6 ? <Flow pts={[[1390, 382], [1390, 418]]} color={C.head} o={head} /> : null}
           </g>
-        ) : null}
+        ) : null)}
 
         {/* ---------------- slide 8: less labelling, fewer checks ---------------- */}
         {s8q > 0.001 ? (
@@ -488,7 +440,7 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
         const x = LX(k) + LPAD, y = LY(k);
         return (
           <React.Fragment key={k}>
-            <HText x={x} y={y + 26} size={24} mono weight={600} color={hl[k] > 0.5 ? C.chalk2 : C.mute} o={o}>{`rung ${k + 1} · data needed`}</HText>
+            <HText x={x} y={y + 26} size={24} mono weight={600} color={hl[k] > 0.5 ? C.chalk2 : C.mute} o={o}>{`rung ${k + 1} · task data`}</HText>
             {k === 0 ? (
               <TexSteps x={x} y={y + 112} t={t} size={64} o={sL * rungDim[k]}
                 parts={[['\\{\\cin{x}', w(3, 'image') - 0.1], [',\\ \\ccon{c}', w(3, 'concept', 1) - 0.1], [',\\ y\\}', w(3, 'class') - 0.1]]} />
@@ -508,7 +460,7 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
         return (
           <React.Fragment key={k}>
             <Rich x={cx} y={y - 16} ax="center" ay="bottom" size={26} color={C.chalk2} text="drop" o={o} />
-            <Rich x={cx} y={y + 16} ax="center" size={26} color={C.chalk2} text={k === 1 ? '{c:concept labels}' : 'training'} o={o} />
+            <Rich x={cx} y={y + 16} ax="center" size={26} color={C.chalk2} text={k === 1 ? '{c:concept labels}' : 'task training'} o={o} />
           </React.Fragment>
         );
       })}
@@ -517,33 +469,52 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
       ))}
       <Rich x={1760} y={AXY + 16} ax="right" size={28} color={C.chalk2} text="less supervision" o={oo(sL, lessO)} />
 
-      {/* slides 6 and 7: who supplies the concepts */}
-      <SlideHead text={bh(P, 6)} o={so(6)} />
-      <SlideHead text={bh(P, 7)} o={so(7)} />
-      {[
-        ['a tutor marks every picture', 'a human annotator'],
-        ['a {x:spotter} looks, a {c:guide} names', '{x:a pretrained model}, with a language model or a phrase list'],
-        ['only the {c:field guide}', 'a language model writes, CLIP compares'],
-      ].map(([a, c], k) => (
+      {/* slides 6 and 7: keep the common pipeline in place, change the combination */}
+      {workflow.map(({ k, o, input, scores, head, result, takeaway }) => (
         <React.Fragment key={k}>
-          <HText x={WX[k]} y={WTH.y - 64} ax="center" size={24} mono weight={600} color={C.mute} o={sW * Math.max(colO[k], wGhost(k))}>{`rung ${k + 1}`}</HText>
-          <Rich x={WX[k]} y={WCAP} ax="center" w={500} size={32} text={a} o={oo(sW, k === 1 ? guide2 : colO[k])} />
-          <Rich x={WX[k]} y={WCAP + 56} ax="center" w={440} size={26} color={C.chalk2} text={c} o={oo(sW, k === 1 ? sub2 : k === 2 ? cmp3 : colO[k])} />
+          <SlideHead text={bh(P, k)} o={o} />
+          <HText x={160} y={302} size={28} weight={600} color={C.chalk2} o={o}>
+            {k === 6 ? 'Example: LaBo' : 'Classification by description'}
+          </HText>
+          <HText x={160} y={610} size={28} color={C.input} o={o * input}>image to classify</HText>
+          <HText x={160} y={670} size={26} color={C.concept} o={o * input}>descriptions from a language model</HText>
+          <HText x={360} y={758} ax="center" ay="middle" size={26} color={C.concept} o={o * input}>
+            e.g. black and white stripes
+          </HText>
+          <HText x={660} y={490} ax="center" size={32} weight={700} color={C.input} o={o * scores}>pretrained CLIP</HText>
+          <HText x={660} y={542} ax="center" size={28} color={C.chalk2} o={o * scores}>kept fixed</HText>
+          <HText x={1015} y={518} w={230} ax="center" ay="middle" size={30} lh={1.4} color={C.concept} o={o * scores}>
+            description<br />match scores
+          </HText>
+          <HText x={1390} y={518} w={290} ax="center" ay="middle" size={32} weight={700} lh={1.4} o={o * head}>
+            {k === 6 ? <>learned<br />task head</> : <>fixed<br />class averages</>}
+          </HText>
+          <HText x={1390} y={620} w={340} ax="center" size={26} lh={1.4} color={C.chalk2} o={o * head}>
+            {k === 6 ? 'weights learned from class labels' : 'average the description scores within each class'}
+          </HText>
+          <HText x={1390} y={310} w={420} ax="center" size={28} weight={600} lh={1.4} color={C.chalk2} o={o * head}>
+            {k === 6 ? <>class-labelled images<br />teach the head</> : <>no task-labelled examples<br />no fitting</>}
+          </HText>
+          <HText x={1670} y={518} ay="middle" size={36} weight={700} o={o * result}>zebra</HText>
+          <HText x={1670} y={570} size={25} color={C.mute} o={o * result}>{k === 6 ? 'class' : 'highest average'}</HText>
+          <Rich x={160} y={870} w={1600} size={34} text={k === 6
+            ? 'Rung two: {y:class labels} teach us how to combine the {c:scores}.'
+            : 'Rung three: combine the {c:scores} with a {y:fixed average}.'} o={o * takeaway} />
+          <EvTag x={160} y={940} kind="schematic" text="example path; no measured scores shown" o={o * input} />
+          <Credit x={160} y={988} text={`Photo: ${EXC.artist}, Wikimedia Commons, ${EXC.license}`} o={o * input} />
         </React.Fragment>
       ))}
-      <Rich x={1760} y={AXY + 16} ax="right" size={28} color={C.chalk2} text="less supervision" o={oo(sW, at(b(6) + 0.2))} />
-      <Credit x={160} y={AXY + 24} text={COLLECTIVE} o={oo(sW, colO[0])} />
 
       {/* slide 8: the trade-off */}
       <SlideHead text={bh(P, 8)} o={s8q} />
       {['rung 1', 'rung 2', 'rung 3'].map((r, k) => (
         <HText key={r} x={QX[k]} y={QR[0] - 120} ax="center" size={24} mono weight={600} color={C.mute} o={oo(s8q, qRow[0])}>{r}</HText>
       ))}
-      <Rich x={160} y={QR[0]} ay="middle" w={460} size={32} text="{c:concept labels} written by people" o={oo(s8q, qRow[0])} />
+      <Rich x={160} y={QR[0]} ay="middle" w={460} size={32} text="{c:concept labels} for each task image" o={oo(s8q, qRow[0])} />
       <Rich x={QX[1]} y={QR[0]} ax="center" ay="middle" size={30} color={C.mute} text="none" o={oo(s8q, qRow[0])} />
       <Rich x={QX[2]} y={QR[0]} ax="center" ay="middle" size={30} color={C.mute} text="none" o={oo(s8q, qRow[0])} />
       <Rich x={160} y={QR[1]} ay="middle" w={460} size={32} text="someone checks each {c:concept} against the {x:photo}" o={oo(s8q, qRow[1])} />
-      <Rich x={960} y={QR[1] + 130} ax="center" size={30} color={C.chalk2} text="each step up saves labelling, and removes a check" o={oo(s8q, qQ)} />
+      <Rich x={960} y={QR[1] + 130} ax="center" size={30} color={C.chalk2} text="without per-image concept labels, check the concepts another way" o={oo(s8q, qQ)} />
 
       {/* slide 9: the question */}
       <SlideHead text={bh(P, 9)} o={s9q} />

@@ -927,32 +927,32 @@
     {
      "id": "10.4",
      "gap": 0.8,
-     "text": "Post-hoc models, label-free models, LaBo and VLG-CBM drop the concept labels.",
-     "head": "Rung two: drop the {c:concept labels}"
+     "text": "Post-hoc models, label-free models, LaBo and VLG-CBM drop the concept labels on the task images. They still learn from images with class labels. A pretrained model supplies visual knowledge, and concept names can come from people or a language model.",
+     "head": "Rung two: keep {y:class labels}, drop per-image {c:concept labels}"
     },
     {
      "id": "10.5",
      "gap": 0.8,
-     "text": "Classification by description drops training altogether.",
-     "head": "Rung three: drop training altogether"
+     "text": "Classification by description drops training on the new task. It still uses a pretrained model. We supply class descriptions and a new image, without fitting a model to labelled examples of these classes.",
+     "head": "Rung three: no training for this task"
     },
     {
      "id": "10.6",
-     "gap": 0.6,
-     "text": "An everyday way to read the ladder is to ask who supplies the concepts. Think of learning to recognise animals. On rung one, a tutor marks every feature on every picture.",
-     "head": "Who supplies the {c:concepts}? On rung one, a tutor marks every picture"
+     "gap": 0.8,
+     "text": "Take LaBo as an example of rung two. A language model supplies descriptions, such as black and white stripes. Pretrained CLIP compares each image with these descriptions and produces match scores. During training, class labels teach a task head how to combine those scores. For a new photo, the learned head predicts the class. We need class-labelled images, but no person has to label every concept in every image. The diagram illustrates the path, without showing measured scores.",
+     "head": "Rung two: {y:class labels} teach the {f:task head}"
     },
     {
      "id": "10.7",
      "gap": 0.8,
-     "text": "On rung two, an experienced spotter, a pretrained model, does the looking, and a field guide, a language model or a list of phrases, supplies the names. On rung three, only the field guide is left: a language model writes the descriptions, and CLIP simply compares them with each photo.",
-     "head": "Then a {x:spotter} with a field guide, then the field guide alone"
+     "text": "Now keep the pretrained CLIP model, but replace the learned head with a fixed rule. A language model supplies descriptions for each class. CLIP compares a new photo with each description. We average the match scores within each class and choose the class with the highest average. No class-labelled examples or fitting are needed for this task. The difference is the combination: rung two learns it from class labels; rung three uses a fixed average.",
+     "head": "Rung three: combine the {c:match scores} with a fixed rule"
     },
     {
      "id": "10.8",
      "gap": 0.6,
-     "text": "Each step up saves labelling, and it also removes a check. A tutor who ticks a box has looked at the picture. On the higher rungs, nobody checks the concepts against the photos.",
-     "head": "Less labelling, and fewer checks"
+     "text": "Dropping per-image concept labels saves labelling, but removes a direct check. A person who supplies a concept label has checked it against the image. On the higher rungs, a match score alone does not establish that the named concept is visible. We need to check this another way.",
+     "head": "Fewer {c:concept labels}, so check the {c:concepts} another way"
     },
     {
      "id": "10.9",
