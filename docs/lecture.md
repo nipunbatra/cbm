@@ -422,43 +422,8 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 ## Concept leakage  (s09)
 
-1. **What does a concept value carry?**  
-   Each concept value is a single number on its way to the task head. What exactly does that number carry?
-
-2. **Leakage: the value carries more, and the head uses it**  
-   A concept value should answer one question: is this concept present? Leakage is when the value carries more than that answer, and the task head uses the extra.
-
-3. **Two zebras with the same binary label**  
-   Here is a constructed example. A plains zebra and a Grévy's zebra both have stripes, so both get the label stripes equals 1.
-
-4. **Different scores, and the head cuts between them**  
-   A soft predictor scores plains zebras around 0.72, and Grévy's zebras, with narrower and denser stripes, around 0.96. Both mean stripes present, yet a threshold near 0.84 separates them almost perfectly. The binary label alone leaves the head at chance.
-
-5. **The stripes value also carries stripe density**  
-   So the stripes value also carries stripe density, which nobody named and nobody can inspect. That hidden part is the leakage.
-
-6. **A correct edit gives the wrong species**  
-   Now correct a plains zebra's stripes value to 1, its true value. The head reads anything above 0.84 as Grévy's zebra, so the correct edit gives the wrong species.
-
-7. **Implicit leakage hides in the score; explicit takes a side path**  
-   That was implicit leakage, inside a continuous score. Explicit leakage is a side path that carries latent features around the concepts, so an edit no longer controls everything the head sees. Ordinary variation in confidence is not leakage. Leakage is systematic, and the head uses it.
-
-## Leakage in a trained model  (s20)
-
-1. **In a trained model, the score for large rises with the radius**  
-   Does a real trained model leak? Take a small model trained on synthetic shapes, which Part 11 looks at closely, and its concept large, labelled 1 for a radius of 14 pixels or more. Its score rises smoothly with the radius: about 0.09 at 12 pixels, 0.25 at 13, 0.63 at 14, and 0.87 at 15. So it carries a graded size, more than large or not large.
-
-2. **Position and shade leave almost no trace: probe the scores**  
-   A simple linear probe recovers essentially nothing about the shape's position or shade from the scores. That is how to look for leakage: probe what the scores predict beyond their labels. This is one small synthetic model.
-
-3. **Hard concepts pass only 0 or 1, and lose accuracy**  
-   Hard concepts pass only 0 or 1 to the head, so nothing extra travels. On our CUB run, a linear head on hard concepts gets about 53 percent of the test photos right; on soft scores, 69 percent.
-
-4. **Fit the head on true concepts; remove or report side paths**  
-   Independent training fits the head on true binary concepts, so it never learns hidden detail in the scores. Side paths can be removed, or reported clearly.
-
-5. **Above all, measure**  
-   Above all, measure: probe the scores, and test whether interventions help on held-out data.
+1. **A concept score can carry more than its name says**  
+   One caution: a concept score can carry more than its name says. Imagine a score called stripes present that also carries extra information about the zebra species. If the task head uses that extra information, we call it concept leakage. The named concept then does not fully explain what the model uses. Different confidence values alone do not prove leakage. The practical takeaway is to test whether correcting a concept has the intended effect on the prediction.
 
 ## Modern concept bottleneck architectures  (s10)
 

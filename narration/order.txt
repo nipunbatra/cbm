@@ -18,7 +18,7 @@ s06
 s07
 s08
 s09
-s20
+# s20 is omitted during review: Part 9 is now one high-level slide.
 s10
 s15
 s16

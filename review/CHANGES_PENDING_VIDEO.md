@@ -80,3 +80,18 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     revision 2. Replaced pages 65-77 in revision 2; the other 305 page content streams are unchanged, including the
     earlier saliency edits. Verified all 318 page footers, 28 section bookmarks and all 13 revised pages visually.
     No audio generation, film rebuild or publishing was performed.
+17. **Concept Leakage reduced to one slide (PDF comment on page 132; Part 9).** Replaced the seven-slide s09
+    explanation and five-slide s20 follow-up with one high-level schematic in s09. It explains that a concept score
+    can carry extra information used by the task head, and asks the audience to test whether concept corrections
+    have the intended effect. Removed the distributions, numerical threshold example, implicit/explicit taxonomy,
+    trained-model probes and remedies from the lecture. s20 remains in the repository but is omitted from
+    `narration/order.txt`; its data and the saved film are retained. Later references to leakage remain consistent
+    with the brief warning. Updated the narration test to stop requiring the deleted example's numbers; numerical
+    provenance checks remain intact. Content, type checking, 21 Python tests and three deck tests passed. Visually
+    inspected the slide and notes, and verified that the next build goes directly to Part 10. Saved timeline and
+    beat-list hashes are unchanged. The current deck has 27 sections and 307 slides.
+18. **Annotation PDF revision 4.** Rebuilt `review/cbm-lecture-review-2026-10-15-r4.pdf` from the current source,
+    including the earlier saliency and task-head revisions. It has 307 pages and 27 section bookmarks. The leakage
+    warning is on page 132; old pages 133-143 are removed, and old pages 144-318 become pages 133-307. Verified every
+    page footer and unchanged body text for all 306 retained slides, and visually checked the warning, its adjacent
+    pages and the final page. Previous annotation PDFs are preserved. No audio, film or publishing work was done.

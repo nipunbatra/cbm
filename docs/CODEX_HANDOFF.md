@@ -44,8 +44,16 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   softmax probabilities. It distinguishes per-image concept estimates from fixed layer weights, explains the
   illustrative values, and introduces the matrix shorthand after a labelled linear-layer calculation. The head
   may generally be an MLP; this example uses one linear layer without bias. The original D.zoo values are unchanged.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r3.pdf`, with revised s04 pages 65-77 and all revision 2
+- Annotation PDF revision 3: `review/cbm-lecture-review-2026-10-15-r3.pdf`, with revised s04 pages 65-77 and all revision 2
   changes retained. There are still 318 pages and 28 section bookmarks. Earlier PDFs remain for annotation references.
+- PDF page 132 review: Part 9 is now one high-level warning in s09. The detailed s09 examples were removed and
+  s20 is omitted from `narration/order.txt` while its source and data remain available. The deck now has 27 sections
+  and 307 slides, and proceeds directly from s09 to Part 10. The numerical leakage example, probes and remedies
+  are no longer part of the current lecture. Other scenes' content and the saved film timing are unchanged.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r4.pdf`, rebuilt with all review changes, 307 pages
+  and 27 section bookmarks. Page 132 is the single leakage warning. In older PDFs, pages 133-143 are now removed;
+  subtract 11 from old pages 144-318 to find the corresponding current page. Pages 1-131 keep their numbers.
+  Earlier PDFs remain available, so comments attached to those copies can still be resolved by their slide IDs.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

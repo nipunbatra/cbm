@@ -894,83 +894,9 @@
    "beats": [
     {
      "id": "9.1",
-     "gap": 0.8,
-     "text": "Each concept value is a single number on its way to the task head. What exactly does that number carry?",
-     "head": "What does a {c:concept value} carry?"
-    },
-    {
-     "id": "9.2",
-     "gap": 1.0,
-     "text": "A concept value should answer one question: is this concept present? Leakage is when the value carries more than that answer, and the task head uses the extra.",
-     "head": "Leakage: the {c:value} carries more, and the {f:head} uses it"
-    },
-    {
-     "id": "9.3",
-     "gap": 0.8,
-     "text": "Here is a constructed example. A plains zebra and a Grévy's zebra both have stripes, so both get the label stripes equals 1.",
-     "head": "Two zebras with the same {c:binary label}"
-    },
-    {
-     "id": "9.4",
-     "gap": 1.0,
-     "text": "A soft predictor scores plains zebras around 0.72, and Grévy's zebras, with narrower and denser stripes, around 0.96. Both mean stripes present, yet a threshold near 0.84 separates them almost perfectly. The binary label alone leaves the head at chance.",
-     "head": "Different {c:scores}, and the {f:head} cuts between them"
-    },
-    {
-     "id": "9.5",
-     "gap": 1.0,
-     "text": "So the stripes value also carries stripe density, which nobody named and nobody can inspect. That hidden part is the leakage.",
-     "head": "The {c:stripes value} also carries {k:stripe density}"
-    },
-    {
-     "id": "9.6",
-     "gap": 1.0,
-     "text": "Now correct a plains zebra's stripes value to 1, its true value. The head reads anything above 0.84 as Grévy's zebra, so the correct edit gives the wrong species.",
-     "head": "A correct {e:edit} gives the wrong {y:species}"
-    },
-    {
-     "id": "9.7",
-     "gap": 1.0,
-     "text": "That was implicit leakage, inside a continuous score. Explicit leakage is a side path that carries latent features around the concepts, so an edit no longer controls everything the head sees. Ordinary variation in confidence is not leakage. Leakage is systematic, and the head uses it.",
-     "head": "{k:Implicit} leakage hides in the {c:score}; {k:explicit} takes a side path"
-    }
-   ]
-  },
-  {
-   "id": "s20",
-   "title": "Leakage in a trained model",
-   "lead": 0.4,
-   "hold": 0.8,
-   "beats": [
-    {
-     "id": "20.1",
-     "gap": 1.0,
-     "text": "Does a real trained model leak? Take a small model trained on synthetic shapes, which Part 11 looks at closely, and its concept large, labelled 1 for a radius of 14 pixels or more. Its score rises smoothly with the radius: about 0.09 at 12 pixels, 0.25 at 13, 0.63 at 14, and 0.87 at 15. So it carries a graded size, more than large or not large.",
-     "head": "In a trained model, the {c:score} for large rises with the radius"
-    },
-    {
-     "id": "20.2",
-     "gap": 1.0,
-     "text": "A simple linear probe recovers essentially nothing about the shape's position or shade from the scores. That is how to look for leakage: probe what the scores predict beyond their labels. This is one small synthetic model.",
-     "head": "Position and shade leave almost no trace: probe the {c:scores}"
-    },
-    {
-     "id": "20.3",
-     "gap": 0.8,
-     "text": "Hard concepts pass only 0 or 1 to the head, so nothing extra travels. On our CUB run, a linear head on hard concepts gets about 53 percent of the test photos right; on soft scores, 69 percent.",
-     "head": "Hard {c:concepts} pass only 0 or 1, and lose accuracy"
-    },
-    {
-     "id": "20.4",
-     "gap": 0.8,
-     "text": "Independent training fits the head on true binary concepts, so it never learns hidden detail in the scores. Side paths can be removed, or reported clearly.",
-     "head": "Fit the {f:head} on true {c:concepts}; remove or report {k:side paths}"
-    },
-    {
-     "id": "20.5",
      "gap": 1.2,
-     "text": "Above all, measure: probe the scores, and test whether interventions help on held-out data.",
-     "head": "Above all, measure"
+     "text": "One caution: a concept score can carry more than its name says. Imagine a score called stripes present that also carries extra information about the zebra species. If the task head uses that extra information, we call it concept leakage. The named concept then does not fully explain what the model uses. Different confidence values alone do not prove leakage. The practical takeaway is to test whether correcting a concept has the intended effect on the prediction.",
+     "head": "A {c:concept score} can carry more than its name says"
     }
    ]
   },
