@@ -125,3 +125,14 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     revision 5. Verified all 307 footers and 27 section bookmarks, and visually checked all eight changed PDF pages.
     Page 146 defines the vectors, page 154 explains training and page 159 compares training with testing. Previous
     annotation PDFs remain available. No audio, saved timeline, film or publication work was performed.
+23. **Remove RandInt from the CEM explanation (PDF revision 4 page 154).** Removed the dedicated random-training-
+    intervention slide (s15.11 in revision 6), its dice animation, and the recap/card references. Kept the general
+    joint-training diagram and optional expert correction. CEM now has 15 slides; later beats move up one and the
+    lecture has 306 slides. Source notes retain the paper detail outside the lecture. Content, type checking,
+    21 Python tests and three deck tests passed. Inspected the training-to-capacity transition, notes, revised
+    recap and final card in the deck, with no browser errors. Saved film timelines and the beat list are unchanged.
+24. **Annotation PDF revision 7.** Saved `review/cbm-lecture-review-2026-10-15-r7.pdf`, preserving earlier copies.
+    It has 306 pages and 27 section bookmarks. Removed revision 6 page 155; pages 1-154 retain their numbers and
+    old pages 156-307 move up one. Verified every footer, no RandInt references, and unchanged body text for all
+    304 retained slides except the revised recap and card (now pages 158-159). Visually checked pages 153-160 and
+    the final page. No audio generation, saved timeline rebuild, film render or publication was performed.

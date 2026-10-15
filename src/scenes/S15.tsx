@@ -1,4 +1,4 @@
-// s15 Part 10 · Concept embedding models (Espinosa Zarlenga et al. 2022). Review revision, 16 beats.
+// s15 Part 10 · Concept embedding models (Espinosa Zarlenga et al. 2022). Review revision, 15 beats.
 // Illustrative numbers from D.worked.cem (hand-chosen 2-D embeddings, three concepts, the worked zebra photo).
 // 15.1 the narrow channel: photo -> encoder -> one number per concept; Part 8 callback (same values, D.incomplete).
 // 15.2 define the embeddings as image-specific numeric vectors, not stored example pictures.
@@ -8,11 +8,10 @@
 // 15.8 to 15.9 one stage: three mixed points -> 6 numbers -> head -> shares (D.worked.cem.probs); amber edit p -> 1:
 //      the point slides to c+, the vector updates, the head pulses, shares move to probs_edit.
 // 15.10 joint training: concept and task losses update the network; no vector-coordinate targets.
-// 15.11 RandInt: practise corrections during training, then use predicted probabilities at test time.
-// 15.12 when it helps: Part 8's blue circle and square get the same values (blue 1, large 0), so one output for both.
-// 15.13 with embeddings, the 'blue' vector differs per image, so a head can separate class A and class B.
-// 15.14 cost: the coordinates have no names.
-// 15.15 training versus test recap. 15.16 the VariantCard and symbol legend.
+// 15.11 when it helps: Part 8's blue circle and square get the same values (blue 1, large 0), so one output for both.
+// 15.12 with embeddings, the 'blue' vector differs per image, so a head can separate class A and class B.
+// 15.13 cost: the coordinates have no names.
+// 15.14 training versus test recap. 15.15 the VariantCard and symbol legend.
 import React from 'react';
 import { C, F } from '../kit/theme';
 import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, clamp, inv, type SceneProps } from '../kit/core';
@@ -33,7 +32,6 @@ const PRE: number[] = CEM.probs_edit;
 const CLS: string[] = D.worked.classes;
 const EX: string = D.worked.example;
 const EXC = D.worked.photo_credit[EX];
-const TRUE01 = [1, 1, 0]; // the zebra's true binary concept labels: stripes yes, horse-like shape yes, long neck no
 const INC = D.incomplete;
 const COLLECTIVE = '36 Wikimedia Commons photographs (CC BY-SA / CC BY / public domain)';
 const SHAPE_BLUE = '#3B6FD8'; // the physical object colour of Part 8's shapes (not a role colour)
@@ -86,24 +84,11 @@ const Plane: React.FC<{
   );
 };
 
-/** a die glyph (face 1..6) centred on (x, y) */
-const PIPS: Record<number, [number, number][]> = {
-  1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]],
-  5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]],
-};
-const Die: React.FC<{ x: number; y: number; face: number; rot?: number; o?: number; color?: string; s?: number }> = ({ x, y, face, rot = 0, o = 1, color = C.chalk2, s = 1 }) =>
-  o <= 0.001 ? null : (
-    <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`} opacity={o < 0.999 ? o : undefined}>
-      <rect x={-19} y={-19} width={38} height={38} rx={8} fill={C.bg3} stroke={color} strokeWidth={2.5} />
-      {PIPS[face].map(([a, b2], k) => <circle key={k} cx={a * 10} cy={b2 * 10} r={3.6} fill={color} />)}
-    </g>
-  );
-
-// ---- 15.15 recap: the four rows of s10 ("what changes"), plain CBM against this variant
-const CMP_ROWS = ['input', 'network weights', 'vectors and probabilities', 'concept correction'];
-const CMP_CBM = ['image, concept labels, class label', 'updated using both losses', 'computed from this image', 'RandInt uses known labels'];
-const CMP_CEM = ['new image', 'kept fixed', 'computed from the new image', 'optional correction by an expert'];
-const CMP_CHANGED = [false, false, false, false];
+// ---- 15.14 recap: training inputs and updates versus test-time computation
+const CMP_ROWS = ['input', 'network weights', 'vectors and probabilities'];
+const CMP_CBM = ['image, concept labels, class label', 'updated using both losses', 'computed from this image'];
+const CMP_CEM = ['new image', 'kept fixed', 'computed from the new image'];
+const CMP_CHANGED = [false, false, false];
 const CT = { lx: 160, c1: 620, c1w: 530, c2: 1190, c2w: 570, hy: 330, y0: 420, rh: 112, bh: 84 };
 const CompareSvg: React.FC<{ o: number; rowO: (i: number) => number; hiO: (i: number) => number; changed: boolean[] }> = ({ o, rowO, hiO, changed }) =>
   o <= 0.001 ? null : (
@@ -149,14 +134,14 @@ const VROWS: VariantRows = {
   g: '\\gth: x \\mapsto (\\ccon{p_j},\\ \\ccon{c_j^{+}},\\ \\ccon{c_j^{-}})',
   c: '\\ch_j = \\ccon{p_j}\\,\\ccon{c_j^{+}} + (1-\\ccon{p_j})\\,\\ccon{c_j^{-}} \\in \\mathbb{R}^m',
   f: '\\yh = \\fph(\\ch_1, \\dots, \\ch_k)',
-  train: '\\gth,\\ \\fph\\ \\ \\text{(RandInt: random interventions)}',
+  train: '\\gth,\\ \\fph\\ \\ \\text{(joint training)}',
   data: '\\{(x,\\ \\ccon{c},\\ y)\\}\\ \\ \\text{images, concept labels, class labels}',
 };
 
 // ---- 15.2 and 15.3: define vectors, then show the learned generators
 const PA = { x: 160, y: 450, w: 270, h: 180 };
 const TRAIN_PH = { x: 160, y: 390, w: 210, h: 140 };
-const SH = { cx: 290, ys: [430, 690], r: 62 }; // slides 12 and 13: circle and square
+const SH = { cx: 290, ys: [430, 690], r: 62 }; // slides 11 and 12: circle and square
 const SQ_B = { circle: [0.72, 0.68] as [number, number], square: [0.9, 0.3] as [number, number] }; // 'blue' embeddings per shape (illustrative)
 const HD = { x: 1240, y: 560, w: 180, h: 120 };
 const SAME_OUT = INC.objects.map((o: { y: string }) => o.y);
@@ -180,9 +165,6 @@ const P6 = { x: 180, s: 160, ys: [330, 530, 730] };
 const V6 = { x: 800, y: 400, rh: 54, w: 130 };
 const H6 = { x: 1110, y: 562, w: 220, h: 120 };
 const S6X = 1300;
-const R8 = [430, 550, 670];
-const H8 = { x: 1250, y: 550, w: 190, h: 120 };
-const L8 = { x: 1530, y: 550, w: 220, h: 110 };
 
 export const S15: React.FC<SceneProps> = ({ t, P }) => {
   const b = (k: number) => bs(P, k);
@@ -216,12 +198,12 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
   const trainFlow = at(w(10, 'image') - 0.1), trainConcept = at(w(10, 'concept', 1) - 0.1);
   const trainTask = at(w(10, 'task') - 0.1), trainGrad = at(w(10, 'Backpropagation') - 0.1);
 
-  // ---------------- 15.12 and 15.13 when it helps: Part 8's circle and square
-  const n12 = so(12), n13 = so(13);
-  const n12s = at(w(12, 'circle') - 0.2, 0.4), n12q = at(w(12, 'square') - 0.2, 0.4);
-  const n12v = at(w(12, 'same') - 0.2, 0.5), n12h = at(w(12, 'head') - 0.2, 0.5), n12x = at(w(12, 'apart') - 0.2);
-  const n13v = at(w(13, 'computed') - 0.2, 0.5), n13d = at(w(13, 'differ') - 0.1, 0.6);
-  const n13h = at(w(13, 'reach') - 0.2, 0.5), n13n = at(w(13, 'named') - 0.2);
+  // ---------------- 15.11 and 15.12 when it helps: Part 8's circle and square
+  const n12 = so(11), n13 = so(12);
+  const n12s = at(w(11, 'circle') - 0.2, 0.4), n12q = at(w(11, 'square') - 0.2, 0.4);
+  const n12v = at(w(11, 'same') - 0.2, 0.5), n12h = at(w(11, 'head') - 0.2, 0.5), n12x = at(w(11, 'apart') - 0.2);
+  const n13v = at(w(12, 'computed') - 0.2, 0.5), n13d = at(w(12, 'differ') - 0.1, 0.6);
+  const n13h = at(w(12, 'reach') - 0.2, 0.5), n13n = at(w(12, 'named') - 0.2);
 
   // ---------------- 15.4 to 15.7 the stripes plane
   const sP = span(4, 7);
@@ -273,33 +255,20 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
   const pS = editOn > 0.001 ? lerp(PV[0], 1, editP) : PV[0];
   const vec = EMB.map((v, k) => (k < 2 ? mix(0, pS)[k] : v)); // ends at EMB_E when p = 1
 
-  // ---------------- 15.8 RandInt
-  const s8 = so(11);
-  const rows8 = at(b(11) + 0.05, 0.5);
-  const ST = [w(11, 'randomly'), w(11, 'probabilities'), w(11, 'true')];
-  const RS: number[][] = [[2], [], [0]];
-  const step = ST.reduce((k, s, j) => (t >= s - 0.1 ? j : k), -1);
-  const rolling = step >= 0 && t < ST[step] + 0.5;
-  const replaced = (i: number) => (step >= 0 && !rolling ? RS[step].includes(i) : false);
-  const used = (i: number) => (replaced(i) ? TRUE01[i] : PV[i]);
-  const loss8 = at(w(11, 'randomly') - 0.1, 0.5);
-  const grad8 = at(w(11, 'so') - 0.1, 0.5);
-  const l8a = at(w(11, 'four') - 0.4), l8b = at(w(11, 'respond') - 0.2);
+  // ---------------- 15.13 cost
+  const s10 = so(13);
+  const c10a = at(b(13) + 0.05, 0.5), c10q = at(w(13, 'no') - 0.1), c10l = at(w(13, 'part') - 0.1);
+  const c10r = at(w(13, 'inspectability') - 0.1);
+  const c10s = at(w(13, 'separated') - 0.1);
 
-  // ---------------- 15.14 cost
-  const s10 = so(14);
-  const c10a = at(b(14) + 0.05, 0.5), c10q = at(w(14, 'no') - 0.1), c10l = at(w(14, 'part') - 0.1);
-  const c10r = at(w(14, 'inspectability') - 0.1);
-  const c10s = at(w(14, 'separated') - 0.1);
-
-  // ---------------- 15.15 recap, 15.16 the card
-  const sR = so(15);
-  const cmpRow = (i: number) => at(w(15, ['input', 'weights', 'vectors', 'Corrections'][i]) - 0.1);
+  // ---------------- 15.14 recap, 15.15 the card
+  const sR = so(14);
+  const cmpRow = (i: number) => at(w(14, ['input', 'weights', 'vectors'][i]) - 0.1);
   const cmpHi = (_i: number) => 0;
-  const cmpSame = at(w(15, 'fixed') - 0.1);
-  const s11 = so(16);
-  const cardP = [w(16, 'g'), w(16, 'hat'), w(16, 'f', 1), w(16, 'Training'), w(16, 'images')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
-  const legO = at(w(16, 'j') - 0.1);
+  const cmpSame = at(w(14, 'fixed') - 0.1);
+  const s11 = so(15);
+  const cardP = [w(15, 'g'), w(15, 'hat'), w(15, 'f', 1), w(15, 'Training'), w(15, 'images')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
+  const legO = at(w(15, 'j') - 0.1);
 
   return (
     <Stage>
@@ -368,7 +337,7 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
           <Flow pts={[[1690, 690], [1690, 770], [1640, 770]]} color={C.chalk} o={trainTask} />
         </g> : null}
 
-        {/* ---------------- slides 12 and 13: Part 8's circle and square ---------------- */}
+        {/* ---------------- slides 11 and 12: Part 8's circle and square ---------------- */}
         {n12 + n13 > 0.001 ? (() => {
           const sh = ['circle', 'square'];
           const VX0 = 560; // concept values (12) or embeddings (13)
@@ -493,43 +462,7 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
           </g>
         ) : null}
 
-        {/* ---------------- slide 8: random interventions during training ---------------- */}
-        {s8 > 0.001 ? (
-          <g opacity={s8 < 0.999 ? s8 : undefined}>
-            <g opacity={rows8}>
-              <Txt x={640} y={352} size={24} weight={600} fill={C.chalk2}>predicted</Txt>
-              <Txt x={980} y={352} size={24} weight={600} fill={C.chalk2}>used in training</Txt>
-              {NAMES.map((n, i) => {
-                const y = R8[i];
-                const rep = replaced(i);
-                const s0 = step >= 0 ? ST[step] : 0;
-                const face = rolling ? 1 + (Math.floor(t * 14 + i * 3) % 6) : rep ? 6 : 2;
-                const rot = rolling ? (t - s0) * 720 + i * 40 : 0;
-                return (
-                  <g key={n}>
-                    <Txt x={200} y={y} size={30} anchor="start" weight={600} fill={C.chalk}>{n}</Txt>
-                    <Txt x={640} y={y} size={30} mono weight={600} fill={C.concept}>{f2(PV[i])}</Txt>
-                    <Die x={800} y={y} face={face} rot={rot} o={at(ST[0] - 0.2)} color={!rolling && rep ? C.edit : C.chalk2} />
-                    <Flow pts={[[840, y], [910, y]]} color={rep ? C.edit : C.line2} sw={2.5} head={11} />
-                    <rect x={928} y={y - 30} width={104} height={60} rx={10} fill={rep ? rgba(C.edit, 0.16) : C.bg3} stroke={rep ? C.edit : rgba(C.concept, 0.5)} strokeWidth={2} />
-                    <Txt x={980} y={y} size={30} mono weight={700} fill={rep ? C.edit : C.concept}>{rep ? String(TRUE01[i]) : f2(used(i))}</Txt>
-                    <Flow pts={[[1040, y], [1100, y], [1100, H8.y + (i - 1) * 30], [1140, H8.y + (i - 1) * 30]]} color={C.concept} sw={2} head={10}
-                      p={1} t={t + i * 0.2} live={rows8} n={1} dotR={4} />
-                  </g>
-                );
-              })}
-            </g>
-            <Block x={H8.x} y={H8.y} w={H8.w} h={H8.h} kind="head" o={rows8} hi={grad8 * (0.5 + 0.5 * Math.sin(t * 4))} />
-            <Txt x={H8.x} y={H8.y - 18} size={25} weight={600} o={rows8}>mix vectors</Txt>
-            <Txt x={H8.x} y={H8.y + 22} size={24} o={rows8}>then head</Txt>
-            <Flow pts={[[H8.x + H8.w / 2 + 6, H8.y - 20], [L8.x - L8.w / 2 - 8, H8.y - 20]]} color={C.chalk2} p={loss8} o={loss8} t={t} live={loss8} n={1} head={11} dotR={4} />
-            <Block x={L8.x} y={L8.y} w={L8.w} h={L8.h} kind="loss" title="loss" sub="true class: zebra" size={28} o={loss8} />
-            <Flow pts={[[L8.x - L8.w / 2 - 6, H8.y + 22], [H8.x + H8.w / 2 + 8, H8.y + 22]]} color={C.loss} p={grad8} o={grad8} t={t} live={grad8} n={2} head={11} dotR={5} />
-            <Txt x={1380} y={H8.y + 64} size={22} fill={C.loss} o={grad8}>gradients</Txt>
-          </g>
-        ) : null}
-
-        {/* ---------------- slide 15: recap ---------------- */}
+        {/* ---------------- slide 14: recap ---------------- */}
         <CompareSvg o={sR} rowO={cmpRow} hiO={cmpHi} changed={CMP_CHANGED} />
 
         {/* ---------------- slide 10: cost ---------------- */}
@@ -615,13 +548,6 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
       <Rich x={S6X} y={850} w={460} size={28} color={C.chalk2} text="now {y:zebra} leads" o={oo(s7, shareK)} />
       <EvTag x={1760} y={300} ax="right" kind="illustrative" text="hand-chosen embeddings and head" o={oo(sH, pl6(0))} />
 
-      {/* slide 8 */}
-      <SlideHead text={bh(P, 11)} o={s8} />
-      <HText x={800} y={352} ax="center" ay="middle" size={22} mono color={C.mute} o={oo(s8, at(ST[0] - 0.2))}>{`step ${Math.max(1, step + 1)}`}</HText>
-      <Rich x={200} y={770} size={32} text="about one concept in four is replaced by its {e:true value}" o={oo(s8, l8a)} />
-      <Rich x={200} y={830} size={32} color={C.chalk2} text="the true value changes the mixture; the {f:head} learns to respond" o={oo(s8, l8b)} />
-      <EvTag x={1760} y={890} ax="right" kind="illustrative" text="three training steps, hand-chosen" o={oo(s8, rows8)} />
-
       {/* slide 10: what teaches the network */}
       <SlideHead text={bh(P, 10)} o={sTrain} />
       <Rich x={160} y={300} size={32} text="Training example: {x:photo} + {c:concept labels} + {y:class label}" o={sTrain * trainFlow} />
@@ -631,9 +557,9 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
       <Rich x={1690} y={610} w={200} ax="center" size={28} text="class label: {y:zebra}" o={sTrain * trainTask} />
       <Rich x={160} y={920} size={30} text="{l:Backpropagation} updates the encoder, vector layers, scorer and head." o={sTrain * trainGrad} />
 
-      {/* slides 12 and 13: Part 8's circle and square */}
-      <SlideHead text={bh(P, 12)} o={n12} />
-      <SlideHead text={bh(P, 13)} o={n13} />
+      {/* slides 11 and 12: Part 8's circle and square */}
+      <SlideHead text={bh(P, 11)} o={n12} />
+      <SlideHead text={bh(P, 12)} o={n13} />
       <HText x={SH.cx} y={318} ax="center" size={24} mono weight={600} color={C.mute} o={oo(n12, n12s) + oo(n13)}>Part 8</HText>
       <HText x={SHAPE_OUT_X} y={HD.y} ay="middle" size={30} weight={700} color={C.chalk} o={oo(n12, n12x)}>same output for both</HText>
       <Rich x={SHAPE_OUT_X} y={HD.y + 46} size={28} color={C.chalk2} text={`best accuracy ${f2(INC.best_accuracy)}`} o={oo(n12, n12x)} />
@@ -645,19 +571,19 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
       <EvTag x={1760} y={890} ax="right" kind="constructed" text="Part 8's two objects; embedding positions illustrative" o={oo(n13, n13v)} />
       <EvTag x={1760} y={890} ax="right" kind="constructed" text="Part 8's two objects" o={oo(n12, n12s)} />
 
-      {/* slide 14 */}
-      <SlideHead text={bh(P, 14)} o={s10} />
+      {/* slide 13 */}
+      <SlideHead text={bh(P, 13)} o={s10} />
       <Rich x={450} y={790} ax="center" size={28} color={C.chalk2} text="the axes have no names" o={oo(s10, c10q)} />
       <Rich x={800} y={680} w={920} size={32} text="part of what the {f:head} uses cannot be inspected" o={oo(s10, c10l)} />
       <Rich x={800} y={750} w={920} size={28} color={C.chalk2} text="including the detail that separated the circle from the square" o={oo(s10, c10s)} />
 
-      {/* slide 15: recap against the plain CBM */}
-      <SlideHead text={bh(P, 15)} o={sR} />
+      {/* slide 14: training versus test recap */}
+      <SlideHead text={bh(P, 14)} o={sR} />
       <CompareText o={sR} name="test" cells={CMP_CEM} rowO={cmpRow} hiO={cmpHi} changed={CMP_CHANGED} />
       <Rich x={196} y={850} size={30} color={C.chalk2} text="Test-time vectors are newly computed; the learned weights stay fixed." o={oo(sR, cmpSame)} />
 
-      {/* slide 16 */}
-      <SlideHead text={bh(P, 16)} o={s11} />
+      {/* slide 15 */}
+      <SlideHead text={bh(P, 15)} o={s11} />
       <div style={{ position: 'absolute', inset: 0, transform: 'scale(0.86)', transformOrigin: '960px 290px' }}>
         <VariantCard name="Concept embedding models (Espinosa Zarlenga et al., NeurIPS 2022)" rows={VROWS} o={s11} p={cardP} y0={290} />
       </div>

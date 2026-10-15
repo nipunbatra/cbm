@@ -68,9 +68,17 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   diagrams distinguish labels and losses from ordinary prediction with fixed weights. RandInt remains a separate
   training step, and the optional expert correction is explicit. The section still has 16 slides; its numerical
   animal example remains illustrative. Mechanism checked against the original CEM paper, Sections 3.1-3.2.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r6.pdf`, still 307 pages and 27 section bookmarks.
+- Annotation PDF revision 6: `review/cbm-lecture-review-2026-10-15-r6.pdf`, still 307 pages and 27 section bookmarks.
   Updated CEM pages: 146, 147, 149, 152, 153, 154, 155 and 159. All other page content streams match revision 5.
   Page 146 defines the vectors; page 154 shows training; page 159 compares training with testing.
+
+- PDF revision 4 page 154 review: removed RandInt from s15, including its dedicated slide and recap/card references.
+  The general training explanation and optional expert correction remain. The section now has 15 slides and the
+  lecture 306. The paper's RandInt details remain only in source notes, outside the lecture. This supersedes the
+  earlier decision to retain it separately.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r7.pdf`, 306 pages and 27 section bookmarks.
+  Revision 6 page 155 is removed; pages 1-154 keep their numbers and pages 156-307 move up one. The training
+  recap is now page 158 and the CEM summary card page 159. Earlier PDFs remain available for annotation references.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

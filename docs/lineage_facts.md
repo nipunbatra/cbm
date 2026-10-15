@@ -123,6 +123,10 @@ are computed from the new image, and mixing uses predicted probabilities. RandIn
 during training while the concept loss still supervises the original prediction. The lecture's animal CEM vectors
 and head remain illustrative, not outputs of a trained animal CEM.
 
+**Lecture scope after review:** RandInt is omitted from the slides and narration to keep the focus on the
+architecture, joint training and test-time prediction. Optional expert correction remains. The paper details
+above are retained as source notes.
+
 
 **CUB setup:**
 - k = 112, Koh's splits, ResNet-34 backbone (App. A.6).

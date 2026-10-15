@@ -495,22 +495,19 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 10. **Training uses concept labels and class labels**  
    During training, each image comes with concept labels and a class label. For this zebra, stripes is labelled present and the class is zebra. A concept loss compares the predicted probability with the concept label. A task loss compares the class prediction with the class label. Backpropagation from these losses updates the encoder, the vector-generating layers, the probability scorer and the task head together. We supervise the probability and the final answer, rather than supplying the vector coordinates.
 
-11. **Training also practises concept corrections**  
-   During training, CEM randomly replaces some predicted probabilities with their true values, about one concept in four, so the head learns to respond to corrections. This is called RandInt. The true value changes the mixture sent to the head. The concept loss still supervises the original predicted probability. At ordinary test time, use the predicted probabilities, without these random replacements.
+11. **When it helps: the vocabulary is incomplete**  
+   When does the extra capacity help? Recall Part 8. With only colour and size as concepts, the blue circle and the blue square got the same concept values, so no head could tell them apart.
 
-12. **When it helps: the vocabulary is incomplete**  
-   When does that matter? Recall Part 8. With only colour and size as concepts, the blue circle and the blue square got the same concept values, so no head could tell them apart.
-
-13. **With embeddings, shape can reach the head without a name**  
+12. **With embeddings, shape can reach the head without a name**  
    With embeddings, the vector for blue is computed from each image, so it can differ between the circle and the square. Shape can then reach the head without ever being named.
 
-14. **Cost: the coordinates of the vector have no names**  
+13. **Cost: the coordinates of the vector have no names**  
    The cost is inspectability: the coordinates of that vector have no names, so part of what the head uses cannot be inspected. The detail that separated the circle from the square is exactly the part nobody can read.
 
-15. **Training learns the weights. Testing uses them**  
-   Compare the two stages. The input during training is an image with concept and class labels. At test time it is just a new image. The weights are updated during training and kept fixed at test time. The vectors and probabilities are computed from each image in both cases. Corrections use known labels during RandInt, or an optional expert correction at test time.
+14. **Training learns the weights. Testing uses them**  
+   Compare the two stages. The input during training is an image with concept and class labels. At test time it is just a new image. The weights are updated during training and kept fixed at test time. The vectors and probabilities are computed from each image in both cases.
 
-16. **Concept embedding models in symbols**  
+15. **Concept embedding models in symbols**  
    In symbols, for concept j out of k: g now outputs a probability and two embeddings, each m numbers long. c hat j is the mixed vector, and f reads all of them. Training still needs images, concept labels and class labels.
 
 ## Post-hoc concept bottleneck models  (s16)
