@@ -48,3 +48,9 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     rather than the old film timeline, and checks for missing slides, unloaded images and browser errors. The footer
     appears only in the PDF view. All page IDs and the revised pages were verified. Saliency is on pages 14-15 and
     the model check on pages 17-18. No audio, saved timing, film or published output was changed.
+12. **Saliency formula and more examples (PDF comment on page 15; s21.3-4, pages 14-15).** Kept the two-slide
+    sequence and added the absolute-gradient formula after its meaning in words, with the centre-pixel calculation
+    |0.1 / 0.1| = 1. The next slide now shows vertical-bar, horizontal-bar and dot inputs with saliency for each
+    matching class score. Values come from `D.saliency_toy`; all maps share a brightness scale. Added three independent
+    finite-difference checks covering every pixel in each example. Content, type checks, 21 Python checks and three
+    deck checks passed. Both slides were inspected in the browser. Film timing and audio were not changed.

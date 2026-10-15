@@ -106,14 +106,14 @@
     {
      "id": "21.3",
      "gap": 0.8,
-     "text": "How sensitive is the vertical bar score to one pixel? In this teaching example, brighten the centre pixel by 0.1. The score rises by 0.1. We watch the score, even if the predicted class stays the same.",
-     "head": "Saliency: nudge one {x:pixel}, watch one {y:class score}"
+     "text": "How sensitive is the vertical bar score to one pixel? In this teaching example, brighten the centre pixel by 0.1. The score rises by 0.1. Saliency measures the size of the score change per unit pixel change: here, 0.1 divided by 0.1 is 1. In symbols, x i is the pixel value, s k is the chosen class score, and S i k is the magnitude of its derivative. This ratio approximates the derivative for a tiny nudge; it is exact for our linear example.",
+     "head": "Saliency: how much does a {y:score} respond to one {x:pixel}?"
     },
     {
      "id": "21.4",
      "gap": 0.8,
-     "text": "Give each pixel the same tiny nudge, one at a time, and compare the size of the score changes. Brighter cells in the saliency map mean a larger change, whether the score rises or falls. Here the middle column matters most for the vertical bar score.",
-     "head": "A saliency map shows where the {y:score} is most sensitive"
+     "text": "Now use the same toy model on a vertical bar, a horizontal bar and a dot. For each image, choose the matching class score and compute its saliency at every pixel. The vertical bar score is most sensitive along the middle column, the horizontal bar score along the middle row, and the dot score at the centre. All maps use the same brightness scale: brighter means more sensitive. These are computed maps of a hand-written linear model.",
+     "head": "Saliency maps for three {x:shapes} and their {y:class scores}"
     },
     {
      "id": "21.5",

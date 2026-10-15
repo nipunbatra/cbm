@@ -48,11 +48,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 2. **Post-hoc: a method explains a trained model on one input**  
    Start with post-hoc. The model f is already trained. An explanation method takes the model and one input, and returns some evidence about the prediction.
 
-3. **Saliency: nudge one pixel, watch one class score**  
-   How sensitive is the vertical bar score to one pixel? In this teaching example, brighten the centre pixel by 0.1. The score rises by 0.1. We watch the score, even if the predicted class stays the same.
+3. **Saliency: how much does a score respond to one pixel?**  
+   How sensitive is the vertical bar score to one pixel? In this teaching example, brighten the centre pixel by 0.1. The score rises by 0.1. Saliency measures the size of the score change per unit pixel change: here, 0.1 divided by 0.1 is 1. In symbols, x i is the pixel value, s k is the chosen class score, and S i k is the magnitude of its derivative. This ratio approximates the derivative for a tiny nudge; it is exact for our linear example.
 
-4. **A saliency map shows where the score is most sensitive**  
-   Give each pixel the same tiny nudge, one at a time, and compare the size of the score changes. Brighter cells in the saliency map mean a larger change, whether the score rises or falls. Here the middle column matters most for the vertical bar score.
+4. **Saliency maps for three shapes and their class scores**  
+   Now use the same toy model on a vertical bar, a horizontal bar and a dot. For each image, choose the matching class score and compute its saliency at every pixel. The vertical bar score is most sensitive along the middle column, the horizontal bar score along the middle row, and the dot score at the centre. All maps use the same brightness scale: brighter means more sensitive. These are computed maps of a hand-written linear model.
 
 5. **Occlusion: grey out a patch and measure how far the score drops**  
    A second family changes the input. Grey out one patch, run the model again, and measure how much the score drops. That is the occlusion map we computed for the gull in Part 1.

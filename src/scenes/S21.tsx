@@ -1,5 +1,5 @@
 // s21 Part 1: Post-hoc or interpretable by design? One slide per narration beat.
-// 1-2: two routes and post-hoc. 3-4: a tiny input nudge and one class's saliency map.
+// 1-2: two routes and post-hoc. 3-4: sensitivity formula, then three shape/class examples.
 // 5: occlusion. 6-7: model randomisation check. 8-10: hospital shortcut.
 // 11-12: where versus what, and named controls. 13-16: interpretable models and the CBM.
 // TCAV is in the appendix, S26.tsx.
@@ -97,7 +97,7 @@ const TOY_CLASS: string = ST.classes[0];
 const IMG: number[][] = ST.image;
 const EPS: number = ST.eps;
 const DELTA: number = ST.nudge_centre[TOY_CLASS];
-const SALIENCY: number[][] = ST.saliency[TOY_CLASS];
+const TOY_EXAMPLES: { class: string; image: number[][] }[] = ST.examples;
 const TOYTAG = 'constructed linear model, not a trained image classifier';
 const fm = (v: number) => String(parseFloat(v.toFixed(3)));
 
@@ -132,11 +132,11 @@ const PixGrid: React.FC<{
 };
 
 /** The relative size of each pixel's score change, for the same tiny nudge. */
-const SalGrid: React.FC<{ x: number; y: number; cell: number; o?: number }> = ({ x, y, cell, o = 1 }) => (
+const SalGrid: React.FC<{ x: number; y: number; cell: number; target?: string; o?: number }> = ({ x, y, cell, target = TOY_CLASS, o = 1 }) => (
   <g opacity={o}>
-    {SALIENCY.map((row, r) => row.map((v, c) => (
+    {(ST.saliency[target] as number[][]).map((row, r) => row.map((v, c) => (
       <rect key={`${r}-${c}`} x={x + c * cell} y={y + r * cell} width={cell} height={cell}
-        fill={rgba(C.heat, 0.92 * v / Math.max(...SALIENCY.flat()))} stroke={C.line2} strokeWidth={2} />
+        fill={rgba(C.heat, 0.92 * v / ST.saliency_max)} stroke={C.line2} strokeWidth={2} />
     )))}
   </g>
 );
@@ -251,11 +251,13 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
   // ---------------- 21.3 one nudge, one score change
   const nudge = at(w(3, 'brighten') - 0.1);
   const change = at(w(3, 'rises') - 0.1);
-  const sameClass = at(w(3, 'even') - 0.1);
+  const saliencyWords = at(w(3, 'Saliency') - 0.1);
+  const saliencyFormula = at(w(3, 'symbols') - 0.1);
 
-  // ---------------- 21.4 assemble the saliency map
-  const map = at(w(4, 'Brighter') - 0.1);
-  const sensitive = at(w(4, 'Here') - 0.1);
+  // ---------------- 21.4 three input/class pairs, with a shared brightness scale
+  const examplesIn = [at(w(4, 'vertical') - 0.1), at(w(4, 'horizontal') - 0.1), at(w(4, 'dot') - 0.1)];
+  const examplesMap = [at(w(4, 'column') - 0.1), at(w(4, 'row') - 0.1), at(w(4, 'centre') - 0.1)];
+  const mapScale = at(w(4, 'All') - 0.1);
 
   // ---------------- 21.5
   const s9ph = at(b(5) - 0.05, 0.3);
@@ -384,41 +386,50 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Tex x={960} y={850} ax="center" size={56} tex="\text{evidence} = E(\chead{f}, \cin{x})" o={s2eq} />
       </Slide>
 
-      {/* ============================================================ 21.3 one small input change */}
+      {/* ============================================================ 21.3 sensitivity in words, then symbols */}
       <Slide o={sl(3)}>
         <SlideHead text={bh(P, 3)} />
         <Svg>
-          <PixGrid x={240} y={365} cell={110} img={IMG} vals={0} lift={[{ r: 1, c: 1, a: nudge }]} />
-          <rect x={354} y={479} width={102} height={102} fill="none" stroke={C.input} strokeWidth={5} opacity={nudge} />
-          <Arr x1={610} y1={530} x2={800} y2={530} color={C.input} p={nudge} />
-          <Block x={960} y={530} w={260} h={140} kind="head">
+          <PixGrid x={240} y={325} cell={90} img={IMG} vals={0} lift={[{ r: 1, c: 1, a: nudge }]} />
+          <rect x={334} y={419} width={82} height={82} fill="none" stroke={C.input} strokeWidth={5} opacity={nudge} />
+          <Arr x1={560} y1={460} x2={800} y2={460} color={C.input} p={nudge} />
+          <Block x={960} y={460} w={260} h={140} kind="head">
             <Txt x={0} y={0} size={36} weight={600}>model</Txt>
           </Block>
-          <Arr x1={1120} y1={530} x2={1300} y2={530} p={change} />
-          <Txt x={1480} y={530} size={80} weight={650} mono o={change}>{`+${fm(DELTA)}`}</Txt>
+          <Arr x1={1120} y1={460} x2={1300} y2={460} p={change} />
+          <Txt x={1480} y={460} size={80} weight={650} mono o={change}>{'+' + fm(DELTA)}</Txt>
         </Svg>
-        <Rich x={405} y={315} ax="center" size={32} text="{x:input image}" />
-        <Rich x={405} y={735} ax="center" size={34} text={`centre {x:pixel}: {x:+${fm(EPS)}}`} o={nudge} />
-        <Rich x={1480} y={390} ax="center" size={34} text={`{y:${TOY_CLASS} score}`} />
-        <Rich x={1480} y={625} ax="center" size={30} color={C.chalk2} text="change in score" o={change} />
-        <Rich x={960} y={825} ax="center" size={32} text="The {y:score} can change while the {y:class} stays the same" o={sameClass} />
-        <EvTag x={240} y={910} kind="constructed" text={TOYTAG} />
+        <Rich x={375} y={280} ax="center" size={30} text="{x:input image}" />
+        <Rich x={375} y={625} ax="center" size={32} text={'centre {x:pixel}: {x:+' + fm(EPS) + '}'} o={nudge} />
+        <Rich x={1480} y={330} ax="center" size={32} text={'{y:' + TOY_CLASS + ' score}'} />
+        <Rich x={1480} y={550} ax="center" size={30} color={C.chalk2} text="change in score" o={change} />
+        <Rich x={960} y={710} ax="center" size={34}
+          text="{l:saliency} = size of the {y:score change} ÷ size of the {x:pixel change}" o={saliencyWords} />
+        <Tex x={790} y={820} ax="center" size={48} o={saliencyFormula}
+          tex="\closs{S_i^{(k)}}=\left|\frac{\partial s_k(\cin{x})}{\partial \cin{x_i}}\right|\approx\left|\frac{\Delta s_k}{\Delta\cin{x_i}}\right|" />
+        <Tex x={1480} y={820} ax="center" size={48} o={saliencyWords}
+          tex={'\\left|\\frac{' + fm(DELTA) + '}{\\cin{' + fm(EPS) + '}}\\right|=\\closs{' + fm(DELTA / EPS) + '}'} />
+        <EvTag x={240} y={930} kind="constructed" text={TOYTAG} />
       </Slide>
 
-      {/* ============================================================ 21.4 repeat across pixels */}
+      {/* ============================================================ 21.4 three shape/class examples */}
       <Slide o={sl(4)}>
         <SlideHead text={bh(P, 4)} />
-        <Svg>
-          <PixGrid x={240} y={375} cell={110} img={IMG} vals={0} />
-          <Arr x1={630} y1={540} x2={950} y2={540} color={C.chalk2} p={map} />
-          <SalGrid x={1040} y={375} cell={110} o={map} />
-        </Svg>
-        <Rich x={405} y={315} ax="center" size={32} text="{x:input image}" />
-        <Rich x={790} y={620} ax="center" w={340} size={28} color={C.chalk2} text="same tiny nudge, one pixel at a time" />
-        <Rich x={1205} y={315} ax="center" size={32} text={`saliency for {y:${TOY_CLASS}}`} o={map} />
-        <Rich x={1435} y={440} w={330} size={32} text="brighter = larger {y:score change}" o={map} />
-        <Rich x={1205} y={760} ax="center" size={34} text="middle column: most sensitive" o={sensitive} />
-        <EvTag x={240} y={910} kind="constructed" text={TOYTAG} />
+        {TOY_EXAMPLES.map((ex, i) => {
+          const x = 510 + i * 500;
+          return <React.Fragment key={ex.class}>
+            <Rich x={x} y={300} ax="center" size={34} weight={650} text={'{y:' + ex.class + '}'} o={examplesIn[i]} />
+            <Svg>
+              <PixGrid x={x - 90} y={360} cell={60} img={ex.image} vals={0} o={examplesIn[i]} />
+              <Arr x1={x} y1={563} x2={x} y2={610} color={C.chalk2} p={examplesMap[i]} />
+              <SalGrid x={x - 90} y={635} cell={60} target={ex.class} o={examplesMap[i]} />
+            </Svg>
+          </React.Fragment>;
+        })}
+        <Rich x={145} y={425} size={30} text="{x:input}" />
+        <Rich x={145} y={700} size={30} text="saliency" />
+        <Rich x={960} y={870} ax="center" size={32} text="Shared scale: brighter means more sensitive to that {y:class score}" o={mapScale} />
+        <EvTag x={240} y={940} kind="constructed" text="computed from a hand-written linear model, three shape/class pairs" />
       </Slide>
 
       {/* ============================================================ 21.5 occlusion */}

@@ -206,5 +206,23 @@ def test_cub_results():
     assert g['top'][0][1] >= per['Herring Gull']['score']
 
 
+@pytest.mark.parametrize('example', D['saliency_toy']['examples'])
+def test_saliency_maps_match_pixel_nudges(example):
+    toy = D['saliency_toy']
+    image = example['image']
+    target = example['class']
+    weights = toy['W'][target]
+    score = lambda pixels, w: sum(pixels[r][c] * w[r][c] for r in range(3) for c in range(3))
+    scores = {k: score(image, w) for k, w in toy['W'].items()}
+    assert max(scores, key=scores.get) == target
+    for r, c in itertools.product(range(3), repeat=2):
+        nudged = [row[:] for row in image]
+        nudged[r][c] += toy['eps']
+        sensitivity = abs((score(nudged, weights) - score(image, weights)) / toy['eps'])
+        assert close(sensitivity, toy['saliency'][target][r][c], 1e-9)
+    assert close(abs(toy['nudge_centre'][target] / toy['eps']), toy['saliency'][target][1][1], 1e-9)
+    assert max(max(row) for row in toy['saliency'][target]) <= toy['saliency_max']
+
+
 if __name__ == '__main__':
     raise SystemExit(pytest.main(['-q', __file__]))

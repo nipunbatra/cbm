@@ -217,12 +217,16 @@ _img = np.array([[0, 1, 0], [0, 1, 0], [0, 1, 0]], float)
 _W = {'vertical bar': np.array([[-0.5, 1, -0.5]] * 3), 'horizontal bar': np.array([[-0.5] * 3, [1] * 3, [-0.5] * 3]),
       'dot': np.array([[-0.25] * 3, [-0.25, 2, -0.25], [-0.25] * 3])}
 _eps = 0.1
+_dot = np.zeros_like(_img); _dot[1, 1] = 1
+_examples = {'vertical bar': _img, 'horizontal bar': _img.T, 'dot': _dot}
 D['saliency_toy'] = {
     'classes': list(_W), 'image': _img.tolist(), 'W': {k: v.tolist() for k, v in _W.items()},
     'scores': {k: r(float((v * _img).sum())) for k, v in _W.items()}, 'eps': _eps,
     'nudge_centre': {k: r(_eps * v[1, 1]) for k, v in _W.items()},     # brighten pixel (row 2, col 2)
     'nudge_corner': {k: r(_eps * v[0, 0]) for k, v in _W.items()},     # brighten pixel (row 1, col 1)
     'saliency': {k: np.abs(v).tolist() for k, v in _W.items()},
+    'examples': [{'class': k, 'image': v.tolist()} for k, v in _examples.items()],
+    'saliency_max': r(max(np.abs(w).max() for w in _W.values())),
 }
 
 json.dump(D, open(ROOT / 'src/data.json', 'w'), indent=1, ensure_ascii=False)
