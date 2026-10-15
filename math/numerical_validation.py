@@ -126,6 +126,26 @@ def test_cem_mixture():
     assert np.allclose(C['mix_example'], 0.7 * cp + 0.3 * cm, atol=1e-4)
 
 
+def test_cem_shape_example_resolves_the_constructed_collision():
+    C = D['cem_shape']
+    mixed = C['blue_probability'] * np.array(C['c_plus']) + (1 - C['blue_probability']) * np.array(C['c_minus'])
+    assert np.allclose(mixed, C['blue_embeddings'])
+    inputs = np.array(C['head_input'])
+    assert np.allclose(inputs[:, :2], mixed)
+    assert np.allclose(inputs[:, 2:], C['large_embedding'])
+    # Independently evaluate the displayed rule, then check the matrix form.
+    scores = np.column_stack([mixed[:, 1], 1 - mixed[:, 1]])
+    assert np.allclose(scores, C['scores'])
+    assert np.allclose(inputs @ np.array(C['W']).T + C['b'], scores)
+    labels = [o['y'] for o in D['incomplete']['objects']]
+    assert [labels[i] for i in scores.argmax(axis=1)] == C['predictions'] == labels
+    # If both images have the same embedding, the same head again gives a tie
+    # between the images' outputs, as in the original collision.
+    collapsed = inputs.copy(); collapsed[1] = collapsed[0]
+    collapsed_scores = collapsed @ np.array(C['W']).T + C['b']
+    assert np.allclose(collapsed_scores[0], collapsed_scores[1])
+
+
 # ------------------------------------------------------------------ Act 11: the measured experiment, preserved
 def test_measured_evidence_unchanged():
     pres = json.load(open(LECT / 'output/preserved-evidence.json'))

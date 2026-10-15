@@ -136,3 +136,18 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     old pages 156-307 move up one. Verified every footer, no RandInt references, and unchanged body text for all
     304 retained slides except the revised recap and card (now pages 158-159). Visually checked pages 153-160 and
     the final page. No audio generation, saved timeline rebuild, film render or publication was performed.
+25. **Explain how embeddings resolve the missing-shape example (PDF revision 4 page 157).** Expanded s15.11-13
+    into five slides, now s15.11-15: identical concept values lose shape; equal blue probabilities can coexist with
+    different image-specific vectors; concept and class labels provide different training signals; one fixed
+    illustrative head gives A for the circle and B for the square; the extra information still has no named
+    shape concept. Made class targets, vector entries, head rule and scores explicit. Added D.cem_shape in
+    math/data.py, with hand-chosen candidates/head and computed mixtures/scores; all previous data is unchanged.
+    A new numerical test checks mixing, the displayed rule, predictions and the return of identical outputs if
+    the embeddings collapse. Mechanism checked against CEM Section 3.1. Content, type checking, 22 Python tests
+    and three deck tests passed. Inspected all five slides, notes, arrow navigation and the renumbered final card;
+    no browser errors. CEM now has 17 slides and the lecture 308. Film timing, audio and publication remain pending.
+26. **Annotation PDF revision 8.** Saved `review/cbm-lecture-review-2026-10-15-r8.pdf`, preserving earlier copies.
+    It has 308 pages and 27 section bookmarks. The expanded example is on pages 155-159; revision 7 pages 158-306
+    move to 160-308. Verified every footer and unchanged body text for all 303 slides outside the expanded example.
+    Visually checked pages 154-162 and the final page. Saved timeline and beat-list hashes remain unchanged.
+    No audio generation, film render or publication was performed.

@@ -76,9 +76,18 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   The general training explanation and optional expert correction remain. The section now has 15 slides and the
   lecture 306. The paper's RandInt details remain only in source notes, outside the lecture. This supersedes the
   earlier decision to retain it separately.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r7.pdf`, 306 pages and 27 section bookmarks.
+- Annotation PDF revision 7: `review/cbm-lecture-review-2026-10-15-r7.pdf`, 306 pages and 27 section bookmarks.
   Revision 6 page 155 is removed; pages 1-154 keep their numbers and pages 156-307 move up one. The training
   recap is now page 158 and the CEM summary card page 159. Earlier PDFs remain available for annotation references.
+
+- PDF revision 4 page 157 review: expanded the circle/square example into s15.11-15. The sequence revisits the
+  identical-value bottleneck, distinguishes concept probability from image-specific embedding, explains the two
+  training signals, calculates predictions with one fixed illustrative head, then states the interpretability
+  trade-off. Values come from `math/data.py` -> `D.cem_shape`, with numerical validation. These are hand-chosen
+  vectors and a head, not a trained shape CEM. Existing data is unchanged. CEM now has 17 slides; the lecture 308.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r8.pdf`, 308 pages and 27 section bookmarks.
+  Pages 155-159 contain the expanded example. Revision 7 pages 158-306 become pages 160-308; pages 1-154 retain
+  their numbers. All previous PDFs remain available for annotation references.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

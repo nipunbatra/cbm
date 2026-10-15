@@ -127,6 +127,11 @@ and head remain illustrative, not outputs of a trained animal CEM.
 architecture, joint training and test-time prediction. Optional expert correction remains. The paper details
 above are retained as source notes.
 
+**Shape-example clarification (15 October 2026):** Section 3.1 computes embeddings from each image and jointly
+trains them with concept and task losses. Equal concept probabilities therefore need not imply equal mixed
+embeddings. The expanded circle/square example illustrates that capacity, not a guarantee that training discovers
+shape. `D.cem_shape` contains hand-chosen candidate vectors and a head, with computed mixtures and scores.
+
 
 **CUB setup:**
 - k = 112, Koh's splits, ResNet-34 backbone (App. A.6).

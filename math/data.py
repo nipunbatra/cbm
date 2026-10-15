@@ -133,6 +133,26 @@ D['cem'] = {'c_plus': cp.tolist(), 'c_minus': cm.tolist(),
             'path': [(p * cp + (1 - p) * cm).round(4).tolist() for p in np.linspace(0, 1, 11)], 'p_example': 0.7,
             'mix_example': (0.7 * cp + 0.3 * cm).round(4).tolist()}
 
+# A constructed CEM counterexample to the Part 8 collision. These are hand-chosen
+# candidate vectors and a fixed illustrative head, not fitted model outputs.
+_shape_p = 0.9
+_shape_plus = np.array([[0.8, 0.7], [1.0, 0.3]])
+_shape_minus = np.array([[0.0, 0.5], [0.0, 0.3]])
+_shape_mixed = _shape_p * _shape_plus + (1 - _shape_p) * _shape_minus
+_shape_large = np.array([0.2, 0.4])  # held identical for both images
+_shape_input = np.concatenate([_shape_mixed, np.tile(_shape_large, (2, 1))], axis=1)
+_shape_W = np.array([[0, 1, 0, 0], [0, -1, 0, 0]])
+_shape_b = np.array([0, 1])
+_shape_scores = _shape_input @ _shape_W.T + _shape_b
+D['cem_shape'] = {
+    'evidence': 'illustrative: hand-chosen vectors and head; arithmetic computed',
+    'blue_probability': _shape_p, 'c_plus': _shape_plus.tolist(), 'c_minus': _shape_minus.tolist(),
+    'blue_embeddings': _shape_mixed.round(4).tolist(), 'large_embedding': _shape_large.tolist(),
+    'head_input': _shape_input.round(4).tolist(), 'W': _shape_W.tolist(), 'b': _shape_b.tolist(),
+    'scores': _shape_scores.round(4).tolist(),
+    'predictions': [D['incomplete']['objects'][i]['y'] for i in _shape_scores.argmax(axis=1)],
+}
+
 # ---------------------------------------------------------------- Act 11: the measured shape experiment (read only)
 M = METRICS['models']; I = METRICS['interventions']; demo = METRICS['demo']
 ex = next(e for e in demo['examples'] if e['index'] == demo.get('selected_index', 10))
