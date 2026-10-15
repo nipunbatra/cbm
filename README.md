@@ -8,7 +8,7 @@ matching narration notes, a vector PDF and a narrated film.
 - [PDF](https://nipunbatra.github.io/cbm/concept-bottleneck-models.pdf)
 - [Deep Learning course](https://nipunbatra.github.io/dl-2026/schedule.html#lecture-20)
 
-The reviewed lecture currently has 311 slides in 27 sections. The slides, notes and PDF include review revision 16
+The reviewed lecture currently has 309 slides in 27 sections. The slides, notes and PDF include review revision 17
 (15 October 2026). The film still uses the earlier narration and will be rebuilt after the slide review.
 
 ## Source and local preview

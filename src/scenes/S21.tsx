@@ -397,7 +397,7 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Rich x={960} y={820} ax="center" size={30} text="Same brightness scale: brighter = more sensitive" o={mapScale} />
         <Rich x={960} y={875} ax="center" size={34} weight={650}
           text="Low class probability does not mean zero pixel sensitivity" o={mapTakeaway} />
-        <EvTag x={180} y={940} kind="computed" text="raw score gradients; max over RGB; shared scale, brightest 1% clipped" />
+        <EvTag x={180} y={940} kind="computed" text={`raw score gradients; max over RGB; shared scale, brightest ${100 - SR.display.clip_percentile}% clipped`} />
       </Slide>
 
       {/* ============================================================ 21.5 occlusion */}

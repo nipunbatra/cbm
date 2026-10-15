@@ -9,6 +9,12 @@ slides (`npm run deck`), a vector PDF, the notes page and a narrated film. Each 
 one slide: `[[heading]] narration`. Each `src/scenes/S<id>.tsx` draws that section, slide k on beat k.
 Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (generated).
 
+## Current reviewed release
+
+Revision 17 is live at https://nipunbatra.github.io/cbm/: 309 slides in 27 sections, matching notes and PDF.
+The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
+The dated entries below preserve the review history. The film remains on its earlier narration.
+
 ## Done
 - 28 sections, 322 slides, about 68 minutes of narration. Post-hoc vs ante-hoc motivation; CUB-200-2011 as the
   running benchmark (our own linear CBM run on frozen CLIP features, `cub/cbm_cub.py`); concept types; the arithmetic
@@ -177,6 +183,22 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   live course row and s25.11 visually. The deck now versions script/style URLs by content. See
   `publishing/README.md` for links and verification evidence. Audio, saved timelines and film are unchanged.
 
+- 15 Oct, browser saliency review: s21.3-4 now use an actual zebra photo, fixed pretrained ResNet-50,
+  a measured pixel nudge and computed raw score gradients. Compare the predicted zebra class with the
+  low-probability tiger class on the same input and common brightness scale. Distinguish probabilities
+  from sensitivity and explain background responses. Reproduction: `worked/saliency.py`; provenance and
+  interpretation: `docs/saliency_example.md`. Existing numerical results are unchanged.
+- 15 Oct, browser s23.7 review: removed s23.7 and s23.8 and their narration. The CUB section has six slides,
+  ending at its intervention curves and leading directly to s06.1, Human interventions.
+- Latest annotation PDF is revision 17, 309 pages and 27 bookmarks. Pages 14-15 are revised; revision 16
+  pages 97-98 are removed. All other 307 retained slide bodies are unchanged, and all footers and bookmarks
+  are checked. Earlier PDFs remain available. Content, 25 Python tests, three deck tests and visual checks passed.
+- The standalone CBM migration and revision 17 publication are complete. Source is pushed to `nipunbatra/cbm`;
+  `gh-pages` release `381c30f` is deployed. Old attention deck/notes links redirect while preserving anchors
+  (attention PR 8). Course links now use `/cbm/` and show the 309-page PDF (DL 2026 PRs 10-11).
+  Verified live release bytes, course row and browser views. See `publishing/README.md` for evidence.
+  Audio, saved timelines and film remain unchanged.
+
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each
    change: edit the narration line and/or the scene, run `npm run content` and `npm run check`, look at the slide in
@@ -184,14 +206,14 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 2. **Remake the film after the review** (not now): regenerate the voice for changed lines, real timeline, music,
    captions, render, upload unlisted. Claude Code runs this pipeline (`tools/build.sh`, see CLAUDE.md); Codex should
    not run TTS, the timeline or renders.
-3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r16 are already live.
+3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r17 are already live.
    Later edits will need another deck/notes/PDF release on `nipunbatra/cbm` (`gh-pages`) and,
    if the page count changes, the course page through a pull request. The film remains a separate pending rebuild.
 4. Open checks, low priority:
    - s24 recap says label-free models are judged "at their own sparsity level"; confirm the wording against the
      LF-CBM paper.
-   - Values still illustrative or schematic by design (tagged on the slides): the 6 × 6 map on the deep-network
-     saliency slide, the VLG-CBM detector boxes, the TCAV example tiles, the example values in "Beyond images".
+   - Values still illustrative or schematic by design (tagged on the slides): the workflow and sanity-check maps
+     on s21.6-7, the VLG-CBM detector boxes, the TCAV example tiles, the example values in "Beyond images".
 
 ## How Nipun likes to work
 - One idea per slide, generous space, colour-coded words that match their symbols, words before symbols, a small

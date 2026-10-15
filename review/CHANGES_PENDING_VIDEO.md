@@ -278,3 +278,13 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     s23.8's comparison with Koh et al., including their narration and animation code. The section now has six
     slides and the lecture 309. Verified that s23.6 leads directly to s06.1, Human interventions. Source results
     are preserved; the full content and check commands passed. No audio or film work was performed.
+46. **Standalone CBM repository and Pages migration.** Created `nipunbatra/cbm`, pushed the full source
+    history to `main`, and published the website from `gh-pages` at `/cbm/`. Attention PR 8 adds deck/notes
+    redirects that preserve anchors; DL 2026 PR 10 points the course resources to the new site. Verified
+    the live redirects and course URLs. The existing attention PDF remains available for old references.
+47. **Annotation PDF revision 17 and publication.** Rebuilt the matching PDF with 309 pages and 27 bookmarks.
+    Revised pages 14-15; removed revision 16 pages 97-98. Verified every footer and bookmark and unchanged
+    body text for all other 307 retained slides. Inspected revised pages and the section transition. Published
+    release `381c30f` on CBM Pages and updated the course count through DL 2026 PR 11. Deployments succeeded;
+    live deck, notes, PDF and saliency images match the release bytes. Previous PDFs are preserved. All review
+    changes still await the film rebuild; audio and saved timelines were not changed.
