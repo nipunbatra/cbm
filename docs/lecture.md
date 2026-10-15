@@ -617,13 +617,13 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
    Step two: filter. Phrases that contain a class name go, such as zebras or horse-like body. Equine goes as a near-duplicate of equine animal. Leather saddle and ossicones on head go because even the photos that match them best score low with CLIP. 34 concepts remain.
 
 7. **Step 3: the teacher, CLIP, scores every image against every concept**  
-   Step three: CLIP scores every image against every remaining concept. A higher score means the phrase fits the image better. These scores are the teacher's answers: targets for the student, not labels from a person.
+   Step three: CLIP scores every image against every remaining concept. A higher score means the phrase fits the image better. On training images, these scores are the teacher's answers: targets for the student, not labels from a person. Follow the highlighted zebra row into step four, starting with 0.274 for stripes. This is our held-out example photo.
 
-8. **Step 4: the student maps features to concept activations**  
-   Step four builds the student. A different frozen network, here a ResNet-50 rather than CLIP, turns each image into 2048 features, written e of x. A linear layer, W c, maps them to 34 concept activations. This layer is often called the projection, and it is the only part that learns.
+8. **Step 4: keep the teacher row, build the student**  
+   Keep the highlighted zebra row from step three. These five numbers are still CLIP's raw scores, in exactly the same concept order. The student reads the same photo through a frozen residual network, ResNet-50. Its 2048 features pass through a learned linear projection, with weights W c, to produce 34 concept activations. Training changes only the projection, so each activation follows its teacher score across training images. This held-out zebra illustrates the connection; it is not used to fit the model. The student's outputs need not equal the raw CLIP numbers. Next, put the two outputs on a comparable scale.
 
-9. **Standardising puts the teacher and the student on one scale**  
-   The teacher's scores and the student's activations come on different scales, so both are standardised: subtract the average over the photos, then divide by the spread, the standard deviation. For this zebra, CLIP's stripes score sits 1.41 standard deviations above its average, and the student's stripes activation sits 1.36 above.
+9. **Follow the stripes entry onto a comparable scale**  
+   Take the first entry of the same zebra row: CLIP's stripes score, 0.274. To standardise it, subtract the training-photo average and divide by the spread, the standard deviation. That gives 1.41. Standardise the student's stripes activation using its own training-photo average and spread: it gives 1.36. The values need not be identical; learning aims to match how this concept rises and falls across photos.
 
 10. **Copying means each activation rises and falls with its CLIP score**  
    What does copying mean? Take one concept, black and white stripes. Across many images, the student's activation should be high where CLIP's score is high, and low where it is low. Only this pattern across images matters, not the exact values.

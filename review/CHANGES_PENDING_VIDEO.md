@@ -225,3 +225,16 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     expanded names and unchanged content streams/text for the other 302 pages. Visually inspected all ten
     revised PDF pages. Earlier PDFs remain available. Saved timelines and the beat list are unchanged;
     no audio generation, film render or publication was performed.
+37. **Carry one row from LF-CBM step 3 to step 4 (PDF revision 6 page 190).** Highlight the worked zebra
+    row on s17.7 and keep its exact photo, concept order, five raw CLIP scores, positions and colour scale on
+    s17.8. Draw the student's separate image-to-activation path below it. Delay the unexplained standardised
+    student values; s17.9 now explicitly follows the first row entry, 0.274 for stripes, through the existing
+    scaling calculation before comparing teacher 1.41 with student 1.36. Clarify that matching is across images,
+    not exact raw-value copying, and that the worked zebra is held out from fitting. Existing data is unchanged.
+    Content, type checking, 24 Python tests and three deck tests passed. Checked row identity, split provenance,
+    scaling arithmetic, all three slides, narration and progressive builds; no browser warnings or errors.
+38. **Annotation PDF revision 14.** Saved `review/cbm-lecture-review-2026-10-15-r14.pdf`, with 312 pages and
+    27 section bookmarks. Revised pages 194-196 correspond to revision 6 pages 189-191. Verified all footers
+    and bookmark destinations, identical five-score rows on pages 194-195, and unchanged content streams/text
+    for the other 309 pages. Visually checked all three revised PDF pages. Earlier PDFs, saved timelines and
+    the beat list are preserved. No audio generation, film render or publication was performed.

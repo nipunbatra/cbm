@@ -4,7 +4,7 @@
 // 17.3 the five steps, each with its helper   17.4 step 1: three questions, the REAL Gemini JSON reply to question 1
 // 17.5 59 candidates as a class x question count table   17.6 step 2: the filter, 59 - 3 - 4 - 18 = 34
 // 17.7 step 3: CLIP image x concept score matrix (real rows: D.worked.extras.lf_targets)
-// 17.8 step 4: ResNet-50 (frozen) -> e(x), 2048 -> W_c (the projection) -> 34 activations (real, worked photo)
+// 17.8 step 4: retain the exact zebra teacher row, then trace the same image through the student
 // 17.9 standardising: CLIP's stripes score 0.274 -> z 1.41 (D.worked.pcbm, same phrase, same photo), student z 1.36
 // 17.10 copying = rise and fall together (illustrative curves)   17.11 cubing stretches the top (illustrative z -> z^3 bars)
 // 17.12 the cosine of two lists, three made-up examples (1, 0, -1)   17.13 the cos^3 match with q-bar and P-bar named
@@ -72,10 +72,6 @@ const M5ROWS = ['zebra', 'horse', 'giraffe'];
 const M5IMG: string[] = M5ROWS.map((k) => LFT.photos[k] as string);
 const M5V: number[][] = M5ROWS.map((k) => M5.map((s) => LFT.rows[k][(LFT.concepts as string[]).indexOf(s)] as number));
 const M5lo = Math.min(...M5V.flat()), M5hi = Math.max(...M5V.flat());
-
-// ------------------------------------------------------------------ 17.6 named activations of the worked photo (standardised)
-const ACT_NAMES = M5;
-const ACT = ACT_NAMES.map((s) => LF.example_activation_z[FINAL.indexOf(s)] as number);
 
 // ------------------------------------------------------------------ 17.7 illustrative curves (shape only, not our numbers)
 const C7IMG = ['zebra_03.jpg', 'horse_05.jpg', 'giraffe_03.jpg', 'zebra_09.jpg', 'horse_10.jpg', 'zebra_14.jpg', 'giraffe_12.jpg', 'horse_08.jpg'];
@@ -167,14 +163,6 @@ const Clipboard: React.FC<{ x: number; y: number; o?: number; ticks: number }> =
           <rect x={-46} y={-94 + i * 52} width={i % 2 ? 110 : 140} height={10} rx={5} fill={C.line2} />
         </g>
       ))}
-    </g>
-  );
-
-const Padlock: React.FC<{ x: number; y: number; s?: number; o?: number; color?: string }> = ({ x, y, s = 1, o = 1, color = C.chalk2 }) =>
-  o <= 0.001 ? null : (
-    <g transform={`translate(${x} ${y}) scale(${s})`} opacity={o}>
-      <path d="M -9 -4 L -9 -12 A 9 9 0 0 1 9 -12 L 9 -4" fill="none" stroke={color} strokeWidth={3.5} />
-      <rect x={-14} y={-5} width={28} height={22} rx={4} fill={color} />
     </g>
   );
 
@@ -285,13 +273,13 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
   const s7l1 = at(w(7, 'higher') - 0.1), s7l2 = at(w(7, 'teacher') - 0.1);
   const s7x = inv(w(7, 'not') - 0.05, w(7, 'not') + 0.5, t);
 
-  // ---------------- 17.8 the student
-  const s8ph = at(w(8, 'different') - 0.3), s8rn = at(w(8, 'ResNet') - 0.2), s8fz = at(w(8, 'frozen') - 0.1, 0.4);
-  const s8e = at(w(8, '2048') - 0.2), s8ex = at(w(8, 'written') - 0.1);
-  const s8w = at(w(8, 'linear') - 0.2), s8c = at(w(8, '34') - 0.2);
-  const s8live = at(w(8, 'maps'), 0.5);
-  const s8words = at(w(8, 'maps') - 0.1), s8eq = at(w(8, 'activations') - 0.1, 0.5);
-  const s8stu = at(w(8, 'linear') - 0.1), s8proj = at(w(8, 'projection') - 0.1, 0.4);
+  const s7pick = at(w(7, 'Follow') - 0.1);
+
+  // ---------------- 17.8 same teacher row, separate student path
+  const s8row = at(b(8) + 0.1), s8rn = at(w(8, 'student') - 0.1);
+  const s8e = at(w(8, '2048') - 0.1), s8w = at(w(8, 'linear') - 0.1);
+  const s8c = at(w(8, '34') - 0.1), s8train = at(w(8, 'Training') - 0.1);
+  const s8next = at(w(8, 'Next') - 0.1);
 
   // ---------------- 17.9 standardising
   const s9f = at(w(9, 'subtract') - 0.1, 0.5);
@@ -370,7 +358,6 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
   const T5X = 820, T5CW = 200, T5Y = 430, T5RH = 74; // 17.5 table
   const R6Y = [400, 545, 690]; // 17.6 rows
   const M7X = 760, M7CW = 196, M7Y = 420, M7RH = 100; // 17.7 matrix
-  const ex8: Rect = { x: 160, y: 470, w: 210, h: 140 };
   const NL = { x0: 1000, x1: 1720, y: 600, lo: -1, hi: 2.5 }; // 17.9 number line
   const nlx = (v: number) => NL.x0 + ((v - NL.lo) * (NL.x1 - NL.x0)) / (NL.hi - NL.lo);
   const P10 = { x: 200, y: 360, w: 760, h: 300 }; // 17.10 plot area
@@ -558,11 +545,12 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
       {/* ============================================================ 17.7 step 3: CLIP scores */}
       <Slide o={sl(7)}>
         <SlideHead text={bh(P, 7)} />
-        <HText x={160} y={M7Y + 20} w={400} size={24} color={C.mute} o={s7img(0)}>3 of the photos</HText>
+        <HText x={160} y={M7Y + 20} w={370} size={30} color={C.input} o={s7pick}>Follow this zebra row</HText>
+        <HText x={160} y={M7Y + 76} size={24} color={C.chalk2} o={s7pick}>held-out example photo</HText>
         <HText x={160} y={M7Y - 40} w={400} size={24} color={C.mute} o={s7head}>5 of the 34 concepts</HText>
         {M5IMG.map((f, i) => (
           <PhotoR key={f} R={{ x: M7X - 170, y: M7Y + i * M7RH + 8, w: 126, h: 84 }} src={`worked/${f}`} frac={cropTo(f, 1.5)}
-            o={s7img(i)} radius={6} shadow={false} border={i ? undefined : C.input} />
+            o={s7img(i) * (i ? 1 - 0.55 * s7pick : 1)} radius={6} shadow={false} border={i ? undefined : C.input} />
         ))}
         {M5.map((s, j) => (
           <HText key={s} x={M7X + j * M7CW + M7CW / 2} y={M7Y - 10} w={M7CW - 16} ax="center" ay="bottom" size={24} lh={1.15} color={C.concept} o={s7head}>{s}</HText>
@@ -570,7 +558,7 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
         <Svg>
           {M5IMG.map((_, i) => M5.map((__, j) => {
             const y = M7Y + i * M7RH, x = M7X + j * M7CW;
-            const o = s7cell(i, j);
+            const o = s7cell(i, j) * (i ? 1 - 0.55 * s7pick : 1);
             if (o <= 0.001) return null;
             const a = (M5V[i][j] - M5lo) / (M5hi - M5lo);
             return (
@@ -581,6 +569,8 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
               </g>
             );
           }))}
+          <rect x={M7X - 180} y={M7Y - 6} width={5 * M7CW + 192} height={M7RH + 12} rx={10}
+            fill="none" stroke={C.input} strokeWidth={3} opacity={s7pick} />
           <Txt x={M7X + 5 * M7CW + 30} y={M7Y + 1.5 * M7RH} size={30} mono fill={C.mute} o={s7head}>…</Txt>
           <Person x={1640} y={M7Y + 3 * M7RH + 104} s={0.9} o={s7l2} />
           <Cross x={1605} y={M7Y + 3 * M7RH + 68} w={70} h={70} p={s7x} sw={5} />
@@ -591,55 +581,57 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="computed" text="CLIP ViT-B/32, one photo per class; row 1 = worked photo" o={s7cell(0, 0)} />
       </Slide>
 
-      {/* ============================================================ 17.8 step 4: the student */}
+      {/* ============================================================ 17.8 same zebra, same teacher row */}
       <Slide o={sl(8)}>
         <SlideHead text={bh(P, 8)} />
-        <PhotoR R={ex8} src={`worked/${EX}`} o={s8ph} border={C.input} />
-        <Credit x={160} y={906} text={credit(EX)} o={s8ph} />
+        <HText x={160} y={M7Y + 20} w={370} size={30} color={C.input} o={s8row}>Same teacher row</HText>
+        <HText x={160} y={M7Y + 76} size={24} color={C.chalk2} o={s8row}>raw CLIP scores</HText>
+        <PhotoR R={{x: M7X - 170, y: M7Y + 8, w: 126, h: 84}} src={`worked/${M5IMG[0]}`}
+          frac={cropTo(M5IMG[0], 1.5)} o={s8row} radius={6} shadow={false} border={C.input} />
+        {M5.map((name, j) => (
+          <HText key={name} x={M7X + j * M7CW + M7CW / 2} y={M7Y - 10} w={M7CW - 16}
+            ax="center" ay="bottom" size={24} lh={1.15} color={C.concept} o={s8row}>{name}</HText>
+        ))}
         <Svg>
-          <Flow pts={[[ex8.x + ex8.w + 8, 540], [470, 540]]} color={C.input} p={s8rn} t={t} live={s8live} head={12} />
-          <Block x={570} y={540} w={190} h={120} kind="input" title="ResNet-50" sub="frozen" size={28} o={s8rn} />
-          <Padlock x={650} y={496} o={s8fz} />
-          <Flow pts={[[668, 540], [730, 540]]} color={C.input} p={s8e} t={t + 0.3} live={s8live} head={12} />
-          {/* e(x): 2048 numbers, drawn as a blue strip */}
-          <g opacity={s8e < 0.999 ? s8e : undefined}>
-            {Array.from({ length: 9 }, (_, i) => (
-              <rect key={i} x={746} y={402 + i * 31} width={44} height={25} rx={4} fill={rgba(C.input, 0.2 + 0.6 * ((i * 37) % 11) / 10)} />
-            ))}
-            <Txt x={768} y={705} size={24} mono fill={C.input}>⋮</Txt>
-          </g>
-          <Flow pts={[[806, 540], [880, 540]]} color={C.input} p={s8w} t={t + 0.6} live={s8live} head={12} />
-          <Block x={990} y={540} w={200} h={140} kind="input" o={s8w} hi={s8proj} />
-          <MathSvg x={990} y={520} tex="W_c" size={48} o={s8w} />
-          <Txt x={990} y={578} size={22} mono fill={C.chalk2} o={s8w}>{`${N_KEEP} × ${FEAT_DIM}`}</Txt>
-          <Txt x={990} y={646} size={24} weight={600} fill={C.chalk} o={s8proj}>the projection</Txt>
-          <Flow pts={[[1100, 540], [1170, 540]]} color={C.concept} p={s8c} t={t + 0.9} live={s8live} head={12} />
-          <VecCol x={1186} y={360} vals={ACT} rowH={64} w={130} size={30} digits={2} o={s8c} />
-          <Txt x={1251} y={705} size={24} mono fill={C.concept} o={s8c}>⋮</Txt>
-          {ACT_NAMES.map((s, i) => (
-            <Txt key={s} x={1344} y={360 + (i + 0.5) * 64} size={24} anchor="start" fill={C.concept} o={s8c}>{s}</Txt>
-          ))}
-          {/* the student = frozen backbone + W_c */}
-          <g opacity={s8stu < 0.999 ? s8stu : undefined}>
-            <rect x={455} y={385} width={650} height={340} rx={20} fill="none" stroke={rgba(C.input, 0.7)} strokeWidth={2.5} strokeDasharray="10 8" />
-            <Txt x={470} y={752} size={26} anchor="start" weight={600} fill={C.input}>the student</Txt>
-          </g>
-          <MathSvg x={768} y={290} tex="\cin{e(x)}" size={34} o={s8ex} />
+          {/* The same data row, column order, formatting, geometry and colour scale as step 3. */}
+          {M5V[0].map((value, j) => {
+            const x = M7X + j * M7CW;
+            const a = (value - M5lo) / (M5hi - M5lo);
+            return <g key={M5[j]} opacity={s8row}>
+              <rect x={x + 4} y={M7Y + 8} width={M7CW - 8} height={M7RH - 16} rx={8}
+                fill={rgba(C.concept, 0.1 + 0.45 * a)} stroke={rgba(C.concept, 0.6)} strokeWidth={1.5} />
+              <Txt x={x + M7CW / 2} y={M7Y + M7RH / 2} size={32} mono weight={600}>{value.toFixed(3)}</Txt>
+            </g>;
+          })}
+          <rect x={M7X - 180} y={M7Y - 6} width={5 * M7CW + 192} height={M7RH + 12} rx={10}
+            fill="none" stroke={C.input} strokeWidth={3} opacity={s8row} />
+          <Flow pts={[[653, 534], [653, 626]]} color={C.input} p={s8rn} head={12} />
+          <Block x={653} y={690} w={210} h={120} kind="input" title="ResNet-50" sub="frozen" size={28} o={s8rn} />
+          <Flow pts={[[760, 690], [820, 690]]} color={C.input} p={s8e} head={12} />
+          <Block x={940} y={690} w={230} h={120} kind="input" title={`${FEAT_DIM} features`} sub="from the photo" size={27} subSize={21} o={s8e} />
+          <Flow pts={[[1057, 690], [1117, 690]]} color={C.input} p={s8w} head={12} />
+          <Block x={1250} y={690} w={260} h={120} kind="head" title="linear projection" sub="learned weights" size={28} o={s8w} />
+          <MathSvg x={1250} y={795} tex="W_c" size={34} o={s8w} />
+          <Flow pts={[[1383, 690], [1417, 690]]} color={C.concept} p={s8c} head={12} />
+          <Block x={1590} y={690} w={340} h={120} kind="concept" title={`${N_KEEP} activations`} sub="one per concept" size={28} subSize={22} o={s8c} />
         </Svg>
-        <Rich x={768} y={366} ax="center" ay="bottom" size={26} text={`{x:${FEAT_DIM} features}`} o={s8e} />
-        <Rich x={1251} y={350} ax="center" ay="bottom" size={26} text={`{c:${N_KEEP} activations}`} o={s8c} />
-        <Rich x={960} y={770} ax="center" size={32} text="{c:concept activations} = $W_c$ × {x:image features}" o={s8words} />
-        <Tex x={960} y={860} ax="center" size={56} tex={'\\ch = W_c\\, \\cin{e(x)}'} o={s8eq} />
-        <EvTag x={1760} y={900} ax="right" kind="computed" text="worked photo, after training; standardised (next slide)" o={s8c} />
+        <Rich x={730} y={565} size={29} text="the {c:student} reads the same {x:photo}" o={s8rn} />
+        <Rich x={960} y={865} ax="center" size={30} text="Fit the {c:student activations} to the {x:teacher's pattern} across training images." o={s8train} />
+        <Rich x={960} y={920} ax="center" size={27} color={C.chalk2} text="Next: put the two outputs on a comparable scale." o={s8next} />
+        <Credit x={160} y={970} text={credit(EX)} o={s8row} />
+        <EvTag x={1760} y={1000} ax="right" kind="computed" text="CLIP scores for the held-out zebra; this photo is not used for fitting" o={s8row} />
       </Slide>
 
       {/* ============================================================ 17.9 standardising: one scale for both */}
       <Slide o={sl(9)}>
         <SlideHead text={bh(P, 9)} />
-        <Tex x={160} y={390} size={52} o={s9f} tex={'z = \\dfrac{\\text{value} - \\text{average}}{\\text{spread}}'} />
-        <HText x={160} y={470} size={24} color={C.mute} o={s9f}>average and spread (standard deviation) over the training photos</HText>
-        <HText x={160} y={560} size={24} mono color={C.mute} o={s9cap}>{"CLIP'S STRIPES SCORE, THIS ZEBRA"}</HText>
-        <TexSteps x={160} y={660} t={t} size={50} parts={[
+        <PhotoR R={{x: 160, y: 280, w: 126, h: 84}} src={`worked/${M5IMG[0]}`}
+          frac={cropTo(M5IMG[0], 1.5)} radius={6} shadow={false} border={C.input} />
+        <Rich x={320} y={300} size={29} text="same zebra, first column: {c:black and white stripes}" />
+        <Tex x={160} y={470} size={52} o={s9f} tex={'z = \\dfrac{\\text{value} - \\text{average}}{\\text{spread}}'} />
+        <HText x={160} y={550} size={24} color={C.mute} o={s9f}>average and spread (standard deviation) over the training photos</HText>
+        <HText x={160} y={640} size={24} mono color={C.mute} o={s9cap}>{"CLIP'S STRIPES SCORE, THIS ZEBRA"}</HText>
+        <TexSteps x={160} y={740} t={t} size={50} parts={[
           [`\\cin{z} = \\dfrac{${S_RAW.toFixed(3)} - ${S_MU.toFixed(3)}}{${S_SD.toFixed(3)}}`, s9t0],
           [`{} = \\cin{${S_Z.toFixed(2)}}`, s9z],
         ]} />
@@ -665,8 +657,8 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
           </g>
         </Svg>
         <HText x={(NL.x0 + NL.x1) / 2} y={NL.y - 170} ax="center" size={24} color={C.chalk2} o={s9ax}>standard deviations above average</HText>
-        <Rich x={960} y={820} ax="center" size={30} text="now the {x:teacher} and the {c:student} can be compared" o={s9ms} />
-        <EvTag x={1760} y={900} ax="right" kind="computed" text={`${EVTXT}; worked photo, ${WK.train.length} training photos`} o={s9cap} />
+        <Rich x={960} y={870} ax="center" size={30} text="now the {x:teacher} and the {c:student} can be compared" o={s9ms} />
+        <EvTag x={1760} y={950} ax="right" kind="computed" text={`${EVTXT}; worked photo, ${WK.train.length} training photos`} o={s9cap} />
       </Slide>
 
       {/* ============================================================ 17.10 copying: rise and fall together */}

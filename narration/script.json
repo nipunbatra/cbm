@@ -1299,21 +1299,20 @@
     {
      "id": "17.7",
      "gap": 0.8,
-     "text": "Step three: CLIP scores every image against every remaining concept. A higher score means the phrase fits the image better. These scores are the teacher's answers: targets for the student, not labels from a person.",
+     "text": "Step three: CLIP scores every image against every remaining concept. A higher score means the phrase fits the image better. On training images, these scores are the teacher's answers: targets for the student, not labels from a person. Follow the highlighted zebra row into step four, starting with 0.274 for stripes. This is our held-out example photo.",
      "head": "Step 3: the {x:teacher}, CLIP, scores every image against every {c:concept}"
     },
     {
      "id": "17.8",
      "gap": 0.8,
-     "text": "Step four builds the student. A different frozen network, here a ResNet-50 rather than CLIP, turns each image into 2048 features, written e of x. A linear layer, W c, maps them to 34 concept activations. This layer is often called the projection, and it is the only part that learns.",
-     "head": "Step 4: the {x:student} maps {x:features} to {c:concept activations}",
-     "tags": "[calm]"
+     "text": "Keep the highlighted zebra row from step three. These five numbers are still CLIP's raw scores, in exactly the same concept order. The student reads the same photo through a frozen residual network, ResNet-50. Its 2048 features pass through a learned linear projection, with weights W c, to produce 34 concept activations. Training changes only the projection, so each activation follows its teacher score across training images. This held-out zebra illustrates the connection; it is not used to fit the model. The student's outputs need not equal the raw CLIP numbers. Next, put the two outputs on a comparable scale.",
+     "head": "Step 4: keep the {x:teacher row}, build the {c:student}"
     },
     {
      "id": "17.9",
      "gap": 0.8,
-     "text": "The teacher's scores and the student's activations come on different scales, so both are standardised: subtract the average over the photos, then divide by the spread, the standard deviation. For this zebra, CLIP's stripes score sits 1.41 standard deviations above its average, and the student's stripes activation sits 1.36 above.",
-     "head": "Standardising puts the {x:teacher} and the {c:student} on one scale"
+     "text": "Take the first entry of the same zebra row: CLIP's stripes score, 0.274. To standardise it, subtract the training-photo average and divide by the spread, the standard deviation. That gives 1.41. Standardise the student's stripes activation using its own training-photo average and spread: it gives 1.36. The values need not be identical; learning aims to match how this concept rises and falls across photos.",
+     "head": "Follow the {c:stripes} entry onto a comparable scale"
     },
     {
      "id": "17.10",

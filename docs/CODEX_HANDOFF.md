@@ -135,10 +135,20 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   on s24.5 and in the narration. The initial overview and CLIP, CEM, PCBM, PCBM-h, LF-CBM and CBD introductions
   now make their abbreviation mappings explicit. AGENTS.md records the rule to show and say each full name
   when introducing it. No slides were added. Content, 24 Python tests, three deck tests and live visual checks passed.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r13.pdf`, 312 pages and 27 section bookmarks.
+- Annotation PDF revision 13: `review/cbm-lecture-review-2026-10-15-r13.pdf`, 312 pages and 27 section bookmarks.
   Model names are expanded on ten pages; VLG-CBM is on page 229 (revision 5 page 224). All page numbers and
   bookmark destinations are unchanged, and the other 302 page content streams and extracted text match revision 12.
   Earlier PDFs are preserved. Saved film timing, audio and publication are untouched.
+
+- PDF revision 6 page 190 review: s17.7-9 now follow the same zebra row from CLIP's score table into the student
+  explanation. Step 4 retains the five raw scores in the same order and positions. The following slide tracks
+  the stripes entry through standardisation before showing the student's value. The narration distinguishes
+  matching patterns from copying raw values and identifies the zebra as a held-out example. No data or slide
+  counts changed. Content, 24 Python tests, three deck tests and live visual checks passed.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r14.pdf`, 312 pages and 27 section bookmarks.
+  The continuous row example is on pages 194-196 (revision 6 pages 189-191). All numbering and bookmarks are
+  preserved; the other 309 page content streams and extracted text match revision 13. Earlier PDFs and saved
+  film timing remain unchanged. No audio generation, film render or publication was performed.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each
