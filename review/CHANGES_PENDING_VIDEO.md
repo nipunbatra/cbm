@@ -261,3 +261,8 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     destination, visually inspected the revised PDF page, and confirmed identical content streams and text
     for the other 310 pages. Earlier PDFs remain available. No audio generation, saved timeline rebuild,
     film render or publication was performed.
+43. **Publish the reviewed slides and notes, 15 October 2026.** Nipun authorised publication through r16.
+    Merged attention PR 7 (`e6118e8`) and DL 2026 PR 9 (`872dd22`); both deployments succeeded. The live
+    deck, notes and exact r16 PDF are current, and the course's lecture 20 row shows 311 pages. Added content
+    hashes to script/style URLs. Verified live release bytes and browser views. All slide and narration edits
+    above still await the film rebuild; no audio, saved timeline or video was regenerated or published.

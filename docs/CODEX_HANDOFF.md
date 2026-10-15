@@ -170,6 +170,13 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   other 310 page content streams and extracted text match revision 15. The revised PDF page was inspected
   visually. Earlier PDFs remain available. No audio generation, film render or publication was performed.
 
+- 15 Oct publication, explicitly requested after review r16: published all current slides, matching notes and
+  the exact 311-page r16 PDF through attention PR 7 (merge `e6118e8`). Updated the current CBM course row,
+  lecture 20, through DL 2026 PR 9 (merge `872dd22`); both visible and accessible PDF labels show 311 pages.
+  Both deployments succeeded. Served HTML, JS, CSS, notes and PDF match local release bytes. Checked the
+  live course row and s25.11 visually. The deck now versions script/style URLs by content. See
+  `publishing/README.md` for links and verification evidence. Audio, saved timelines and film are unchanged.
+
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each
    change: edit the narration line and/or the scene, run `npm run content` and `npm run check`, look at the slide in
@@ -177,8 +184,9 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 2. **Remake the film after the review** (not now): regenerate the voice for changed lines, real timeline, music,
    captions, render, upload unlisted. Claude Code runs this pipeline (`tools/build.sh`, see CLAUDE.md); Codex should
    not run TTS, the timeline or renders.
-3. **Republish after the review**: rebuild deck + PDF, update `nipunbatra/attention` (`concept-bottlenecks/`) and the
-   PDF page count on the course page, by pull request, only when Nipun asks.
+3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r16 are already live.
+   Later edits will need another deck/notes/PDF release to `nipunbatra/attention` (`concept-bottlenecks/`) and,
+   if the page count changes, the course page, through pull requests. The film remains a separate pending rebuild.
 4. Open checks, low priority:
    - s24 recap says label-free models are judged "at their own sparsity level"; confirm the wording against the
      LF-CBM paper.
