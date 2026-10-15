@@ -37,3 +37,9 @@ Audio note: the voice for these lines was already generated and checked (asrchec
    The deck previews revised narration in memory, retaining recorded word alignment for unchanged narration. Both
    saved timelines and `docs/beats.txt` remain the previous film version. Three deck-content checks cover slide order,
    timing bounds, unchanged alignment and deletion of earlier slides. Audio, film rebuild and publishing remain pending.
+10. **Model sanity check simplified (old s21.10 and s21.11, now s21.6 and s21.7).** Replaced network diagrams,
+    explanation-method symbols and the multiple-method comparison panel with one before-and-after heatmap comparison.
+    Narration keeps the photo and class fixed, explains replacing learned weights with random values, and asks whether
+    the heatmap should stay the same. The result slide has one takeaway: a convincing heatmap alone is insufficient.
+    The notes retain the distinction between methods that barely changed and methods that passed the test. Maps are
+    explicitly schematic. Content checks, all 21 checks and browser inspection passed; notes and arrow navigation work.

@@ -57,11 +57,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 5. **Occlusion: grey out a patch and measure how far the score drops**  
    A second family changes the input. Grey out one patch, run the model again, and measure how much the score drops. That is the occlusion map we computed for the gull in Part 1.
 
-6. **Limit 1: an explanation should change when the model changes**  
-   These methods are useful, and they have limits. The first is a sanity check. If an explanation really describes the model, it should change when the model changes. Adebayo and colleagues tested this by randomising a trained network's weights, layer by layer, until it had learned nothing.
+6. **A simple check: remove what the model learned**  
+   Keep the photo and the class we are explaining fixed. First, make a heatmap with the trained model. Then replace its learned weights with random values and make the heatmap again. If the heatmap reflects what the model learned, should it stay the same?
 
-7. **Some saliency maps barely changed**  
-   Some saliency methods, such as guided backpropagation, still produced almost the same maps for the randomised network. Those maps mostly trace the edges in the image, like an edge detector. So a convincing map is not, on its own, evidence about the model. Plain gradients and Grad-CAM did pass this test.
+7. **Some heatmaps barely change**  
+   For some methods, the heatmap stays almost the same, even after we replace the learned weights. Adebayo and colleagues found this with guided backpropagation: the map could still trace image edges. So a convincing heatmap alone is not enough to trust an explanation. Other methods, including plain gradients and Grad-CAM, did change in their tests.
 
 8. **Limit 2: a model can learn a shortcut**  
    The second limit is about shortcuts. Zech and colleagues trained a pneumonia detector on chest X-rays from two hospital systems. At one hospital about a third of the patients had pneumonia, and at the other about one in a hundred.

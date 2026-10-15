@@ -160,51 +160,6 @@ const ClipBox: React.FC<{ x: number; y: number; w: number; h: number; t: number;
 };
 
 // ------------------------------------------------------------------ 21.6 to 21.12: the limits
-/** a small schematic network: 4 columns of 4 nodes. R (0..3) randomises its 3 weight layers from the output end
- *  (the cascading randomisation of Adebayo et al.): a randomised layer is drawn dashed with scrambled strengths. */
-const NetGlyph: React.FC<{ x: number; y: number; R?: number; o?: number; seed?: number }> = ({ x, y, R = 0, o = 1, seed = 3 }) => {
-  if (o <= 0.001) return null;
-  const cx = [-105, -35, 35, 105], cy = [-54, -18, 18, 54];
-  const edges = [];
-  for (let l = 0; l < 3; l++) {
-    const r = clamp(R - (2 - l));
-    for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) {
-      const k = l * 16 + i * 4 + j;
-      const a0 = 0.12 + 0.6 * rnd(seed + k * 1.31), a1 = 0.1 + 0.55 * rnd(seed + 400 + k * 2.17);
-      const p = { x1: x + cx[l], y1: y + cy[i], x2: x + cx[l + 1], y2: y + cy[j] };
-      if (r < 0.999) edges.push(<line key={`t${k}`} {...p} stroke="#9AA6B5" strokeWidth={2.5} opacity={a0 * (1 - r)} />);
-      if (r > 0.001) edges.push(<line key={`r${k}`} {...p} stroke={C.chalk2} strokeWidth={2.5} strokeDasharray="3 6" opacity={a1 * r} />);
-    }
-  }
-  return (
-    <g opacity={o < 0.999 ? o : undefined}>
-      <rect x={x - 150} y={y - 85} width={300} height={170} rx={16} fill={C.headFill} stroke="#8792A2" strokeWidth={3} />
-      {edges}
-      {cx.map((ax) => cy.map((ay) => <circle key={`${ax}-${ay}`} cx={x + ax} cy={y + ay} r={9} fill={C.bg3} stroke="#9AA6B5" strokeWidth={2.5} />))}
-    </g>
-  );
-};
-
-/** a schematic map with no structure: scattered speckle (what a map of a randomised model should look like) */
-const NoiseGlyph: React.FC<{ x: number; y: number; s: number; id: string; o?: number }> = ({ x, y, s, id, o = 1 }) => {
-  if (o <= 0.001) return null;
-  return (
-    <g transform={`translate(${x} ${y})`} opacity={o < 0.999 ? o : undefined}>
-      <defs>
-        <filter id={id} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={s * 0.012} /></filter>
-        <clipPath id={`${id}-c`}><rect width={s} height={s} rx={10} /></clipPath>
-      </defs>
-      <rect width={s} height={s} rx={10} fill="#06080B" stroke={C.line2} strokeWidth={2} />
-      <g clipPath={`url(#${id}-c)`} filter={`url(#${id})`}>
-        {Array.from({ length: 70 }, (_, k) => (
-          <circle key={k} cx={s * (0.04 + 0.92 * rnd(k * 2.3 + 9))} cy={s * (0.04 + 0.92 * rnd(k * 5.1 + 2))} r={s * (0.01 + 0.018 * rnd(k * 1.9))}
-            fill={C.heat} opacity={0.25 + 0.45 * rnd(k * 3.7)} />
-        ))}
-      </g>
-    </g>
-  );
-};
-
 /** a tick mark (drawn on with p) */
 const Tick: React.FC<{ x: number; y: number; s?: number; p?: number; o?: number; color?: string }> = ({ x, y, s = 1, p = 1, o = 1, color = C.good }) =>
   o <= 0.001 || p <= 0.001 ? null : (
@@ -309,17 +264,14 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
   const s9w = at(w(5, 'measure') - 0.1), s9eq = at(w(5, 'drops') - 0.1, 0.6);
 
 
-  // ---------------- 21.6 limit 1 setup
-  const s10n1 = at(w(6, 'sanity') - 0.1), s10e1 = E.io(inv(w(6, 'explanation') - 0.1, w(6, 'explanation') + 0.8, t));
-  const s10pr = at(w(6, 'should') - 0.1);
-  const s10n2 = at(w(6, 'Adebayo') - 0.1), s10l2 = at(w(6, 'randomising') - 0.1);
-  const s10R = 3 * E.io(inv(w(6, 'randomising'), w(6, 'nothing'), t));
-  const s10e2 = E.io(inv(w(6, 'nothing') - 0.3, w(6, 'nothing') + 0.5, t));
+  // ---------------- 21.6 the check, in plain words
+  const checkBefore = at(w(6, 'First') - 0.1);
+  const checkReplace = at(w(6, 'Then') - 0.1);
+  const checkQuestion = at(w(6, 'If') - 0.1);
 
-  // ---------------- 21.7 result
-  const s11a = at(w(7, 'guided') - 0.1, 0.6), s11b = at(w(7, 'randomised') - 0.1, 0.6), s11eq = at(w(7, 'randomised') + 0.4);
-  const s11edge = at(w(7, 'edges') - 0.1), s11pan = at(w(7, 'Plain') - 0.1, 0.6);
-  const s11pass = E.io(inv(w(7, 'pass') - 0.1, w(7, 'pass') + 0.5, t));
+  // ---------------- 21.7 the result: one comparison, one takeaway
+  const resultAfter = at(w(7, 'same') - 0.1);
+  const resultLesson = at(w(7, 'So') - 0.1);
 
   // ---------------- 21.8 limit 2 setup
   const s12det = at(w(8, 'pneumonia') - 0.1), s12hA = at(w(8, 'chest') - 0.1), s12hB = at(w(8, 'two') - 0.1);
@@ -493,61 +445,38 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
       </Slide>
 
 
-      {/* ============================================================ 21.6 limit 1 setup: the sanity check */}
+      {/* ============================================================ 21.6 one simple check */}
       <Slide o={sl(6)}>
         <SlideHead text={bh(P, 6)} />
+        <Rich x={960} y={310} ax="center" size={32} text="Same {x:photo}. Same {y:class}." />
         <Svg>
-          {[{ R: 440, net: s10n1, e: s10e1, rr: 0 }, { R: 690, net: s10n2, e: s10e2, rr: s10R }].map((row, i) => (
-            <g key={i}>
-              <NetGlyph x={370} y={row.R} R={row.rr} o={row.net} seed={3} />
-              <Arr x1={530} y1={row.R} x2={698} y2={row.R} color={FC} p={row.e} />
-              <g opacity={inv(0.3, 0.7, row.e) < 0.999 ? inv(0.3, 0.7, row.e) : undefined}>
-                <Block x={770} y={row.R} w={130} h={100} kind="neutral" />
-                <MathSvg x={770} y={row.R} tex="E" size={52} />
-              </g>
-              <Arr x1={845} y1={row.R} x2={938} y2={row.R} p={inv(0.5, 1, row.e)} />
-            </g>
-          ))}
-          <SchemMap x={950} y={440 - 75} s={150} id="s21n1" o={inv(0.7, 1, s10e1)} />
-          <Txt x={1025} y={340} size={26} fill={C.chalk2} o={inv(0.7, 1, s10e1)}>explanation</Txt>
-          <g opacity={inv(0.7, 1, s10e2) < 0.999 ? inv(0.7, 1, s10e2) : undefined}>
-            <rect x={950} y={690 - 75} width={150} height={150} rx={10} fill="none" stroke={C.line2} strokeWidth={2.5} strokeDasharray="8 7" />
-            <Txt x={1025} y={692} size={72} weight={600} fill={C.chalk2}>?</Txt>
+          <SchemMap x={350} y={405} s={300} id="s21check-before" o={checkBefore} />
+          <Arr x1={740} y1={555} x2={1180} y2={555} color={FC} p={checkReplace} />
+          <g opacity={checkReplace}>
+            <rect x={1270} y={405} width={300} height={300} rx={10} fill="#06080B" stroke={C.line2} strokeWidth={2.5} strokeDasharray="9 8" />
+            <Txt x={1420} y={555} size={100} weight={600}>?</Txt>
           </g>
         </Svg>
-        <Rich x={220} y={315} size={30} weight={600} text="{f:trained network}" o={s10n1} />
-        <Rich x={220} y={565} size={30} weight={600} text="{f:same network}" o={s10n2} />
-        <Rich x={220} y={790} size={28} color={C.chalk2} text="weights randomised layer by layer" o={s10l2} />
-        <Rich x={1240} y={400} w={560} size={36} lh={1.4} text="a faithful explanation should {y:change} when the {f:model} changes" o={s10pr} />
-        <Rich x={1240} y={690} ay="middle" size={26} color={C.mute} text="the test: Adebayo et al., NeurIPS 2018" o={s10n2} />
-        <EvTag x={220} y={862} kind="schematic" text="networks and maps drawn" o={s10n1} />
+        <Rich x={500} y={745} ax="center" size={34} text="{f:trained model}" o={checkBefore} />
+        <Rich x={960} y={410} ax="center" w={400} size={32} lh={1.4} text="replace learned weights with random values" o={checkReplace} />
+        <Rich x={1420} y={745} ax="center" size={34} text="{f:random weights}" o={checkReplace} />
+        <Rich x={960} y={840} ax="center" size={38} weight={650} text="Should the heatmap stay the same?" o={checkQuestion} />
+        <EvTag x={240} y={920} kind="schematic" text="drawn heatmap, illustrating the test in Adebayo et al., NeurIPS 2018" />
       </Slide>
 
       {/* ============================================================ 21.7 the result */}
       <Slide o={sl(7)}>
         <SlideHead text={bh(P, 7)} />
+        <Rich x={960} y={310} ax="center" size={32} text="Same {x:photo}. Same {y:class}." />
         <Svg>
-          <SchemMap x={260} y={390} s={300} id="s21sA" o={s11a} />
-          <SchemMap x={720} y={390} s={300} id="s21sB" jit={1} o={s11b} />
-          <Txt x={640} y={550} size={80} weight={600} o={s11eq}>≈</Txt>
-          <Txt x={410} y={735} size={30} fill={C.chalk2} o={s11a}>trained</Txt>
-          <Txt x={870} y={735} size={30} fill={C.chalk2} o={s11b}>randomised</Txt>
-          {/* the methods that pass */}
-          <g opacity={s11pan < 0.999 ? s11pan : undefined}>
-            <rect x={1180} y={370} width={560} height={420} rx={16} fill={C.bg2} stroke={C.line} strokeWidth={2} />
-            <HeatGlyph x={1225} y={470} s={170} id="s21pg" />
-            <Txt x={1460} y={555} size={60} weight={600}>≠</Txt>
-            <NoiseGlyph x={1525} y={470} s={170} id="s21pn" />
-            <Txt x={1310} y={672} size={24} fill={C.chalk2}>trained</Txt>
-            <Txt x={1610} y={672} size={24} fill={C.chalk2}>randomised</Txt>
-          </g>
-          <Tick x={1250} y={735} p={s11pass} />
+          <SchemMap x={350} y={405} s={300} id="s21result-before" />
+          <SchemMap x={1270} y={405} s={300} id="s21result-after" jit={1} o={resultAfter} />
         </Svg>
-        <Rich x={640} y={330} ax="center" ay="middle" size={34} weight={650} text="guided backpropagation" o={s11a} />
-        <Rich x={640} y={810} ax="center" ay="middle" size={32} text="these maps trace edges, like an edge detector" o={s11edge} />
-        <Rich x={1460} y={415} ax="center" ay="middle" size={30} weight={650} text="plain gradient, Grad-CAM" o={s11pan} />
-        <Rich x={1285} y={735} ay="middle" size={30} text="changes: passes the test" o={s11pass} />
-        <EvTag x={260} y={872} kind="schematic" text="maps drawn, after Adebayo et al., NeurIPS 2018" o={s11a} />
+        <Rich x={500} y={745} ax="center" size={34} text="{f:trained model}" />
+        <Rich x={960} y={530} ax="center" w={410} size={38} weight={650} text="almost the same heatmap" o={resultAfter} />
+        <Rich x={1420} y={745} ax="center" size={34} text="{f:random weights}" o={resultAfter} />
+        <Rich x={960} y={840} ax="center" size={36} weight={650} text="A convincing heatmap is not enough to trust the explanation" o={resultLesson} />
+        <EvTag x={240} y={920} kind="schematic" text="drawn maps, illustrating guided backpropagation in Adebayo et al., NeurIPS 2018" />
       </Slide>
 
       {/* ============================================================ 21.8 limit 2 setup: two hospitals */}

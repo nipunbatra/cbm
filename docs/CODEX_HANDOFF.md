@@ -25,6 +25,8 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 ## Review updates
 - 15 Oct, first review comment: reduced the six saliency slides to two (s21.3 and s21.4). The deck now has 318 slides;
   s21 has 16. Later s21 slide numbers move up by four. See `review/CHANGES_PENDING_VIDEO.md`.
+- The model sanity check (old s21.10-11, now s21.6-7) is now a plain before-and-after heatmap comparison, with the
+  photo and class held fixed. Network diagrams and explanation-method symbols were removed.
 - `npm run content` now leaves both saved film timelines and `docs/beats.txt` untouched. The deck reads the updated
   script and uses temporary preview timing in memory for changed scenes. Review via the deck until Claude Code
   remakes the audio and film. The saved film timing still describes the previous narration.

@@ -124,14 +124,14 @@
     {
      "id": "21.6",
      "gap": 0.8,
-     "text": "These methods are useful, and they have limits. The first is a sanity check. If an explanation really describes the model, it should change when the model changes. Adebayo and colleagues tested this by randomising a trained network's weights, layer by layer, until it had learned nothing.",
-     "head": "Limit 1: an explanation should change when the {f:model} changes"
+     "text": "Keep the photo and the class we are explaining fixed. First, make a heatmap with the trained model. Then replace its learned weights with random values and make the heatmap again. If the heatmap reflects what the model learned, should it stay the same?",
+     "head": "A simple check: remove what the {f:model} learned"
     },
     {
      "id": "21.7",
      "gap": 1.0,
-     "text": "Some saliency methods, such as guided backpropagation, still produced almost the same maps for the randomised network. Those maps mostly trace the edges in the image, like an edge detector. So a convincing map is not, on its own, evidence about the model. Plain gradients and Grad-CAM did pass this test.",
-     "head": "Some saliency maps barely changed"
+     "text": "For some methods, the heatmap stays almost the same, even after we replace the learned weights. Adebayo and colleagues found this with guided backpropagation: the map could still trace image edges. So a convincing heatmap alone is not enough to trust an explanation. Other methods, including plain gradients and Grad-CAM, did change in their tests.",
+     "head": "Some heatmaps barely change"
     },
     {
      "id": "21.8",
