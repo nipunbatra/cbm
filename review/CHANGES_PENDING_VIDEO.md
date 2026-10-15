@@ -62,3 +62,7 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     The takeaway is explicit: before trusting a heatmap, check that it depends on the learned weights. Maps are
     labelled schematic, not computed for this photo. Content, type checks, 21 Python checks, three deck checks
     and the deck build passed. Both slides were inspected in the browser. Audio and film timing remain unchanged.
+14. **Revised annotation PDF.** Saved `review/cbm-lecture-review-2026-10-15-r2.pdf`, preserving the original annotated
+    version. Updated pages 14, 15, 17 and 18 only; the other 314 page content streams are unchanged. Verified all
+    318 slide ID/page footers, 28 section bookmarks and the four revised pages visually. Notes and arrow builds
+    work in the deck. The saved timelines and beat list retain their original hashes. No film or publication work.

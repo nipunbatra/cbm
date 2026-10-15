@@ -25,14 +25,21 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 ## Review updates
 - 15 Oct, first review comment: reduced the six saliency slides to two (s21.3 and s21.4). The deck now has 318 slides;
   s21 has 16. Later s21 slide numbers move up by four. See `review/CHANGES_PENDING_VIDEO.md`.
-- The model sanity check (old s21.10-11, now s21.6-7) is now a plain before-and-after heatmap comparison, with the
-  photo and class held fixed. Network diagrams and explanation-method symbols were removed.
+- PDF review: s21.3-4 now introduce the saliency formula with a small pixel-nudge calculation, then show vertical-bar,
+  horizontal-bar and dot examples with matching class maps on one brightness scale. Values are in `D.saliency_toy`.
+- The model sanity check (old s21.10-11, now s21.6-7) first shows photo, model, chosen class score, explanation method
+  and heatmap. It then holds the photo, class and method fixed while replacing learned weights with random values.
+  The takeaway is to check whether the map depends on the learned weights. Guided backpropagation is the reported
+  failure example; plain gradients are distinguished in the narration. The maps remain explicitly schematic.
 - `npm run content` now leaves both saved film timelines and `docs/beats.txt` untouched. The deck reads the updated
   script and uses temporary preview timing in memory for changed scenes. Review via the deck until Claude Code
   remakes the audio and film. The saved film timing still describes the previous narration.
 - Annotation PDF: `review/cbm-lecture-review-2026-10-15.pdf` (generated, ignored by git), 318 pages with slide IDs and
   section bookmarks. Both review simplifications are included: pages 14-15 and 17-18. `npm run deck:pdf` now exports
   the current script's slide list, independently of the saved film timeline.
+- Revised annotation PDF: `review/cbm-lecture-review-2026-10-15-r2.pdf`. Pages 14, 15, 17 and 18 include the PDF
+  comments above; all other page content and all 318 page numbers are preserved. Keep the original PDF for its
+  annotation references. The updated narration remains available through N in the deck.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck and asks for changes. For each
