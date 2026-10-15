@@ -1521,8 +1521,8 @@
     {
      "id": "24.4",
      "gap": 1.0,
-     "text": "Srivastava and colleagues point out that a head built on a set of random concepts can reach accuracy comparable to these models. So the concept scores were carrying information that their names do not describe, a form of the leakage we met in Part 9.",
-     "head": "A head on {m:random concepts} does almost as well"
+     "text": "Here is why accuracy alone is not enough. Start with a photo and a pretrained image encoder. In this baseline, the concept layer has randomly chosen weights that stay fixed: it was never taught concepts such as yellow bill. Its outputs still depend on the image. Train only the final head using images and their class labels, then test on new images. When the head can use many of these outputs, the paper finds that accuracy can approach that of concept-based models. Useful image information has survived, even though the layer was never trained to detect named concepts. So check whether a high yellow-bill score really corresponds to a yellow bill, as well as checking the predicted class.",
+     "head": "High accuracy does not prove meaningful {c:concepts}"
     },
     {
      "id": "24.5",

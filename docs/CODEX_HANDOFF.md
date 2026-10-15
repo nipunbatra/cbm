@@ -116,10 +116,20 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
   extra path unchanged. Retain one worked score addition and the saved 0.14 versus 0.20 zebra probabilities.
   Narration distinguishes fitting the extra head from test-time use. The section now has 26 slides and the lecture
   312. Content, 24 Python tests, three deck tests and live visual checks passed. Saved film timing is unchanged.
-- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r11.pdf`, 312 pages and 27 section bookmarks.
+- Annotation PDF revision 11: `review/cbm-lecture-review-2026-10-15-r11.pdf`, 312 pages and 27 section bookmarks.
   The two residual slides are on pages 184-185; revision 10 pages 188-314 move to 186-312. All 310 retained
   slides have unchanged body text. Visually checked both new slides, adjacent pages and the final page.
   Earlier PDFs are preserved. No audio, saved timeline rebuild, film render or publication was performed.
+
+- PDF revision 5 page 223 review: s24.4 now explains the random-layer control with an explicit input-to-output
+  diagram. The encoder and random layer are fixed; only the class head is fitted using class labels. The
+  takeaway is that high class accuracy does not establish concept meaning. Check that a yellow-bill score
+  corresponds to a visible yellow bill. The claim follows the untrained CBL in VLG-CBM Section 4.1 and Figure 3.
+  Content, 24 Python tests, three deck tests and live visual checks passed. Saved film timing is unchanged.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r12.pdf`, still 312 pages and 27 section bookmarks.
+  Page 228 is revised; all other 311 page content streams and extracted text are unchanged. All page numbers
+  and bookmark destinations are retained. Previous annotation PDFs remain available. No audio, film or
+  publication work was performed.
 
 ## Pending
 1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each

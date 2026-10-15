@@ -2,7 +2,7 @@
 // 24.1 motivation: a language model names a concept, CLIP scores it, nothing checks the image.
 // 24.2 intuition: naming (a chip with no place in the photo) vs pointing (a box on the bill); only found concepts count.
 // 24.3 three ways a concept fails (not visual / the setting / scores high where absent), three cards.
-// 24.4 random concepts: two bars without numbers, nearly equal (reported qualitatively by the paper).
+// 24.4 random-layer control: fixed image encoder and random layer, trained head; accuracy does not establish concept meaning.
 // 24.5 the detector step: boxes on the gull at D.gull.regions (illustrative boxes) and the pipeline.
 // 24.6 boxes become a 0/1 vector c^det for the gull's concepts (symbol named).  24.7 the concept layer; L_C in words, then symbols.
 // 24.8 one BCE term worked out for a label 1 and a label 0 (same numbers as Part 5; predictions illustrative).
@@ -107,10 +107,11 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
   // ---------------- 24.3
   const s2 = [at(w(3, 'visual') - 0.3, 0.5), at(w(3, 'setting') - 0.3, 0.5), at(w(3, 'score') - 0.3, 0.5)];
   const s3white = at(w(3, 'white') - 0.3, 0.5);
-  // ---------------- 24.4
-  const s3a = at(w(4, 'head') - 0.2), s3b = at(w(4, 'random') - 0.2);
-  const s3p = E.out(inv(w(4, 'comparable') - 0.4, w(4, 'comparable') + 0.6, t));
-  const s3eq = at(w(4, 'accuracy') - 0.1), s3line = at(w(4, 'carrying') - 0.2), s3leak = at(w(4, 'leakage') - 0.2);
+  // ---------------- 24.4 random-layer control
+  const s4input = at(w(4, 'photo') - 0.2), s4random = at(w(4, 'randomly') - 0.2);
+  const s4head = at(w(4, 'Train') - 0.2), s4result = at(w(4, 'many') - 0.2);
+  const s4meaning = at(w(4, 'survived') - 0.2), s4check = at(w(4, 'check') - 0.2);
+  const PHCONTROL: Rect = { x: 130, y: 390, w: 210, h: 210 };
   // ---------------- 24.5
   const PH4: Rect = { x: 200, y: 310, w: 560, h: 560 };
   const s4names = at(w(5, 'grounds') - 0.1), s4det = at(w(5, 'open') - 0.2), s4def = at(w(5, 'search') - 0.3, 0.5), s4each = at(w(5, 'looks') - 0.1);
@@ -270,27 +271,31 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={880} ax="right" kind="illustrative" text="example concepts chosen for teaching" o={s2[0]} />
       </Slide>
 
-      {/* ============================================================ 24.4 random concepts */}
+      {/* ============================================================ 24.4 random-layer control */}
       <Slide o={sl(4)}>
         <SlideHead text={bh(P, 4)} />
+        <PhotoR R={PHCONTROL} src="gull.jpg" o={s4input} />
+        <Credit x={130} y={640} text={CREDIT['gull.jpg']} o={s4input} />
         <Svg>
-          <Txt x={620} y={410} size={24} mono weight={600} anchor="start" fill={C.mute} o={s3a}>TASK ACCURACY OF THE HEAD</Txt>
-          {[{ lab: 'language-model concepts', v: 0.86, o: s3a }, { lab: 'random concepts', v: 0.83, o: s3b }].map((r, i) => {
-            const y = 490 + i * 110;
-            return (
-              <g key={i} opacity={r.o < 0.999 ? r.o : undefined}>
-                <rect x={620} y={y - 28} width={1000} height={56} rx={6} fill={C.bg3} />
-                <rect x={620} y={y - 28} width={1000 * r.v * s3p} height={56} rx={6} fill={C.chalk} opacity={i ? 0.6 : 0.92} />
-              </g>
-            );
-          })}
-          <Txt x={1660} y={545} size={48} weight={700} fill={C.chalk} o={s3eq}>≈</Txt>
+          <Txt x={235} y={355} size={28} fill={C.input} o={s4input}>input photo</Txt>
+          <Flow pts={[[345,495],[398,495]]} color={C.input} o={s4input} />
+          <Block x={535} y={495} w={270} h={120} kind="input" title="image encoder" sub="pretrained, fixed" size={29} subSize={20} o={s4input} />
+          <Flow pts={[[672,495],[758,495]]} color={C.input} o={s4random} />
+          <Txt x={715} y={407} size={24} fill={C.input} o={s4random}>features</Txt>
+          <Block x={910} y={495} w={300} h={120} kind="neutral" title="concept layer" sub="random weights, fixed" size={30} subSize={20} o={s4random} />
+          <Flow pts={[[1062,495],[1148,495]]} color={C.mute} o={s4head} />
+          <Txt x={1105} y={407} size={24} fill={C.chalk2} o={s4head}>values</Txt>
+          <Block x={1270} y={495} w={240} h={120} kind="head" title="class head" sub="trained" size={30} subSize={22} o={s4head} />
+          <Txt x={1270} y={330} size={27} fill={C.loss} o={s4head}>fit using class labels</Txt>
+          <Flow pts={[[1270,355],[1270,429]]} color={C.loss} o={s4head} />
+          <Flow pts={[[1392,495],[1498,495]]} color={C.chalk} o={s4head} />
+          <Block x={1630} y={495} w={260} h={120} kind="output" title="bird species" sub="predicted class" size={30} subSize={21} o={s4head} />
         </Svg>
-        <Rich x={590} y={490} ax="right" ay="middle" size={32} text="{c:language-model concepts}" o={s3a} />
-        <Rich x={590} y={600} ax="right" ay="middle" size={32} text="{m:random concepts}" o={s3b} />
-        <Rich x={960} y={720} ax="center" size={34} text="The scores carry {k:information} that their {c:names} do not describe." o={s3line} />
-        <Rich x={960} y={790} ax="center" size={30} color={C.chalk2} text="a form of {k:leakage}, as in Part 9" o={s3leak} />
-        <EvTag x={1760} y={880} ax="right" kind="reported" text="qualitative finding, Srivastava et al. 2024; bar lengths drawn for teaching" o={s3a} />
+        <Rich x={910} y={580} ax="center" w={430} align="center" size={26} color={C.chalk2} text="Never trained to detect {c:yellow bill}." o={s4random} />
+        <Rich x={960} y={730} ax="center" size={34} text="With many outputs, this baseline can be {y:almost as accurate as concept models}." o={s4result} />
+        <Rich x={960} y={795} ax="center" size={29} color={C.chalk2} text="Useful image information can survive without named concept meanings." o={s4meaning} />
+        <Rich x={960} y={900} ax="center" size={34} text="Check: does a high {c:yellow-bill score} really mean a {c:yellow bill} is present?" o={s4check} />
+        <EvTag x={1760} y={1000} ax="right" kind="reported" text="Srivastava et al. 2024, Section 4 and Figure 3; prediction path schematic" o={s4result} />
       </Slide>
 
       {/* ============================================================ 24.5 the detector */}

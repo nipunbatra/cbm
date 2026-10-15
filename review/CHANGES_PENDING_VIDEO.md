@@ -200,3 +200,16 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     pages 188-314 move to 186-312. Verified every footer and unchanged body text on all 310 retained slides.
     Visually checked the new slides, adjacent pages, section transition and final page. No audio generation,
     saved timeline rebuild, film render or publication was performed.
+33. **Clarify the random-concept comparison (PDF revision 5 page 223).** Reworked s24.4 as one explicit
+    random-layer control: input photo, fixed pretrained image encoder, fixed random concept layer, a class head
+    fitted using class labels, and the predicted species. Removed the unexplained illustrative accuracy bars.
+    Explain that outputs still depend on the image and that high accuracy with many outputs does not establish
+    concept meaning. End by asking whether a high yellow-bill score corresponds to a visible yellow bill,
+    leading into the detector slide. Scoped the claim to the random, untrained CBL in Section 4.1 and Figure 3
+    of Srivastava et al.; updated docs/lineage_facts.md. Content, type checking, 24 Python tests and three deck
+    tests passed. Inspected the diagram, narration, builds and transition in the deck; no browser errors.
+34. **Annotation PDF revision 12.** Saved `review/cbm-lecture-review-2026-10-15-r12.pdf`, keeping 312 pages and
+    27 section bookmarks. The revised slide is page 228 (s24.4), corresponding to revision 5 page 223. Every
+    footer and bookmark destination was checked; the other 311 pages retain identical content streams and
+    extracted text. Visually checked the revised page and its neighbours. Prior PDFs remain available.
+    No audio generation, saved timeline rebuild, film render or publication was performed.

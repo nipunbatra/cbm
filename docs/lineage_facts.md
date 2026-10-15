@@ -295,6 +295,15 @@ On the non-CLIP backbone, the random CBL beats LF-CBM.
    - This is why VLG-CBM controls NEC.
    - Roth et al. are cited for random words and characters matching CLIP zero-shot accuracy.
 
+**Review clarification (15 October 2026, s24.4):**
+The slide now uses the random, untrained linear CBL control in Section 4.1 and Figure 3, rather than
+ambiguous “random concepts”. The backbone features and sampled CBL weights are fixed; the final classifier
+is fitted using class labels. With sufficiently many effective outputs, high class accuracy is possible
+without training the intermediate layer to detect named concepts. This is a warning about using class
+accuracy as proof of concept meaning, not proof that every concept model leaks, nor a claim that random
+image-independent noise predicts labels. The next slide motivates checking concepts against image regions.
+Source: https://arxiv.org/html/2408.01432v3#S4
+
 ---
 
 ## 8. Menon & Vondrick 2023, Classification by Description

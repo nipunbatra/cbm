@@ -722,8 +722,8 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 3. **Three ways a concept can fail**  
    There are three ways a concept can fail. Some are not visual, such as a gull's call. Some describe the setting, not the bird. And some score highly on images that do not contain them, such as a black head on a gull whose head is white.
 
-4. **A head on random concepts does almost as well**  
-   Srivastava and colleagues point out that a head built on a set of random concepts can reach accuracy comparable to these models. So the concept scores were carrying information that their names do not describe, a form of the leakage we met in Part 9.
+4. **High accuracy does not prove meaningful concepts**  
+   Here is why accuracy alone is not enough. Start with a photo and a pretrained image encoder. In this baseline, the concept layer has randomly chosen weights that stay fixed: it was never taught concepts such as yellow bill. Its outputs still depend on the image. Train only the final head using images and their class labels, then test on new images. When the head can use many of these outputs, the paper finds that accuracy can approach that of concept-based models. Useful image information has survived, even though the layer was never trained to detect named concepts. So check whether a high yellow-bill score really corresponds to a yellow bill, as well as checking the predicted class.
 
 5. **VLG-CBM asks a detector to find each concept**  
    Their method, VLG-CBM, grounds the concepts first. It uses an open-vocabulary object detector: a detector that can search for any phrase you give it, not only a fixed list of objects. It looks for each concept in each training image, and draws a box where it finds it.
