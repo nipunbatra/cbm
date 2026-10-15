@@ -57,11 +57,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 5. **Occlusion: grey out a patch and measure how far the score drops**  
    A second family changes the input. Grey out one patch, run the model again, and measure how much the score drops. That is the occlusion map we computed for the gull in Part 1.
 
-6. **A simple check: remove what the model learned**  
-   Keep the photo and the class we are explaining fixed. First, make a heatmap with the trained model. Then replace its learned weights with random values and make the heatmap again. If the heatmap reflects what the model learned, should it stay the same?
+6. **From an input photo and a class score to a heatmap**  
+   The input is a gull photo. A trained model produces class scores; choose the herring gull score as the output to explain. The explanation method takes the photo, the model and this choice of class. For plain gradient saliency, it computes the pixel sensitivities from the formula we just saw. It displays them as a heatmap, with brighter pixels more sensitive. This is an explanation of the score, not another prediction.
 
-7. **Some heatmaps barely change**  
-   For some methods, the heatmap stays almost the same, even after we replace the learned weights. Adebayo and colleagues found this with guided backpropagation: the map could still trace image edges. So a convincing heatmap alone is not enough to trust an explanation. Other methods, including plain gradients and Grad-CAM, did change in their tests.
+7. **Does the heatmap depend on what the model learned?**  
+   Now keep the photo, the herring gull class and the explanation method fixed. Compare the heatmap from the trained model with one made after replacing its learned weights with random values. For some methods, such as guided backpropagation, Adebayo and colleagues found the maps barely changed. That is a warning: the picture can survive even after learning is removed. Before trusting a heatmap, check that it depends on the learned weights. Plain gradients did change in their test, but passing this check alone does not prove an explanation is correct.
 
 8. **Limit 2: a model can learn a shortcut**  
    The second limit is about shortcuts. Zech and colleagues trained a pneumonia detector on chest X-rays from two hospital systems. At one hospital about a third of the patients had pneumonia, and at the other about one in a hundred.

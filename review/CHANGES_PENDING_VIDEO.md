@@ -54,3 +54,11 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     matching class score. Values come from `D.saliency_toy`; all maps share a brightness scale. Added three independent
     finite-difference checks covering every pixel in each example. Content, type checks, 21 Python checks and three
     deck checks passed. Both slides were inspected in the browser. Film timing and audio were not changed.
+13. **Heatmap workflow and takeaway (PDF comment on page 17; s21.6-7, pages 17-18).** The first slide now shows
+    the input gull photo, trained model, chosen herring-gull score, explanation method and heatmap in one row.
+    Narration explains that plain gradient saliency uses the pixel sensitivities just introduced. The following
+    slide holds the photo, class and method fixed, then compares trained with random weights. Guided
+    backpropagation is named as the reported failure example; the notes distinguish it from plain gradients.
+    The takeaway is explicit: before trusting a heatmap, check that it depends on the learned weights. Maps are
+    labelled schematic, not computed for this photo. Content, type checks, 21 Python checks, three deck checks
+    and the deck build passed. Both slides were inspected in the browser. Audio and film timing remain unchanged.

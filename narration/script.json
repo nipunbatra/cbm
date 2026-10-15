@@ -124,14 +124,14 @@
     {
      "id": "21.6",
      "gap": 0.8,
-     "text": "Keep the photo and the class we are explaining fixed. First, make a heatmap with the trained model. Then replace its learned weights with random values and make the heatmap again. If the heatmap reflects what the model learned, should it stay the same?",
-     "head": "A simple check: remove what the {f:model} learned"
+     "text": "The input is a gull photo. A trained model produces class scores; choose the herring gull score as the output to explain. The explanation method takes the photo, the model and this choice of class. For plain gradient saliency, it computes the pixel sensitivities from the formula we just saw. It displays them as a heatmap, with brighter pixels more sensitive. This is an explanation of the score, not another prediction.",
+     "head": "From an {x:input photo} and a {y:class score} to a heatmap"
     },
     {
      "id": "21.7",
      "gap": 1.0,
-     "text": "For some methods, the heatmap stays almost the same, even after we replace the learned weights. Adebayo and colleagues found this with guided backpropagation: the map could still trace image edges. So a convincing heatmap alone is not enough to trust an explanation. Other methods, including plain gradients and Grad-CAM, did change in their tests.",
-     "head": "Some heatmaps barely change"
+     "text": "Now keep the photo, the herring gull class and the explanation method fixed. Compare the heatmap from the trained model with one made after replacing its learned weights with random values. For some methods, such as guided backpropagation, Adebayo and colleagues found the maps barely changed. That is a warning: the picture can survive even after learning is removed. Before trusting a heatmap, check that it depends on the learned weights. Plain gradients did change in their test, but passing this check alone does not prove an explanation is correct.",
+     "head": "Does the heatmap depend on what the {f:model} learned?"
     },
     {
      "id": "21.8",

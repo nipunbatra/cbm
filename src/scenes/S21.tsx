@@ -266,14 +266,19 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
   const s9w = at(w(5, 'measure') - 0.1), s9eq = at(w(5, 'drops') - 0.1, 0.6);
 
 
-  // ---------------- 21.6 the check, in plain words
-  const checkBefore = at(w(6, 'First') - 0.1);
-  const checkReplace = at(w(6, 'Then') - 0.1);
-  const checkQuestion = at(w(6, 'If') - 0.1);
+  // ---------------- 21.6 all inputs and outputs of the explanation workflow
+  const workflowModel = at(w(6, 'trained') - 0.1);
+  const workflowScore = at(w(6, 'choose') - 0.1);
+  const workflowMethod = at(w(6, 'method') - 0.1);
+  const workflowFormula = at(w(6, 'formula') - 0.1);
+  const workflowMap = at(w(6, 'heatmap') - 0.1);
 
-  // ---------------- 21.7 the result: one comparison, one takeaway
-  const resultAfter = at(w(7, 'same') - 0.1);
-  const resultLesson = at(w(7, 'So') - 0.1);
+  // ---------------- 21.7 repeat that method after removing the learned weights
+  const checkBefore = at(w(7, 'Compare') - 0.1);
+  const checkAfter = at(w(7, 'random') - 0.1);
+  const checkMethod = at(w(7, 'guided') - 0.1);
+  const checkSimilar = at(w(7, 'barely') - 0.1);
+  const checkTakeaway = at(w(7, 'Before') - 0.1);
 
   // ---------------- 21.8 limit 2 setup
   const s12det = at(w(8, 'pneumonia') - 0.1), s12hA = at(w(8, 'chest') - 0.1), s12hB = at(w(8, 'two') - 0.1);
@@ -456,38 +461,65 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
       </Slide>
 
 
-      {/* ============================================================ 21.6 one simple check */}
+      {/* ============================================================ 21.6 the whole explanation workflow */}
       <Slide o={sl(6)}>
         <SlideHead text={bh(P, 6)} />
-        <Rich x={960} y={310} ax="center" size={32} text="Same {x:photo}. Same {y:class}." />
+        <PhotoR R={{ x: 120, y: 400, w: 220, h: 220 }} src="gull.jpg" border={C.input} />
         <Svg>
-          <SchemMap x={350} y={405} s={300} id="s21check-before" o={checkBefore} />
-          <Arr x1={740} y1={555} x2={1180} y2={555} color={FC} p={checkReplace} />
-          <g opacity={checkReplace}>
-            <rect x={1270} y={405} width={300} height={300} rx={10} fill="#06080B" stroke={C.line2} strokeWidth={2.5} strokeDasharray="9 8" />
-            <Txt x={1420} y={555} size={100} weight={600}>?</Txt>
+          <Arr x1={365} y1={510} x2={425} y2={510} color={C.input} p={workflowModel} />
+          <g opacity={workflowModel}>
+            <Block x={560} y={510} w={230} h={135} kind="head">
+              <Txt x={0} y={-20} size={32} weight={600}>trained</Txt>
+              <Txt x={0} y={22} size={32} weight={600}>model</Txt>
+            </Block>
           </g>
+          <Arr x1={695} y1={510} x2={760} y2={510} p={workflowScore} />
+          <g opacity={workflowScore}>
+            <Txt x={915} y={485} size={34} weight={650}>herring gull</Txt>
+            <Txt x={915} y={535} size={34} weight={650}>score</Txt>
+          </g>
+          <Arr x1={1060} y1={510} x2={1105} y2={510} p={workflowMethod} />
+          <g opacity={workflowMethod}>
+            <Block x={1260} y={510} w={270} h={135} kind="neutral">
+              <Txt x={0} y={-20} size={30} weight={600}>explanation</Txt>
+              <Txt x={0} y={22} size={30} weight={600}>method</Txt>
+            </Block>
+          </g>
+          <Arr x1={1415} y1={510} x2={1520} y2={510} p={workflowMap} />
+          <HeatGlyph x={1560} y={400} s={220} id="s21workflow-map" o={workflowMap} />
         </Svg>
-        <Rich x={500} y={745} ax="center" size={34} text="{f:trained model}" o={checkBefore} />
-        <Rich x={960} y={410} ax="center" w={400} size={32} lh={1.4} text="replace learned weights with random values" o={checkReplace} />
-        <Rich x={1420} y={745} ax="center" size={34} text="{f:random weights}" o={checkReplace} />
-        <Rich x={960} y={840} ax="center" size={38} weight={650} text="Should the heatmap stay the same?" o={checkQuestion} />
-        <EvTag x={240} y={920} kind="schematic" text="drawn heatmap, illustrating the test in Adebayo et al., NeurIPS 2018" />
+        <Rich x={230} y={330} ax="center" size={32} text="{x:input}" />
+        <Rich x={915} y={330} ax="center" size={32} text="{y:output to explain}" o={workflowScore} />
+        <Rich x={1670} y={330} ax="center" size={32} text="heatmap" o={workflowMap} />
+        <Rich x={1260} y={630} ax="center" w={390} size={28} text="plain gradients: {l:pixel sensitivities}" o={workflowFormula} />
+        <Rich x={960} y={740} ax="center" size={32}
+          text="The method uses this {x:photo}, the {f:model} and the chosen {y:class}" o={workflowMethod} />
+        <Rich x={960} y={820} ax="center" size={36} weight={650}
+          text="Brighter pixels: the chosen {y:score} is more sensitive there" o={workflowMap} />
+        <EvTag x={120} y={910} kind="schematic" text="workflow and heatmap illustration, not computed for this photo" />
+        <Credit x={120} y={955} text={CREDIT['gull.jpg']} />
       </Slide>
 
-      {/* ============================================================ 21.7 the result */}
+      {/* ============================================================ 21.7 the test and its takeaway */}
       <Slide o={sl(7)}>
         <SlideHead text={bh(P, 7)} />
-        <Rich x={960} y={310} ax="center" size={32} text="Same {x:photo}. Same {y:class}." />
+        <Rich x={960} y={300} ax="center" size={32} text="Same {x:photo}, same {y:herring gull class}, same method" />
+        <PhotoR R={{ x: 150, y: 425, w: 250, h: 250 }} src="gull.jpg" border={C.input} />
         <Svg>
-          <SchemMap x={350} y={405} s={300} id="s21result-before" />
-          <SchemMap x={1270} y={405} s={300} id="s21result-after" jit={1} o={resultAfter} />
+          <SchemMap x={680} y={425} s={250} id="s21check-trained" o={checkBefore} />
+          <Arr x1={985} y1={550} x2={1255} y2={550} color={FC} p={checkAfter} />
+          <SchemMap x={1320} y={425} s={250} id="s21check-random" jit={1} o={checkAfter} />
         </Svg>
-        <Rich x={500} y={745} ax="center" size={34} text="{f:trained model}" />
-        <Rich x={960} y={530} ax="center" w={410} size={38} weight={650} text="almost the same heatmap" o={resultAfter} />
-        <Rich x={1420} y={745} ax="center" size={34} text="{f:random weights}" o={resultAfter} />
-        <Rich x={960} y={840} ax="center" size={36} weight={650} text="A convincing heatmap is not enough to trust the explanation" o={resultLesson} />
-        <EvTag x={240} y={920} kind="schematic" text="drawn maps, illustrating guided backpropagation in Adebayo et al., NeurIPS 2018" />
+        <Rich x={275} y={365} ax="center" size={32} text="{x:input photo}" />
+        <Rich x={805} y={365} ax="center" size={32} text="{f:trained weights}" o={checkBefore} />
+        <Rich x={1445} y={365} ax="center" size={32} text="{f:random weights}" o={checkAfter} />
+        <Rich x={1120} y={425} ax="center" w={270} size={30} text="replace learned weights" o={checkAfter} />
+        <Rich x={1120} y={615} ax="center" w={300} size={30} weight={650} text="almost unchanged" o={checkSimilar} />
+        <Rich x={1125} y={720} ax="center" size={28} color={C.chalk2} text="reported example: guided backpropagation" o={checkMethod} />
+        <Rich x={960} y={815} ax="center" w={1600} size={36} weight={650}
+          text="Before trusting a heatmap, check that it depends on the {f:learned weights}" o={checkTakeaway} />
+        <EvTag x={150} y={910} kind="schematic" text="drawn maps illustrating a reported failure, Adebayo et al., NeurIPS 2018" />
+        <Credit x={150} y={955} text={CREDIT['gull.jpg']} />
       </Slide>
 
       {/* ============================================================ 21.8 limit 2 setup: two hospitals */}
