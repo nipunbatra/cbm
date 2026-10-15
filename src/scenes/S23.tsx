@@ -1,18 +1,16 @@
-// s23 Part 5 · The three schemes on CUB (revision 2: one idea per slide, 8 slides, one per beat; slides replace each other)
+// s23 Part 5 · The three schemes on CUB (revision 2: one idea per slide, 6 slides, one per beat; slides replace each other)
 // 23.1 why: the three schemes as three small cards, then our run on CUB (D.cub.n_train / n_test)
 // 23.2 the setup in words with the symbols aligned underneath: x -> frozen CLIP -> e(x) in R^512 -> linear g -> c hat -> linear f -> y hat
 // 23.3 one photo through it: e(x) as symbolic entries, c hat as four named CUB concepts (D.cub.gull, computed), f -> species shares
 // 23.4 task accuracy, one calm bar chart (D.cub.acc)               23.5 the intervention operator c_j <- c_j with a tiny group vector
-// 23.6 intervention curves (D.cub.intervention)                     23.7 why joint gains least: the head also reads detail (leakage pointer)
-// 23.8 Koh et al.'s reported results next to ours (D.lit.koh_cub_err)
+// 23.6 intervention curves (D.cub.intervention); the section ends with this measured result.
 import React from 'react';
 import { C } from '../kit/theme';
 import { E, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, bw, bh, inv, type SceneProps } from '../kit/core';
-import { ArchMap, Block, CREDIT, ConceptRow, Credit, Cross, EvTag, Flow, MathSvg, Person, PhotoR, ShareBars, rgba, type Rect } from '../kit/cbm';
+import { ArchMap, Block, CREDIT, Credit, EvTag, Flow, MathSvg, Person, PhotoR, ShareBars, rgba, type Rect } from '../kit/cbm';
 import { D } from '../kit/data';
 
 const CUB = D.cub;
-const KOH = D.lit.koh_cub_err;
 const IV = CUB.intervention;
 const KS: number[] = IV.groups;
 const NG = KS[KS.length - 1];
@@ -147,17 +145,6 @@ export const S23: React.FC<SceneProps> = ({ t, P }) => {
   const fast = at(w(6, 'fastest') - 0.2);
   const least = at(w(6, 'least') - 0.3);
   const endLab = at(w(6, 'trusts') - 0.2);
-
-  // ---------------- 23.7
-  const s7row = at(b(7) - 0.05, 0.3);
-  const s7m = E.io(inv(b(7) + 0.1, b(7) + 0.8, t));
-  const s7k = E.io(inv(w(7, 'fine') - 0.2, w(7, 'fine') + 0.6, t)), s7kl = at(w(7, 'beyond') - 0.1);
-  const s7e = E.io(inv(w(7, 'corrected') - 0.1, w(7, 'corrected') + 0.6, t));
-  const s7x = inv(w(7, 'less') - 0.1, w(7, 'less') + 0.4, t);
-  const s7l = at(w(7, 'leakage') - 0.15);
-
-  // ---------------- 23.8
-  const r8 = [at(b(8) + 0.1, 0.4), at(w(8, 'Koh') - 0.1), at(w(8, 'same') - 0.1), at(w(8, 'fully') - 0.1)];
 
   // chart helpers
   const cx = (k: number) => CH.x0 + (k / NG) * (CH.x1 - CH.x0);
@@ -406,53 +393,6 @@ export const S23: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={880} ax="right" kind="measured" text={`${TAG_SHORT}, averaged over random orders`} o={ax6} />
       </Slide>
 
-      {/* ============================================================ 23.7 why joint gains least */}
-      <Slide o={sl(7)}>
-        <SlideHead text={bh(P, 7)} />
-        <Svg>
-          <ConceptRow x={260} y={560} label="wing: grey" v={WING_PRED[0]} w={240} labelW={180} size={30} barH={30} o={s7row}
-            edit={s7e > 0.001 ? { to: WING[0].truth, p: s7e } : undefined} />
-          {/* meaning: teal, solid */}
-          <Flow pts={[[800, 545], [930, 470], [1220, 470], [1306, 530]]} color={s7e > 0.5 ? C.edit : C.concept} sw={4} head={14} p={s7m} t={t} live={s7row} n={2} dotR={5} />
-          {/* extra detail in the exact soft value: purple, dotted */}
-          <Flow pts={[[800, 575], [930, 650], [1220, 650], [1306, 590]]} color={C.leak} sw={4} head={14} dash="3 10" p={s7k} t={t + 0.4} live={s7k * (1 - s7e)} n={2} dotR={5}
-            o={1 - 0.65 * s7e} />
-          <Cross x={1050} y={628} w={44} h={44} p={s7x} />
-          <Block x={1400} y={560} w={180} h={130} kind="head" title="joint" sub="task head" size={30} o={s7row} />
-        </Svg>
-        <Rich x={1075} y={420} ax="center" size={28} text="{c:what the concept means}" o={s7m} />
-        <Rich x={1075} y={680} ax="center" size={28} text="{k:extra detail in the exact score}" o={s7kl} />
-        <Rich x={960} y={765} ax="center" size={30} text="a {e:corrected} 0 or 1 carries the meaning, not the detail" o={s7x} />
-        <Rich x={960} y={818} ax="center" size={28} color={C.chalk2} text="this is {k:leakage}: Part 9" o={s7l} />
-        <EvTag x={260} y={880} kind="schematic" text="one concept drawn; the head reads all 112" o={s7row} />
-      </Slide>
-
-      {/* ============================================================ 23.8 Koh et al. */}
-      <Slide o={sl(8)}>
-        <SlideHead text={bh(P, 8)} />
-        <Svg>
-          <g opacity={r8[0] < 0.999 ? r8[0] : undefined}>
-            <line x1={280} x2={1640} y1={430} y2={430} stroke={C.line2} strokeWidth={2} />
-            {[1, 2].map((i) => <line key={i} x1={280} x2={1640} y1={430 + i * 100} y2={430 + i * 100} stroke={C.line} strokeWidth={1.5} opacity={r8[i + 1]} />)}
-          </g>
-        </Svg>
-        <Rich x={900} y={385} ax="center" ay="middle" size={30} weight={700} text="ours" o={r8[0]} />
-        <Rich x={1380} y={385} ax="center" ay="middle" size={30} weight={700} text="Koh et al. 2020" o={r8[1]} />
-        {[
-          { lab: 'network', ours: '{x:frozen CLIP} + linear', koh: '{x:Inception-v3}, trained fully', o: r8[1] },
-          { lab: 'accuracy: joint / independent', ours: `${pc(CUB.acc.joint)} % / ${pc(CUB.acc.independent)} %`, koh: `${pc(1 - KOH.joint)} % / ${pc(1 - KOH.independent)} %`, o: r8[2] },
-          { lab: 'gains most from intervention', ours: '{y:independent}', koh: '{y:independent}', o: r8[2] },
-        ].map((r, i) => (
-          <React.Fragment key={r.lab}>
-            <Rich x={300} y={480 + i * 100} ay="middle" size={26} color={C.chalk2} text={r.lab} o={r.o} />
-            <Rich x={900} y={480 + i * 100} ax="center" ay="middle" size={30} text={r.ours} o={r.o} />
-            <Rich x={1380} y={480 + i * 100} ax="center" ay="middle" size={30} text={r.koh} o={r.o} />
-          </React.Fragment>
-        ))}
-        <Rich x={960} y={770} ax="center" size={30} text="fully trained networks: higher accuracy, the same pattern" o={r8[3]} />
-        <EvTag x={160} y={880} kind="measured" text={TAG_SHORT} o={r8[0]} />
-        <EvTag x={1760} y={880} ax="right" kind="reported" text="Koh et al. 2020, Table 1 and Fig. 4" o={r8[1]} />
-      </Slide>
     </Stage>
   );
 };

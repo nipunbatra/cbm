@@ -1,5 +1,5 @@
 // s21 Part 1: Post-hoc or interpretable by design? One slide per narration beat.
-// 1-2: two routes and post-hoc. 3-4: sensitivity formula, then three shape/class examples.
+// 1-2: two routes and post-hoc. 3-4: one pixel nudge, then two class maps on the same real photo.
 // 5: occlusion. 6-7: model randomisation check. 8-10: hospital shortcut.
 // 11-12: where versus what, and named controls. 13-16: interpretable models and the CBM.
 // TCAV is in the appendix, S26.tsx.
@@ -90,56 +90,12 @@ const Arr: React.FC<{ x1: number; y1: number; x2: number; y2: number; color?: st
   );
 };
 
-// 21.3 and 21.4: one input nudge, one class score, then the saliency map.
-// All numerical values come from the existing constructed example in math/data.py.
-const ST = D.saliency_toy;
-const TOY_CLASS: string = ST.classes[0];
-const IMG: number[][] = ST.image;
-const EPS: number = ST.eps;
-const DELTA: number = ST.nudge_centre[TOY_CLASS];
-const TOY_EXAMPLES: { class: string; image: number[][] }[] = ST.examples;
-const TOYTAG = 'constructed linear model, not a trained image classifier';
+// 21.3 and 21.4: measured ResNet-50 input gradients, reproduced by worked/saliency.py.
+const SR = D.saliency_real;
+const NUDGE = SR.nudge;
+const REAL_PHOTO: Rect = { x: 180, y: 345, w: 340, h: 340 };
 const fm = (v: number) => String(parseFloat(v.toFixed(3)));
-
-/** a 3 x 3 image: lit pixels in input blue, dark pixels near black, the pixel value small in each cell.
- *  lift brightens chosen cells (a nudge); ring outlines them */
-const PixGrid: React.FC<{
-  x: number; y: number; cell: number; img: number[][]; o?: number; lit?: number; vals?: number;
-  lift?: { r: number; c: number; a: number }[];
-}> = ({ x, y, cell, img, o = 1, lit = 1, vals = 1, lift = [] }) => {
-  if (o <= 0.001) return null;
-  return (
-    <g opacity={o < 0.999 ? o : undefined}>
-      {img.map((row, r) => row.map((v, c) => {
-        const up = lift.filter((q) => q.r === r && q.c === c).reduce((s, q) => s + q.a, 0);
-        return (
-          <g key={`${r}-${c}`}>
-            <rect x={x + c * cell} y={y + r * cell} width={cell} height={cell} fill="#080B0F" />
-            <rect x={x + c * cell} y={y + r * cell} width={cell} height={cell} fill={C.input} opacity={clamp(0.88 * v * lit + 0.35 * up)} />
-            <Txt x={x + c * cell + cell - 12} y={y + r * cell + cell - 16} size={Math.max(20, cell * 0.17)} anchor="end" mono
-              fill={v * lit > 0.5 ? '#0B1220' : C.mute} o={vals}>{fm(v)}</Txt>
-          </g>
-        );
-      }))}
-      {Array.from({ length: 4 }, (_, i) => (
-        <g key={i}>
-          <line x1={x + i * cell} x2={x + i * cell} y1={y} y2={y + 3 * cell} stroke={C.line2} strokeWidth={2} />
-          <line y1={y + i * cell} y2={y + i * cell} x1={x} x2={x + 3 * cell} stroke={C.line2} strokeWidth={2} />
-        </g>
-      ))}
-    </g>
-  );
-};
-
-/** The relative size of each pixel's score change, for the same tiny nudge. */
-const SalGrid: React.FC<{ x: number; y: number; cell: number; target?: string; o?: number }> = ({ x, y, cell, target = TOY_CLASS, o = 1 }) => (
-  <g opacity={o}>
-    {(ST.saliency[target] as number[][]).map((row, r) => row.map((v, c) => (
-      <rect key={`${r}-${c}`} x={x + c * cell} y={y + r * cell} width={cell} height={cell}
-        fill={rgba(C.heat, 0.92 * v / ST.saliency_max)} stroke={C.line2} strokeWidth={2} />
-    )))}
-  </g>
-);
+const small = (v: number) => String(parseFloat(v.toPrecision(2)));
 
 /** an opaque network: a dark box with a faint, slowly shimmering inner texture (as in s01) */
 const ClipBox: React.FC<{ x: number; y: number; w: number; h: number; t: number; o?: number }> = ({ x, y, w, h, t, o = 1 }) => {
@@ -248,16 +204,18 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
   const s2ev = at(w(2, 'evidence') - 0.2), s2eq = at(w(2, 'evidence') + 0.2, 0.6);
 
 
-  // ---------------- 21.3 one nudge, one score change
-  const nudge = at(w(3, 'brighten') - 0.1);
-  const change = at(w(3, 'rises') - 0.1);
-  const saliencyWords = at(w(3, 'Saliency') - 0.1);
+  // ---------------- 21.3: chosen score, one pixel nudge, then the derivative
+  const saliencyScore = at(w(3, 'Choose') - 0.1);
+  const nudge = at(w(3, 'slightly') - 0.1);
+  const change = at(w(3, 'changes') - 0.1);
+  const saliencyWords = at(w(3, 'Sensitivity') - 0.1);
   const saliencyFormula = at(w(3, 'symbols') - 0.1);
 
-  // ---------------- 21.4 three input/class pairs, with a shared brightness scale
-  const examplesIn = [at(w(4, 'vertical') - 0.1), at(w(4, 'horizontal') - 0.1), at(w(4, 'dot') - 0.1)];
-  const examplesMap = [at(w(4, 'column') - 0.1), at(w(4, 'row') - 0.1), at(w(4, 'centre') - 0.1)];
-  const mapScale = at(w(4, 'All') - 0.1);
+  // ---------------- 21.4: hold image and weights fixed, change only the chosen class
+  const classProbabilities = at(w(4, 'Zebra') - 0.1);
+  const classMaps = [at(w(4, 'backpropagate') - 0.1), at(w(4, 'repeat') - 0.1)];
+  const mapScale = at(w(4, 'Both') - 0.1);
+  const mapTakeaway = at(w(4, 'Notice') - 0.1);
 
   // ---------------- 21.5
   const s9ph = at(b(5) - 0.05, 0.3);
@@ -391,50 +349,55 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Tex x={960} y={850} ax="center" size={56} tex="\text{evidence} = E(\chead{f}, \cin{x})" o={s2eq} />
       </Slide>
 
-      {/* ============================================================ 21.3 sensitivity in words, then symbols */}
+      {/* ============================================================ 21.3 real pixel sensitivity */}
       <Slide o={sl(3)}>
         <SlideHead text={bh(P, 3)} />
+        <Rich x={350} y={285} ax="center" size={30} text="{x:input photo}" />
+        <PhotoR R={REAL_PHOTO} src="saliency/input.png" border={C.input} />
         <Svg>
-          <PixGrid x={240} y={325} cell={90} img={IMG} vals={0} lift={[{ r: 1, c: 1, a: nudge }]} />
-          <rect x={334} y={419} width={82} height={82} fill="none" stroke={C.input} strokeWidth={5} opacity={nudge} />
-          <Arr x1={560} y1={460} x2={800} y2={460} color={C.input} p={nudge} />
-          <Block x={960} y={460} w={260} h={140} kind="head">
-            <Txt x={0} y={0} size={36} weight={600}>model</Txt>
-          </Block>
-          <Arr x1={1120} y1={460} x2={1300} y2={460} p={change} />
-          <Txt x={1480} y={460} size={80} weight={650} mono o={change}>{'+' + fm(DELTA)}</Txt>
+          <circle cx={REAL_PHOTO.x + (NUDGE.col + 0.5) * REAL_PHOTO.w / SR.preprocess.crop_size}
+            cy={REAL_PHOTO.y + (NUDGE.row + 0.5) * REAL_PHOTO.h / SR.preprocess.crop_size}
+            r={12} fill="none" stroke={C.input} strokeWidth={4} opacity={nudge} />
+          <Arr x1={555} y1={500} x2={710} y2={500} color={C.input} />
+          <Block x={920} y={500} w={350} h={140} kind="head" title={SR.model} sub="trained, weights fixed" size={34} />
+          <Arr x1={1120} y1={500} x2={1270} y2={500} p={saliencyScore} />
+          <Txt x={1495} y={500} size={66} mono weight={650} o={change}>{'+' + small(NUDGE.score_change)}</Txt>
         </Svg>
-        <Rich x={375} y={280} ax="center" size={30} text="{x:input image}" />
-        <Rich x={375} y={625} ax="center" size={32} text={'centre {x:pixel}: {x:+' + fm(EPS) + '}'} o={nudge} />
-        <Rich x={1480} y={330} ax="center" size={32} text={'{y:' + TOY_CLASS + ' score}'} />
-        <Rich x={1480} y={550} ax="center" size={30} color={C.chalk2} text="change in score" o={change} />
-        <Rich x={960} y={710} ax="center" size={34}
-          text="{l:saliency} = size of the {y:score change} ÷ size of the {x:pixel change}" o={saliencyWords} />
-        <Tex x={790} y={820} ax="center" size={48} o={saliencyFormula}
+        <Rich x={920} y={610} ax="center" w={410} size={26} color={C.chalk2} text={SR.model_full_name} />
+        <Rich x={1495} y={360} ax="center" size={34} text="chosen score: {y:zebra}" o={saliencyScore} />
+        <Rich x={1495} y={411} ax="center" size={26} color={C.chalk2} text="before softmax" o={saliencyScore} />
+        <Rich x={1495} y={580} ax="center" size={28} color={C.chalk2} text="tiny change in the score" o={change} />
+        <Credit x={180} y={700} text={SR.credit} />
+        <Rich x={350} y={742} ax="center" size={30} text={'{x:red value: +' + fm(NUDGE.epsilon) + '}'} o={nudge} />
+        <Rich x={960} y={805} ax="center" size={32}
+          text="{l:sensitivity} = size of {y:score change} ÷ size of {x:pixel change}" o={saliencyWords} />
+        <Tex x={700} y={890} ax="center" size={44} o={saliencyFormula}
           tex="\closs{S_i^{(k)}}=\left|\frac{\partial s_k(\cin{x})}{\partial \cin{x_i}}\right|\approx\left|\frac{\Delta s_k}{\Delta\cin{x_i}}\right|" />
-        <Tex x={1480} y={820} ax="center" size={48} o={saliencyWords}
-          tex={'\\left|\\frac{' + fm(DELTA) + '}{\\cin{' + fm(EPS) + '}}\\right|=\\closs{' + fm(DELTA / EPS) + '}'} />
-        <EvTag x={240} y={930} kind="constructed" text={TOYTAG} />
+        <Tex x={1485} y={890} ax="center" size={44} o={saliencyFormula}
+          tex={'\\frac{' + small(NUDGE.score_change) + '}{\\cin{' + fm(NUDGE.epsilon) + '}}\\approx\\closs{' + small(NUDGE.finite_difference) + '}'} />
+        <EvTag x={180} y={950} kind="computed" text="real photo, fixed ImageNet model, one pixel channel changed" />
       </Slide>
 
-      {/* ============================================================ 21.4 three shape/class examples */}
+      {/* ============================================================ 21.4 predicted and alternative classes */}
       <Slide o={sl(4)}>
         <SlideHead text={bh(P, 4)} />
-        {TOY_EXAMPLES.map((ex, i) => {
-          const x = 510 + i * 500;
-          return <React.Fragment key={ex.class}>
-            <Rich x={x} y={300} ax="center" size={34} weight={650} text={'{y:' + ex.class + '}'} o={examplesIn[i]} />
-            <Svg>
-              <PixGrid x={x - 90} y={360} cell={60} img={ex.image} vals={0} o={examplesIn[i]} />
-              <Arr x1={x} y1={563} x2={x} y2={610} color={C.chalk2} p={examplesMap[i]} />
-              <SalGrid x={x - 90} y={635} cell={60} target={ex.class} o={examplesMap[i]} />
-            </Svg>
+        <Rich x={350} y={295} ax="center" size={32} text="same {x:input photo}" />
+        <PhotoR R={{ x: 180, y: 385, w: 340, h: 340 }} src="saliency/input.png" border={C.input} />
+        <Rich x={350} y={750} ax="center" size={27} color={C.chalk2} text={'same ' + SR.model + ', fixed weights'} />
+        {(SR.classes as {name: string; probability: number; map: string}[]).map((cl, i) => {
+          const x = 940 + i * 570;
+          return <React.Fragment key={cl.name}>
+            <Rich x={x} y={295} ax="center" size={34} weight={650} text={'{y:' + cl.name + ' score}'} o={classProbabilities} />
+            <Rich x={x} y={345} ax="center" size={25} color={C.chalk2}
+              text={'probability: ' + (cl.probability * 100).toFixed(i === 0 ? 1 : 2) + (i === 0 ? '% (top class)' : '% (not predicted)')} o={classProbabilities} />
+            <PhotoR R={{ x: x - 170, y: 385, w: 340, h: 340 }} src={cl.map} o={classMaps[i]} shadow={false} />
+            <Rich x={x} y={750} ax="center" size={27} text={'{l:saliency} for the ' + cl.name + ' score'} o={classMaps[i]} />
           </React.Fragment>;
         })}
-        <Rich x={145} y={425} size={30} text="{x:input}" />
-        <Rich x={145} y={700} size={30} text="saliency" />
-        <Rich x={960} y={870} ax="center" size={32} text="Shared scale: brighter means more sensitive to that {y:class score}" o={mapScale} />
-        <EvTag x={240} y={940} kind="constructed" text="computed from a hand-written linear model, three shape/class pairs" />
+        <Rich x={960} y={820} ax="center" size={30} text="Same brightness scale: brighter = more sensitive" o={mapScale} />
+        <Rich x={960} y={875} ax="center" size={34} weight={650}
+          text="Low class probability does not mean zero pixel sensitivity" o={mapTakeaway} />
+        <EvTag x={180} y={940} kind="computed" text="raw score gradients; max over RGB; shared scale, brightest 1% clipped" />
       </Slide>
 
       {/* ============================================================ 21.5 occlusion */}

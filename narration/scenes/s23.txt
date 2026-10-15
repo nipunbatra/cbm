@@ -5,5 +5,3 @@
 [[Joint training is the most accurate, independent the least]] Joint training is the most accurate, close to a standard model with no bottleneck. Sequential falls in between, and independent training is the least accurate. || 0.8
 [[An intervention replaces {c:predicted values} with {e:true values}]] Now intervene. Pick a few attribute groups, replace their predicted values with the true values, and let the same head recompute. || 0.8
 [[As more groups are {e:corrected}, the independent model gains most]] The independent model improves fastest. Its head was trained on true concepts, so it trusts corrected ones. The joint model improves least. || 0.8
-[[Why joint gains least: its {f:head} reads {k:detail in the soft scores}]] Its head learned to read fine detail in the soft scores, beyond what the concepts mean, so a corrected value helps it less. We will meet this again as leakage. || 0.8
-[[Fully trained networks show the same pattern]] Koh and colleagues report the same pattern with fully trained networks. || 1.2

@@ -277,6 +277,9 @@ D['saliency_toy'] = {
     'saliency_max': r(max(np.abs(w).max() for w in _W.values())),
 }
 
+# Measured input gradients and finite difference from worked/saliency.py.
+D['saliency_real'] = json.load(open(ROOT / 'worked/saliency.json'))
+
 json.dump(D, open(ROOT / 'src/data.json', 'w'), indent=1, ensure_ascii=False)
 print('wrote src/data.json')
 print('bird', D['bird']['before']['share'], '->', D['bird']['after']['share'])

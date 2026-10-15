@@ -26,6 +26,38 @@ def close(a, b, tol=1e-3):
     return abs(a - b) <= tol
 
 
+def test_real_saliency_provenance_and_gradient():
+    """Verify the displayed maps, class probabilities and pixel nudge from raw outputs."""
+    from PIL import Image
+    s = D['saliency_real']
+    archive = ROOT / 'worked/saliency_gradients.npz'
+    assert hashlib.sha256(archive.read_bytes()).hexdigest() == s['archive_sha256']
+    assert hashlib.sha256((ROOT / s['source_photo']).read_bytes()).hexdigest() == s['source_sha256']
+    a = np.load(archive)
+    gradients, logits, rgb = a['gradients'], a['logits'], a['rgb']
+    assert gradients.shape == (2, 3, 224, 224) and np.isfinite(gradients).all()
+    assert rgb.shape == (3, 224, 224) and (rgb >= 0).all() and (rgb <= 1).all()
+    maps = np.abs(gradients).max(axis=1)
+    scale = np.percentile(maps, s['display']['clip_percentile'])
+    assert np.isclose(scale, s['display']['shared_vmax'])
+    probabilities = soft(logits.tolist())
+    for cl, values in zip(s['classes'], maps):
+        assert abs(probabilities[cl['index']] - cl['probability']) < 1e-7
+        assert abs(float(logits[cl['index']]) - cl['logit']) < 1e-7
+        # Pixel-exact common scaling, no independently normalised class maps.
+        image = ROOT / 'public/img' / cl['map']
+        expected = np.rint(np.clip(values / scale, 0, 1) * 255).astype(np.uint8)
+        assert np.array_equal(np.asarray(Image.open(image)), expected)
+        assert hashlib.sha256(image.read_bytes()).hexdigest() == s['image_sha256'][image.name]
+    assert s['classes'][0]['index'] == int(logits.argmax())
+    assert s['classes'][1]['probability'] < 0.01 and maps[1].max() > 0
+    n = s['nudge']
+    assert np.isclose(n['derivative'], gradients[0, 0, n['row'], n['col']])
+    assert np.isclose(n['score_after'] - n['score_before'], n['score_change'])
+    assert np.isclose(n['score_change'] / n['epsilon'], n['finite_difference'])
+    assert abs(n['finite_difference'] / n['derivative'] - 1) < 0.02
+
+
 # ------------------------------------------------------------------ Act 4: the worksheet, multiplied out by hand
 def matvec(W, c):
     return [sum(W[i][j] * c[j] for j in range(len(c))) for i in range(len(W))]

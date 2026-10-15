@@ -48,11 +48,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 2. **Post-hoc: a method explains a trained model on one input**  
    Start with post-hoc. The model f is already trained. An explanation method takes the model and one input, and returns some evidence about the prediction.
 
-3. **Saliency: how much does a score respond to one pixel?**  
-   How sensitive is the vertical bar score to one pixel? In this teaching example, brighten the centre pixel by 0.1. The score rises by 0.1. Saliency measures the size of the score change per unit pixel change: here, 0.1 divided by 0.1 is 1. In symbols, x i is the pixel value, s k is the chosen class score, and S i k is the magnitude of its derivative. This ratio approximates the derivative for a tiny nudge; it is exact for our linear example.
+3. **Saliency: nudge one pixel, watch one class score**  
+   Start with a real zebra photo and a trained image classifier, a Residual Network with 50 layers, or ResNet-50. Choose its zebra score before softmax. Keep the model fixed and slightly increase the red value at the marked pixel. The zebra score changes by a tiny amount; the predicted class need not change. Sensitivity is the size of the score change divided by the size of the pixel change. In symbols, x i is one pixel channel, s k is the chosen class score, and the derivative measures sensitivity to an infinitesimal nudge. The numerical ratio shown here is an approximation.
 
-4. **Saliency maps for three shapes and their class scores**  
-   Now use the same toy model on a vertical bar, a horizontal bar and a dot. For each image, choose the matching class score and compute its saliency at every pixel. The vertical bar score is most sensitive along the middle column, the horizontal bar score along the middle row, and the dot score at the centre. All maps use the same brightness scale: brighter means more sensitive. These are computed maps of a hand-written linear model.
+4. **Same photo, same model, a different class to explain**  
+   Keep this exact photo and model. After softmax, zebra is the top prediction; tiger has a very low probability. First choose zebra: backpropagate its score to every input pixel and show the largest absolute gradient across the colour channels. Brighter means a larger sensitivity; this gives the zebra saliency map. Now choose tiger and repeat, without changing the photo or the model. Its score is low, but it can still be sensitive to pixels. Both maps use one brightness scale and neither has been smoothed. Notice the background lights up too. A saliency map shows which tiny pixel changes affect a chosen score; it does not mean that a tiger is present, or trace the outline of the animal.
 
 5. **Occlusion: grey out a patch and measure how far the score drops**  
    A second family changes the input. Grey out one patch, run the model again, and measure how much the score drops. That is the occlusion map we computed for the gull in Part 1.
@@ -308,12 +308,6 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 6. **As more groups are corrected, the independent model gains most**  
    The independent model improves fastest. Its head was trained on true concepts, so it trusts corrected ones. The joint model improves least.
-
-7. **Why joint gains least: its head reads detail in the soft scores**  
-   Its head learned to read fine detail in the soft scores, beyond what the concepts mean, so a corrected value helps it less. We will meet this again as leakage.
-
-8. **Fully trained networks show the same pattern**  
-   Koh and colleagues report the same pattern with fully trained networks.
 
 ## Human interventions  (s06)
 

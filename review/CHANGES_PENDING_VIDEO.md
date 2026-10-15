@@ -266,3 +266,15 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     deck, notes and exact r16 PDF are current, and the course's lecture 20 row shows 311 pages. Added content
     hashes to script/style URLs. Verified live release bytes and browser views. All slide and narration edits
     above still await the film rebuild; no audio, saved timeline or video was regenerated or published.
+44. **Use a real photo for class-specific saliency (browser s21.4).** Replaced the three shape/class pairs
+    with one zebra photo and computed ResNet-50 maps for the predicted zebra class and low-probability tiger
+    class. Slide s21.3 now follows a measured pixel nudge before introducing the derivative; s21.4 changes
+    only the chosen class. Clearly distinguish softmax probability from score sensitivity, use one brightness
+    scale, and explain that noisy/background responses are not object outlines. Reproduction and provenance
+    are in `worked/saliency.py`, `worked/saliency.json` and `docs/saliency_example.md`. The old toy data remains.
+    Content, type checking, 25 Python tests and three deck tests passed. Checked both slides, their builds and
+    narration in the deck with no browser warnings or errors. Saved film timing remains unchanged.
+45. **Remove the final two CUB slides (browser s23.7).** Removed s23.7's soft-score/leakage explanation and
+    s23.8's comparison with Koh et al., including their narration and animation code. The section now has six
+    slides and the lecture 309. Verified that s23.6 leads directly to s06.1, Human interventions. Source results
+    are preserved; the full content and check commands passed. No audio or film work was performed.

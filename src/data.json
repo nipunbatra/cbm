@@ -5727,5 +5727,75 @@
    }
   ],
   "saliency_max": 2.0
+ },
+ "saliency_real": {
+  "model": "ResNet-50",
+  "model_full_name": "Residual Network with 50 layers",
+  "weights": "ResNet50_Weights.IMAGENET1K_V2",
+  "checkpoint_sha256": "11ad3fa62ca79e40addfd354a8ec4b7c75143b3038b8d2a807fbc68deab379ca",
+  "torch": "2.9.1",
+  "torchvision": "0.24.1",
+  "source_photo": "public/img/zebra_plains.jpg",
+  "source_sha256": "fd926b4f6e402b86053d52aa722ca13aafcfa64d42f5b6d2d53a236b4375cd0c",
+  "credit": "Photo: Yathin S Krishnappa, Wikimedia Commons, CC BY-SA 3.0; centre crop",
+  "method_source": "https://arxiv.org/abs/1312.6034",
+  "method": "max over RGB of absolute raw class-logit derivative with respect to RGB in [0, 1]",
+  "preprocess": {
+   "resize_short_side": 232,
+   "crop_size": 224,
+   "mean": [
+    0.485,
+    0.456,
+    0.406
+   ],
+   "std": [
+    0.229,
+    0.224,
+    0.225
+   ],
+   "interpolation": "InterpolationMode.BILINEAR"
+  },
+  "predicted_class": "zebra",
+  "classes": [
+   {
+    "name": "zebra",
+    "index": 340,
+    "logit": 6.416087627410889,
+    "probability": 0.3767213821411133,
+    "map": "saliency/zebra.png"
+   },
+   {
+    "name": "tiger",
+    "index": 292,
+    "logit": 0.22692137956619263,
+    "probability": 0.0007728578057140112,
+    "map": "saliency/tiger.png"
+   }
+  ],
+  "display": {
+   "shared_vmax": 0.0664154663681984,
+   "clip_percentile": 99,
+   "scale": "linear greyscale, shared pooled percentile, no smoothing"
+  },
+  "nudge": {
+   "row": 67,
+   "col": 8,
+   "channel": "red",
+   "epsilon": 0.001,
+   "pixel_before": 0.30980393290519714,
+   "pixel_after": 0.31080392003059387,
+   "score_before": 6.416087627410889,
+   "score_after": 6.416229248046875,
+   "derivative": 0.14299489557743073,
+   "selection": "Largest positive red-channel derivative with room for the nudge.",
+   "score_change": 0.00014162063598632812,
+   "finite_difference": 0.14162063598632812
+  },
+  "archive_sha256": "80be839e7b5744e0d6a6cfbadb05e2c9309fc331eebb175b678ee0e3f5bd13a6",
+  "image_sha256": {
+   "input.png": "cc3841fade48fff745df5f9ec093c6f7333b6af64a2f6975303f6b4df9eb71cf",
+   "tiger.png": "28947fbf33ae1de785bc1bcf8df19339c736a2ebc98c8fed756857e47b76e401",
+   "zebra.png": "a2c1fd9bf372060d7d80ef0a0a5b7b9c8cb04ba2f347eb88f038a3d302c23588"
+  }
  }
 }
