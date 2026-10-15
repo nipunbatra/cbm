@@ -1,504 +1,220 @@
-// s04 Part 4 · From concepts to predictions: the arithmetic (revision 2: one idea per slide, 13 slides, one per beat)
-// 4.1 motivation: concept values -> task head -> class scores    4.2 three classes (photos) and three concepts (teal chips)
-// 4.3 the low-contrast zebra -> g -> the concept vector ĉ (D.zoo.c)  4.4 one row of W in words: the zebra row (D.zoo.W[0])
-// 4.5 the full W, key weights ringed                             4.6 the zebra score term by term, as a worksheet (D.zoo.terms)
-// 4.7 W ĉ = terms = s, horse and giraffe rows read out           4.8 the largest score and the softmax shares (D.zoo.softmax)
-// 4.9 the amber edit: stripes 0.1 -> 1 (D.zoo.c_new)             4.10 recompute with the same W (terms_new, logits_new)
-// 4.11 the shares move: zebra leads (softmax_new)                4.12 Δs = 0.9 × the stripes column of W (D.zoo.delta)
-// 4.13 closing: edit a belief, keep the weights.
-// Slides replace each other: the old one fades out in the gap before a beat, the new one fades in on its first words.
+// Part 4: follow one image through predicted concepts, a task head, scores and softmax.
+// Thirteen beats preserve the review PDF's page references. All numbers are from D.zoo.
 import React from 'react';
 import { C } from '../kit/theme';
-import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, ROLE, bs, be, bw, bh, inv, type SceneProps } from '../kit/core';
-import { ArchMap, Block, CREDIT, Credit, EditMark, EvTag, Flow, Matrix, MathSvg, Person, PhotoR, ShareBars, VecCol, fit, rgba, type Rect } from '../kit/cbm';
+import { G, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, inv, type SceneProps } from '../kit/core';
+import { ArchMap, Block, CREDIT, Credit, EditMark, EvTag, Flow, Matrix, MathSvg, Person, PhotoR, ShareBars, rgba } from '../kit/cbm';
 import { TexSteps } from '../kit/slots';
-import { lerp } from '../kit/anim';
 import { D } from '../kit/data';
 
 const Z = D.zoo;
-const CLS: string[] = Z.classes;
-const CON: string[] = Z.concepts;
+const CLS: string[] = Z.classes, CON: string[] = Z.concepts;
 const Wm: number[][] = Z.W;
 const c0: number[] = Z.c, c1: number[] = Z.c_new;
-const T0: number[][] = Z.terms, T1: number[][] = Z.terms_new;
 const L0: number[] = Z.logits, L1: number[] = Z.logits_new;
 const S0: number[] = Z.softmax, S1: number[] = Z.softmax_new;
-const DL: number[] = Z.delta;
-const FC = ROLE.f; // task head colour (light grey, readable on the board)
-const DC = c1[0] - c0[0]; // the edit's size on stripes
-
-/** number for display: at most 2 decimals, no trailing zeros, no negative zero */
-const num = (v: number) => {
-  const r = Math.round(v * 100) / 100;
-  return String(Object.is(r, -0) ? 0 : r);
-};
-const sgn = (v: number) => (v > 0 ? `+${num(v)}` : num(v));
-/** a term in a running sum: the first plain, the rest with their sign */
-const term = (v: number, first: boolean) => (first ? num(v) : v < 0 ? `{}- ${num(-v)}` : `{}+ ${num(v)}`);
-const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-
-const THUMB = [
-  { src: 'zebra_plains.jpg', frac: [0.22, 0.06, 0.94, 0.88] as [number, number, number, number] },
-  { src: 'horse.jpg', frac: [0.04, 0.14, 0.76, 0.92] as [number, number, number, number] },
-  { src: 'giraffe.jpg', frac: [0, 0.12, 1, 0.69] as [number, number, number, number] },
-];
+const FC = '#9AA6B5';
+const num = (v: number) => String(Math.round(v * 100) / 100);
 const LOWC = 'contrast(0.35) brightness(0.75) saturate(0.6)';
+const PHOTOS = ['zebra_plains.jpg', 'horse.jpg', 'giraffe.jpg'];
+const FRACS: [number, number, number, number][] = [[0.22, 0.06, 0.94, 0.88], [0.04, 0.14, 0.76, 0.92], [0, 0.12, 1, 0.69]];
 
-/** one slide: a full-frame SVG group with its own opacity */
-const G: React.FC<{ o: number; children?: React.ReactNode }> = ({ o, children }) =>
-  o <= 0.001 ? null : <g opacity={o < 0.999 ? o : undefined}>{children}</g>;
-
-/** a bracket pair around (x, y, w, h) */
-const Brk: React.FC<{ x: number; y: number; w: number; h: number; color?: string; o?: number; sw?: number }> = ({ x, y, w, h, color = C.chalk2, o = 1, sw = 3.5 }) =>
-  o <= 0.001 ? null : (
-    <g opacity={o < 0.999 ? o : undefined} fill="none" stroke={color} strokeWidth={sw}>
-      <path d={`M ${x + 14} ${y} L ${x} ${y} L ${x} ${y + h} L ${x + 14} ${y + h}`} />
-      <path d={`M ${x + w - 14} ${y} L ${x + w} ${y} L ${x + w} ${y + h} L ${x + w - 14} ${y + h}`} />
-    </g>
+/** Label every value so the reader never has to remember the order of an anonymous vector. */
+const Values: React.FC<{ x: number; y: number; labels: string[]; values: number[]; color: string; edited?: boolean; o?: number }> =
+  ({ x, y, labels, values, color, edited = false, o = 1 }) => (
+    <G o={o}>
+      {labels.map((name, i) => (
+        <g key={name}>
+          <Txt x={x} y={y + i * 90} size={30} anchor="start" fill={edited && i === 0 ? C.edit : color}>{name}</Txt>
+          <rect x={x + 280} y={y + i * 90 - 31} width={100} height={62} rx={9}
+            fill={rgba(edited && i === 0 ? C.edit : color, 0.1)} stroke={edited && i === 0 ? C.edit : color} strokeWidth={2} />
+          <Txt x={x + 330} y={y + i * 90} size={34} mono weight={600} fill={edited && i === 0 ? C.edit : color}>{num(values[i])}</Txt>
+        </g>
+      ))}
+    </G>
   );
-
-// ---- shared layout of the product slides (4.7 and 4.10): names | W | ĉ | = | terms | = | s
-const PM = { x: 430, y: 404, cw: 112, ch: 100 };
-const prY = (i: number) => PM.y + PM.ch * (i + 0.5);
-const PC = { x: 820, w: 116 }; // ĉ column
-const PT = 1046; // terms (left edge)
-const PS = { x: 1500, w: 140 }; // s column
 
 export const S04: React.FC<SceneProps> = ({ t, P }) => {
   const b = (k: number) => bs(P, k);
-  const w = (k: number, word: string, n = 0) => bw(P, k, word, n);
-  /** start of the n-th word in beat k whose normalised form equals `word` exactly ("0.1" -> "01") */
-  const wx = (k: number, word: string, n = 0) => {
-    const bt = P.beats[k - 1];
-    const hits = bt.words.filter((x) => norm(x.w) === norm(word));
-    const h = hits[Math.min(n, hits.length - 1)];
-    if (!h) throw new Error(`no word "${word}" in beat ${k}`);
-    return h.s - P.start;
+  const at = (start: number) => inv(start - 0.05, start + 0.3, t);
+  const a = (k: number, word: string, n = 0) => at(bw(P, k, word, n));
+  const S = Array.from({ length: 14 }, (_, k) => {
+    if (!k) return 0;
+    const enter = inv(b(k) - 0.05, b(k) + 0.25, t);
+    if (k === 13) return enter;
+    const end = Math.min(be(P, k) + 0.02, b(k + 1) - 0.34);
+    return enter * (1 - inv(end, end + 0.3, t));
+  });
+  const o = (k: number, reveal = 1) => S[k] * reveal;
+  const flow = (x1: number, x2: number, y: number, color: string, reveal = 1) =>
+    <Flow pts={[[x1, y], [x2, y]]} color={color} p={reveal} t={t} live={reveal} head={12} n={1} />;
+
+  const pipeline = (k: 1 | 13) => {
+    const words = k === 1 ? ['image', 'predictor', 'concepts', 'task', 'scores', 'Softmax', 'probabilities'] :
+      ['image', 'predictor', 'vector', 'head', 'scores', 'softmax', 'answer'];
+    const show = words.map(word => a(k, word));
+    const nodes = [
+      { x: 180, w: 140, text: ['image'], tex: '\\cin{x}', kind: 'input' as const },
+      { x: 425, w: 210, text: ['concept', 'predictor'], tex: '\\gth', kind: 'input' as const },
+      { x: 705, w: 230, text: ['predicted', 'concepts'], tex: '\\cvec', kind: 'concept' as const },
+      { x: 990, w: 210, text: ['task head'], tex: '\\fph', kind: 'head' as const },
+      { x: 1235, w: 150, text: ['class', 'scores'], tex: '\\cout{\\mathbf{s}}', kind: 'output' as const },
+      { x: 1460, w: 160, text: ['softmax'], tex: '', kind: 'output' as const },
+      { x: 1715, w: 210, text: ['class', 'probabilities'], tex: '\\cout{\\mathbf{p}}', kind: 'output' as const },
+    ];
+    return <G o={S[k]}>{nodes.map((node, i) => <g key={node.x}>
+      {i > 0 ? flow(nodes[i - 1].x + nodes[i - 1].w / 2 + 10, node.x - node.w / 2 - 10, 530, i < 3 ? C.input : i === 3 ? C.concept : C.chalk2, show[i]) : null}
+      <Block x={node.x} y={530} w={node.w} h={140} kind={node.kind} o={show[i]} />
+      {node.text.map((line, j) => <Txt key={line} x={node.x} y={node.text.length === 1 ? 530 : 508 + j * 44} size={28} weight={600} o={show[i]}>{line}</Txt>)}
+      {node.tex ? <MathSvg x={node.x} y={660} tex={node.tex} size={40} o={show[i]} /> : null}
+    </g>)}
+    {k === 13 ? <>
+      <Person x={705} y={345} s={0.7} o={a(13, 'person')} />
+      <Flow pts={[[705, 390], [705, 450]]} color={C.edit} p={a(13, 'correct')} head={12} />
+      <EditMark x={830} y={488} o={a(13, 'correct')} />
+    </> : null}</G>;
   };
-  const at = (x: number, d = 0.4) => inv(x, x + d, t);
-  const NB = P.beats.length;
-  /** slide k: fades in (0.3 s) on the beat's first words, fades out (0.3 s) after the beat ends */
-  const so = (k: number) => {
-    const fin = inv(b(k) - 0.05, b(k) + 0.25, t);
-    if (k === NB) return fin;
-    const z = Math.min(be(P, k) + 0.02, b(k + 1) - 0.34);
-    return fin * (1 - inv(z, z + 0.3, t));
+
+  const headPass = (k: 4 | 7 | 10) => {
+    const edited = k === 10;
+    const values = edited ? c1 : c0, logits = edited ? L1 : L0;
+    const headIn = a(k, k === 4 ? 'head' : k === 7 ? 'layer' : 'linear');
+    const outIn = a(k, k === 4 ? 'returns' : k === 7 ? 'returns' : 'scores');
+    return <G o={S[k]}>
+      <Values x={200} y={450} labels={CON} values={values} color={C.concept} edited={edited} />
+      <MathSvg x={385} y={345} tex="\cvec" size={44} />
+      {flow(620, 795, 540, C.concept, headIn)}
+      <Block x={960} y={540} w={290} h={190} kind="head" o={headIn} />
+      <Txt x={960} y={505} size={32} weight={600} o={headIn}>{k === 4 ? 'task head' : 'linear layer'}</Txt>
+      <MathSvg x={960} y={572} tex="\fph" size={44} o={headIn} />
+      {flow(1125, 1290, 540, C.chalk, outIn)}
+      {k === 4 ? CLS.map((cl, i) => <Txt key={cl} x={1480} y={450 + i * 90} size={32} o={outIn}>{cl} score</Txt>) :
+        <Values x={1320} y={450} labels={CLS} values={logits} color={C.chalk} o={outIn} />}
+      <Txt x={385} y={735} size={30} fill={edited ? C.edit : C.concept}>{edited ? 'corrected concepts' : 'predicted concepts'}</Txt>
+      <Txt x={1510} y={735} size={30} o={outIn}>class scores</Txt>
+    </G>;
   };
-  const S = Array.from({ length: NB + 1 }, (_, k) => (k === 0 ? 0 : so(k)));
-  const o = (k: number, v = 1) => S[k] * v;
-  const tagO = Math.max(...[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((k) => S[k]));
 
-  // ================= 4.1 motivation
-  const m1c = at(w(1, 'concept') - 0.1), m1f = at(w(1, 'task') - 0.1), m1y = at(w(1, 'answer') - 0.2);
-  const m1live = at(w(1, 'arithmetic'), 0.5);
-  const m1txt = at(w(1, 'hand') - 0.3);
-  const M1 = { cx: 560, fx: 960, yx: 1360, y: 560 };
-
-  // ================= 4.2 classes and concepts
-  const cardIn = [w(2, 'zebra'), w(2, 'horse'), w(2, 'giraffe')].map((x) => at(x - 0.15));
-  const chipIn = [w(2, 'stripes'), w(2, 'horse', 1), w(2, 'long')].map((x) => at(x - 0.15));
-  const CX = [780, 1140, 1500], CARD = { w: 300, h: 228, y: 312 };
-
-  // ================= 4.3 the concept vector
-  const PH3: Rect = fit('zebra_plains.jpg', 190, 380, 430);
-  const ph3 = at(b(3) + 0.05);
-  const g3 = at(w(3, 'predictor') - 0.2);
-  const g3p = E.io(inv(w(3, 'predictor') - 0.2, w(3, 'reports'), t));
-  const g3live = at(w(3, 'reports'), 0.4);
-  const v3 = [wx(3, '01', 0), wx(3, '09'), wx(3, '01', 1)].map((x) => at(x - 0.1));
-  const n3 = [w(3, 'stripes'), w(3, 'horse'), w(3, 'long')].map((x) => at(x - 0.1));
-  const col3 = at(w(3, 'Stacked') - 0.1);
-  const sym3 = at(w(3, 'hat') - 0.3);
-  const V3 = { x: 1010, y: 384, rowH: 96, w: 130 };
-
-  // ================= 4.4 the zebra row
-  const r4 = at(w(4, 'matrix') - 0.1);
-  const r4lab = at(w(4, 'zebra') - 0.1);
-  const r4v = [wx(4, '3'), wx(4, '1'), wx(4, '0')].map((x) => at(x - 0.1));
-  const r4ring = at(wx(4, '3'), 0.35);
-  const r4txt = at(wx(4, '0') + 0.4);
-  const M4 = { x: 780, y: 486, cw: 230, ch: 112 };
-
-  // ================= 4.5 the full matrix
-  const r5row = (i: number) => at(b(5) + 0.1 + i * 0.25, 0.35);
-  const ringT: Record<string, number> = { '0-0': w(5, 'stripes'), '2-2': w(5, 'neck'), '1-1': w(5, 'mostly') + 0.2, '0-1': w(5, 'mostly') + 0.2 };
-  const r5txt = at(be(P, 5) - 1.2);
-  const M5 = { x: 780, y: 420, cw: 230, ch: 104 };
-
-  // ================= 4.6 the zebra score, term by term
-  const prodT = [wx(6, '3'), wx(6, '1'), wx(6, '0', 0)];
-  const resT = [wx(6, '03'), wx(6, '09', 1), wx(6, '0', 1)];
-  const sum6 = wx(6, '12');
-  const a6 = at(b(6) + 0.05), cv6 = at(w(6, 'concept') - 0.1), rule6 = at(prodT[0] - 0.3);
-  const band6 = (j: number) => at(prodT[j] - 0.1, 0.3) * (1 - at(j < 2 ? prodT[j + 1] - 0.2 : sum6 - 0.2, 0.3));
-  const X6 = [840, 1080, 1320], Y6 = { head: 330, a: 412, b: 512, c: 650 };
-
-  // ================= 4.7 / 4.10 product slides
-  const rows7 = {
-    start: [b(7), wx(7, 'horse'), wx(7, 'giraffe')],
-    term: [[0, 0, 0], [wx(7, '01', 0), wx(7, '18'), wx(7, '01', 1)], [wx(7, '01', 2), wx(7, '0'), wx(7, '03')]],
-    sum: [0, wx(7, '16'), wx(7, '02')],
+  const probabilityPass = (k: 8 | 11) => {
+    const scores = k === 8 ? L0 : L1, probs = k === 8 ? S0 : S1;
+    return <G o={S[k]}>
+      <Values x={180} y={430} labels={CLS} values={scores} color={C.chalk} />
+      {flow(610, 735, 520, C.chalk2, a(k, 'softmax'))}
+      <Block x={850} y={520} w={200} h={120} kind="output" title="softmax" o={a(k, 'softmax')} />
+      {flow(965, 1090, 520, C.chalk2, a(k, 'softmax'))}
+      <ShareBars x={1110} y={430} labels={CLS} from={probs} rowH={90} labelW={150} w={370} size={30} o={a(k, k === 8 ? 'probabilities' : 'probability')} />
+      <Txt x={370} y={700} size={30}>class scores</Txt>
+      <Txt x={1400} y={700} size={30} o={a(k, k === 8 ? 'probabilities' : 'probability')}>class probabilities</Txt>
+    </G>;
   };
-  const rows10 = {
-    start: [wx(10, 'zebra'), wx(10, 'horse'), wx(10, 'giraffe')],
-    term: [[wx(10, '3'), wx(10, '09'), wx(10, '0', 0)], [wx(10, '1', 0), wx(10, '18'), wx(10, '01')], [wx(10, '1', 1), wx(10, '0', 1), wx(10, '03')]],
-    sum: [wx(10, '39'), wx(10, '07', 0), wx(10, '07', 1)],
-  };
-  const logit7 = at(w(7, 'class') - 0.1);
-  const same10 = at(w(10, 'same') - 0.1);
-  const pulse10 = Math.sin(Math.PI * inv(w(10, 'same') - 0.1, w(10, 'same') + 0.9, t));
 
-  // ================= 4.8 softmax
-  const ring8 = at(w(8, 'largest') - 0.1);
-  const arr8 = E.io(inv(w(8, 'softmax') - 0.1, w(8, 'softmax') + 0.6, t));
-  const bars8 = inv(w(8, 'softmax') + 0.3, w(8, 'shares') + 0.8, t);
-  const eq8 = at(w(8, 'shares') - 0.1);
-  const sum8 = at(w(8, 'sum') - 0.1);
-  const hi8 = at(w(8, 'horse', 1) - 0.1);
-
-  // ================= 4.9 the edit
-  const PH9: Rect = fit('zebra_plains.jpg', 190, 390, 400);
-  const pers9 = at(w(9, 'observer') - 0.1);
-  const look9 = at(w(9, 'looks') - 0.1) * (1 - 0.5 * at(w(9, 'coordinate')));
-  const ring9 = at(w(9, 'coordinate') - 0.1);
-  const editT = wx(9, '01');
-  const edit9 = E.io(inv(editT, wx(9, '1') + 0.4, t));
-  const eq9 = at(editT - 0.2);
-
-  // ================= 4.11 shares move
-  const k11 = inv(w(11, 'softmax'), wx(11, '095') + 0.2, t);
-  const prev11 = at(b(11) + 0.2);
-
-  // ================= 4.12 the column view
-  const tickI = at(w(12, 'image') - 0.1), tickW = at(w(12, 'matrix') - 0.1);
-  const each12 = (j: number) => at(w(12, 'Each') + j * 0.45, 0.3) * (1 - at(w(12, 'Only') - 0.2, 0.3));
-  const only12 = at(w(12, 'Only') - 0.1);
-  const d12a = at(w(12, 'scores') - 0.1), d12m = at(wx(12, '09', 1) - 0.1), d12c = at(w(12, 'stripes', 1) - 0.1);
-  const d12z = at(wx(12, '27') - 0.1), d12o = at(wx(12, '09', 2) - 0.1);
-  const stripeHi = Math.max(only12, 0);
-  const W12 = { x: 250, y: 470, cw: 96, ch: 84 };
-
-  // ================= 4.13 closing
-  const c13 = at(b(13) + 0.05), f13 = at(w(13, 'corrected') - 0.1), y13 = at(w(13, 'belief') - 0.1), t13 = at(w(13, 'retrained') - 0.3);
-
-  // ---------------------------------------------------------------- product slide (4.7 and 4.10)
-  type Rows = { start: number[]; term: number[][]; sum: number[] };
-  const product = (k: number, cv: number[], T: number[][], L: number[], R: Rows, edited: boolean) => {
-    const so = S[k];
-    if (so <= 0.001) return { svg: null, html: null };
-    const band = (i: number) => {
-      const end = i < 2 ? R.start[i + 1] - 0.2 : be(P, k) - 0.3;
-      return (k === 7 && i === 0 ? 0 : at(R.start[i] - 0.1, 0.3)) * (1 - at(end, 0.3));
-    };
-    const shown = (i: number) => (k === 7 && i === 0 ? 1 : at(R.sum[i] - 0.1, 0.35));
-    const svg = (
-      <G o={so}>
-        {[0, 1, 2].map((i) => {
-          const a = band(i);
-          return a > 0.001 ? (
-            <rect key={i} x={170} y={prY(i) - 46} width={PS.x + PS.w + 30 - 170} height={92} rx={14} fill={rgba(C.chalk, 0.05 * a)} stroke={rgba(C.chalk, 0.2 * a)} strokeWidth={2} />
-          ) : null;
-        })}
-        {pulse10 > 0.001 && k === 10 ? <rect x={PM.x - 18} y={PM.y - 18} width={3 * PM.cw + 36} height={3 * PM.ch + 36} rx={20} fill={rgba(FC, 0.2 * pulse10)} /> : null}
-        <Matrix x={PM.x} y={PM.y} vals={Wm} cw={PM.cw} ch={PM.ch} size={34} digits={0} rows={CLS} headSize={30} rowColors={[C.chalk, C.chalk, C.chalk]}
-          valColor={() => FC} bg={(_, j) => (edited && j === 0 ? rgba(C.edit, 0.1) : null)} />
-        <VecCol x={PC.x} y={PM.y} vals={cv} rowH={PM.ch} w={PC.w} size={34} digits={1} cellColor={(i) => (edited && i === 0 ? C.edit : C.concept)}
-          ring={(i) => (edited && i === 0 ? 1 : 0)} />
-        <Txt x={(PC.x + PC.w + PT) / 2} y={prY(1)} size={46} fill={C.chalk2}>=</Txt>
-        <Txt x={PS.x - 44} y={prY(1)} size={46} fill={C.chalk2}>=</Txt>
-        <Brk x={PS.x} y={PM.y + 4} w={PS.w} h={3 * PM.ch - 8} color={C.chalk} />
-        {[0, 1, 2].map((i) => <Txt key={i} x={PS.x + PS.w / 2} y={prY(i)} size={38} mono weight={700} fill={C.chalk} o={shown(i)}>{num(L[i])}</Txt>)}
+  const calcWords = ['Stripes', 'Horse-like', 'Long'];
+  const calcX = [720, 1040, 1360];
+  const tag = Math.max(...S.slice(2, 13));
+  return <Stage>
+    {PHOTOS.map((src, i) => <PhotoR key={src} R={{ x: 650 + i * 370, y: 350, w: 280, h: 220 }} src={src} frac={FRACS[i]} o={o(2, a(2, CLS[i]))} />)}
+    <PhotoR R={{ x: 170, y: 405, w: 390, h: 300 }} src="zebra_plains.jpg" frac={FRACS[0]} filter={LOWC} o={S[3]} />
+    <PhotoR R={{ x: 220, y: 400, w: 400, h: 310 }} src="zebra_plains.jpg" frac={FRACS[0]} filter={LOWC} o={S[9]} />
+    <Svg>
+      {pipeline(1)}
+      <G o={S[2]}>
+        <Txt x={170} y={460} size={34} anchor="start">classes</Txt>
+        <Txt x={170} y={720} size={34} anchor="start" fill={C.concept}>concepts</Txt>
+        {CLS.map((cl, i) => <Txt key={cl} x={790 + i * 370} y={610} size={36} weight={600} o={a(2, cl)}>{cl}</Txt>)}
+        {CON.map((con, i) => <Block key={con} x={790 + i * 370} y={720} w={320} h={76} title={con} kind="concept" size={28} o={a(2, ['stripes', 'horse-like', 'long'][i])} />)}
       </G>
-    );
-    const html = (
-      <>
-        {[0, 1, 2].map((i) => (
-          <TexSteps key={i} x={PT} y={prY(i)} t={t} size={40} o={so}
-            parts={T[i].map((v, j) => {
-              const s = term(v, j === 0);
-              return [edited && j === 0 ? `\\cedit{${s}}` : s, k === 7 && i === 0 ? -99 : R.term[i][j]] as [string, number];
-            })} />
-        ))}
-        <Tex x={PM.x + 1.5 * PM.cw} y={762} ax="center" size={48} tex="\chead{W}" o={so} />
-        <Tex x={PC.x + PC.w / 2} y={762} ax="center" size={48} tex="\cvec" o={so} />
-        <Tex x={PS.x + PS.w / 2} y={762} ax="center" size={48} tex="\cout{\mathbf{s}}" o={so} />
-        {k === 7 ? <Rich x={PS.x + PS.w / 2} y={810} ax="center" size={30} text="{y:class scores}, or logits" o={so * logit7} /> : null}
-        {k === 10 ? <Rich x={PM.x + 1.5 * PM.cw} y={810} ax="center" size={30} text="{f:same matrix}" o={so * same10} /> : null}
-        {k === 10 ? <Rich x={PC.x + PC.w / 2} y={810} ax="center" size={30} text="{e:edited}" o={so * same10} /> : null}
-      </>
-    );
-    return { svg, html };
-  };
-  const P7 = product(7, c0, T0, L0, rows7, false);
-  const P10 = product(10, c1, T1, L1, rows10, true);
-
-  // Δ view tex pieces
-  const colTex = `\\begin{bmatrix}${Wm.map((r) => `\\chead{${num(r[0])}}`).join('\\\\')}\\end{bmatrix}`;
-  const resTex = (show: boolean[]) =>
-    `\\begin{bmatrix}${DL.map((v, i) => (show[i] ? `\\cout{${sgn(v)}}` : `\\phantom{${sgn(v)}}`)).join('\\\\')}\\end{bmatrix}`;
-  const dPre = '\\Delta\\cout{\\mathbf{s}} =';
-  const dMul = `\\cedit{${num(DC)}}\\times`;
-  const ph = (s: string) => `\\phantom{${s}}`;
-  const dLayers: [string, number][] = [
-    [`${dPre}${ph(dMul)}${ph(colTex)}${ph('=')}${ph(resTex([true, true, true]))}`, d12a],
-    [`${ph(dPre)}${dMul}${ph(colTex)}${ph('=')}${ph(resTex([true, true, true]))}`, d12m],
-    [`${ph(dPre)}${ph(dMul)}${colTex}${ph('=')}${ph(resTex([true, true, true]))}`, d12c],
-    [`${ph(dPre)}${ph(dMul)}${ph(colTex)}=${resTex([true, false, false])}`, d12z],
-    [`${ph(dPre)}${ph(dMul)}${ph(colTex)}${ph('=')}${resTex([false, true, true])}`, d12o],
-  ];
-
-  // shares on slide 11
-  const sh11 = S0.map((v, i) => lerp(v, S1[i], E.io(k11)));
-
-  return (
-    <Stage>
-      {/* ================= photos ================= */}
-      {THUMB.map((th, i) => (
-        <PhotoR key={th.src} R={{ x: CX[i] - CARD.w / 2, y: CARD.y, w: CARD.w, h: CARD.h }} src={th.src} frac={th.frac} o={o(2, cardIn[i])} radius={8} />
-      ))}
-      <PhotoR R={PH3} src="zebra_plains.jpg" o={o(3, ph3)} filter={LOWC} />
-      <PhotoR R={{ x: 330, y: M4.y + M4.ch / 2 - 62, w: 164, h: 124 }} src={THUMB[0].src} frac={THUMB[0].frac} o={o(4, r4lab)} radius={6} />
-      {THUMB.map((th, i) => (
-        <PhotoR key={`t5${i}`} R={{ x: 496, y: M5.y + M5.ch * (i + 0.5) - 44, w: 116, h: 88 }} src={th.src} frac={th.frac} o={o(5, r5row(i))} radius={6} />
-      ))}
-      <PhotoR R={PH9} src="zebra_plains.jpg" o={o(9)} filter={LOWC} />
-
-      <Svg>
-        {/* ---------------- 4.1 motivation ---------------- */}
-        <G o={S[1]}>
-          {/* concept values: a teal column of three cells */}
-          <g opacity={m1c}>
-            {[0, 1, 2].map((i) => (
-              <rect key={i} x={M1.cx - 50} y={M1.y - 120 + i * 82} width={100} height={70} rx={10} fill={rgba(C.concept, 0.16)} stroke={C.concept} strokeWidth={3} />
-            ))}
-          </g>
-          <Flow pts={[[M1.cx + 70, M1.y], [M1.fx - 130, M1.y]]} color={C.concept} sw={4} head={14} p={E.out(m1f)} t={t} live={m1live} n={2} />
-          <Block x={M1.fx} y={M1.y} w={220} h={170} kind="head" o={m1f} />
-          <Flow pts={[[M1.fx + 126, M1.y], [M1.yx - 70, M1.y]]} color={C.chalk} sw={4} head={14} p={E.out(m1y)} t={t + 0.3} live={m1live} n={2} />
-          <g opacity={m1y}>
-            {[0, 1, 2].map((i) => (
-              <rect key={i} x={M1.yx - 50} y={M1.y - 120 + i * 82} width={100} height={70} rx={10} fill={C.bg3} stroke={C.chalk} strokeWidth={3} />
-            ))}
-          </g>
-          <Txt x={M1.fx} y={M1.y - 2} size={34} mono weight={600} fill={FC} o={m1f}>× and +</Txt>
-        </G>
-
-        {/* ---------------- 4.2 concept chips ---------------- */}
-        <G o={S[2]}>
-          {CLS.map((n, i) => <Txt key={n} x={CX[i]} y={CARD.y + CARD.h + 40} size={36} weight={700} o={cardIn[i]}>{n}</Txt>)}
-          {CON.map((n, i) => (
-            <g key={n} opacity={chipIn[i]}>
-              <rect x={CX[i] - 150} y={712 - 38} width={300} height={76} rx={14} fill={rgba(C.concept, 0.12)} stroke={C.concept} strokeWidth={2.5} />
-              <Txt x={CX[i]} y={712} size={34} weight={600} fill={C.concept}>{n}</Txt>
-            </g>
-          ))}
-        </G>
-
-        {/* ---------------- 4.3 photo -> g -> ĉ ---------------- */}
-        <G o={S[3]}>
-          <Flow pts={[[PH3.x + PH3.w + 10, PH3.y + PH3.h / 2], [770, PH3.y + PH3.h / 2]]} color={C.input} sw={3.5} head={12} p={g3p} t={t} live={g3live} n={2} />
-          <Block x={840} y={PH3.y + PH3.h / 2} w={130} h={96} kind="input" o={g3} />
-          <MathSvg x={840} y={PH3.y + PH3.h / 2} tex="\gth" size={38} o={g3} />
-          <Flow pts={[[910, PH3.y + PH3.h / 2], [V3.x - 22, PH3.y + PH3.h / 2]]} color={C.concept} sw={3.5} head={12} p={g3p} t={t + 0.2} live={g3live} n={1} />
-          <VecCol x={V3.x} y={V3.y} vals={c0} rowH={V3.rowH} w={V3.w} size={38} digits={1} o={Math.max(v3[0], col3)} cellO={(i) => v3[i]} cellColor={() => C.concept} />
-          {CON.map((n, i) => <Txt key={n} x={V3.x + V3.w + 34} y={V3.y + V3.rowH * (i + 0.5)} size={32} anchor="start" weight={600} fill={C.concept} o={n3[i]}>{n}</Txt>)}
-          <MathSvg x={V3.x + V3.w / 2} y={V3.y - 46} tex="\cvec" size={52} o={sym3} />
-        </G>
-
-        {/* ---------------- 4.4 the zebra row ---------------- */}
-        <G o={S[4]}>
-          <Matrix x={M4.x} y={M4.y} vals={[Wm[0]]} cw={M4.cw} ch={M4.ch} size={46} digits={0} rows={['zebra']} rowColors={[C.chalk]} headSize={34}
-            cols={CON} colHeadY={M4.y - 44} o={r4} headO={r4lab} cell={(_, j) => r4v[j]} valColor={() => FC}
-            ring={(_, j) => (j === 0 && r4ring > 0.001 ? { color: C.chalk, o: r4ring } : null)} />
-        </G>
-
-        {/* ---------------- 4.5 the full matrix ---------------- */}
-        <G o={S[5]}>
-          <Matrix x={M5.x} y={M5.y} vals={Wm} cw={M5.cw} ch={M5.ch} size={42} digits={0} rows={CLS} rowColors={[C.chalk, C.chalk, C.chalk]} headSize={32}
-            cols={CON} colHeadY={M5.y - 40} cell={(i) => r5row(i)} valColor={() => FC}
-            ring={(i, j) => {
-              const kk = `${i}-${j}`;
-              if (!(kk in ringT)) return null;
-              const a = at(ringT[kk], 0.35) * (kk === '0-1' ? 0.55 : 1);
-              return a > 0.001 ? { color: C.chalk, o: a } : null;
-            }} />
-        </G>
-
-        {/* ---------------- 4.6 worksheet: zebra row x concept values ---------------- */}
-        <G o={S[6]}>
-          {[0, 1, 2].map((j) => {
-            const a = band6(j);
-            return a > 0.001 ? <rect key={j} x={X6[j] - 100} y={Y6.a - 52} width={200} height={Y6.c - Y6.a + 104} rx={16} fill={rgba(C.chalk, 0.05 * a)} stroke={rgba(C.chalk, 0.35 * a)} strokeWidth={2.5} /> : null;
-          })}
-          {CON.map((n, j) => <Txt key={n} x={X6[j]} y={Y6.head} size={28} weight={600} fill={C.concept} o={a6}>{n}</Txt>)}
-          {[0, 1, 2].map((j) => (
-            <g key={j}>
-              <g opacity={a6}>
-                <rect x={X6[j] - 75} y={Y6.a - 38} width={150} height={76} rx={10} fill={C.headFill} stroke="#8792A2" strokeWidth={2.5} />
-                <Txt x={X6[j]} y={Y6.a} size={40} mono weight={600} fill={FC}>{num(Wm[0][j])}</Txt>
-              </g>
-              <g opacity={cv6}>
-                <rect x={X6[j] - 75} y={Y6.b - 38} width={150} height={76} rx={10} fill={rgba(C.concept, 0.12)} stroke={C.concept} strokeWidth={2.5} />
-                <Txt x={X6[j]} y={Y6.b} size={40} mono weight={600} fill={C.concept}>{num(c0[j])}</Txt>
-              </g>
-              <Txt x={X6[j] - 100} y={(Y6.a + Y6.b) / 2} size={34} fill={C.chalk2} o={at(prodT[j] - 0.1)}>×</Txt>
-              <Txt x={X6[j]} y={Y6.c} size={44} mono weight={700} fill={C.chalk} o={at(resT[j] - 0.1)}>{num(T0[0][j])}</Txt>
-              {j > 0 ? <Txt x={X6[j] - 120} y={Y6.c} size={40} fill={C.chalk2} o={at(resT[j] - 0.1)}>+</Txt> : null}
-            </g>
-          ))}
-          <line x1={X6[0] - 110} x2={X6[2] + 110} y1={(Y6.b + Y6.c) / 2 + 6} y2={(Y6.b + Y6.c) / 2 + 6} stroke={C.line2} strokeWidth={2.5} opacity={rule6} />
-          <Txt x={X6[2] + 150} y={Y6.c} size={44} fill={C.chalk2} o={at(sum6 - 0.1)}>=</Txt>
-          <g opacity={at(sum6 - 0.1)}>
-            <rect x={X6[2] + 186} y={Y6.c - 42} width={130} height={84} rx={12} fill={C.bg3} stroke={C.chalk} strokeWidth={3} />
-            <Txt x={X6[2] + 251} y={Y6.c} size={46} mono weight={700} fill={C.chalk}>{num(L0[0])}</Txt>
-          </g>
-        </G>
-
-        {/* ---------------- 4.7 and 4.10 products ---------------- */}
-        {P7.svg}
-        {P10.svg}
-
-        {/* ---------------- 4.8 softmax ---------------- */}
-        <G o={S[8]}>
-          <VecCol x={430} y={404} vals={L0} rowH={100} w={130} size={36} digits={1} color={C.chalk} cellColor={() => C.chalk}
-            ring={(i) => (i === Z.argmax ? ring8 : 0)} ringColor={C.chalk} />
-          {CLS.map((n, i) => <Txt key={n} x={404} y={454 + i * 100} size={30} anchor="end" weight={i === Z.argmax && ring8 > 0.5 ? 700 : 500} fill={C.chalk}>{n}</Txt>)}
-          <Flow pts={[[600, 554], [840, 554]]} color={C.chalk} sw={3.5} head={14} p={arr8} />
-          <ShareBars x={880} y={454} labels={CLS} from={S0} rowH={100} labelW={160} w={520} size={32} p={bars8} o={at(w(8, 'softmax'))} />
-          {hi8 > 0.001 ? <rect x={880 + 160 + 520 + 4} y={554 - 30} width={110} height={60} rx={10} fill="none" stroke={C.chalk} strokeWidth={2.5} opacity={hi8} /> : null}
-        </G>
-
-        {/* ---------------- 4.9 the edit ---------------- */}
-        <G o={S[9]}>
-          {look9 > 0.001 ? <rect x={PH9.x - 10} y={PH9.y - 10} width={PH9.w + 20} height={PH9.h + 20} rx={12} fill="none" stroke={C.edit} strokeWidth={3.5} strokeDasharray="12 9" opacity={look9} /> : null}
-          <Person x={PH9.x + PH9.w + 90} y={PH9.y + 40} s={1.1} o={pers9} />
-          <VecCol x={940} y={390} vals={[lerp(c0[0], c1[0], edit9), c0[1], c0[2]]} rowH={100} w={150} size={38} digits={1}
-            color={C.concept} cellColor={(i) => (i === 0 && edit9 > 0.001 ? C.edit : C.concept)} ring={(i) => (i === 0 ? ring9 : 0)} />
-          {CON.map((n, i) => <Txt key={n} x={1124} y={440 + i * 100} size={32} anchor="start" weight={600} fill={i === 0 && edit9 > 0.001 ? C.edit : C.concept}>{n}</Txt>)}
-          <EditMark x={905} y={420} s={1.1} o={ring9} />
-          <MathSvg x={1015} y={350} tex="\cvec" size={48} />
-        </G>
-
-        {/* ---------------- 4.11 shares move ---------------- */}
-        <G o={S[11]}>
-          <ShareBars x={500} y={430} labels={CLS} from={sh11} rowH={112} labelW={200} w={760} size={36} />
-        </G>
-
-        {/* ---------------- 4.12 the column view ---------------- */}
-        <G o={S[12]}>
-          <Matrix x={W12.x} y={W12.y} vals={Wm} cw={W12.cw} ch={W12.ch} size={32} digits={0} valColor={() => FC} o={tickW}
-            bg={(_, j) => {
-              const g = Math.max(each12(j), j === 0 ? stripeHi : 0);
-              return g > 0.001 ? rgba(C.concept, 0.3 * g) : null;
-            }}
-            ring={(_, j) => (j === 0 && stripeHi > 0.001 ? { color: C.edit, o: stripeHi } : null)} />
-          <Flow pts={[[W12.x + 3 * W12.cw + 30, W12.y + 1.5 * W12.ch], [690, W12.y + 1.5 * W12.ch]]} color={C.chalk2} sw={3} head={12} p={E.out(d12c)} />
-        </G>
-
-        {/* ---------------- 4.13 closing ---------------- */}
-        <G o={S[13]}>
-          <Person x={520} y={400} s={0.95} o={c13} />
-          <g opacity={c13}>
-            {[0, 1, 2].map((i) => (
-              <rect key={i} x={470} y={470 + i * 76} width={100} height={64} rx={10} fill={i === 0 ? rgba(C.edit, 0.25) : rgba(C.concept, 0.16)} stroke={i === 0 ? C.edit : C.concept} strokeWidth={3} />
-            ))}
-          </g>
-          <Flow pts={[[600, 572], [820, 572]]} color={C.concept} sw={4} head={14} p={E.out(f13)} t={t} live={f13} n={2} />
-          <Block x={960} y={572} w={240} h={170} kind="head" o={f13} />
-          <MathSvg x={960} y={572} tex="\chead{W}" size={54} o={f13} />
-          <Flow pts={[[1090, 572], [1300, 572]]} color={C.chalk} sw={4} head={14} p={E.out(y13)} t={t + 0.3} live={y13} n={2} />
-          <g opacity={y13}>
-            <rect x={1320} y={530} width={230} height={84} rx={14} fill={C.bg3} stroke={C.chalk} strokeWidth={3} />
-            <Txt x={1435} y={572} size={36} weight={700} fill={C.chalk}>zebra</Txt>
-          </g>
-        </G>
-      </Svg>
-
-      {/* ================= HTML text and maths ================= */}
-      {/* 4.1 */}
-      <SlideHead text={bh(P, 1)} o={o(1)} />
-      <Rich x={M1.cx} y={700} ax="center" size={32} text="{c:concept values}" o={o(1, m1c)} />
-      <Rich x={M1.fx} y={700} ax="center" size={32} text="{f:task head}" o={o(1, m1f)} />
-      <Rich x={M1.yx} y={700} ax="center" size={32} text="{y:class scores}" o={o(1, m1y)} />
-      <HText x={960} y={820} ax="center" size={34} color={C.chalk2} o={o(1, m1txt)}>multiply and add, small enough to do by hand</HText>
-
-      {/* 4.2 */}
-      <SlideHead text={bh(P, 2)} o={o(2)} />
-      <Rich x={180} y={CARD.y + CARD.h / 2} ay="middle" size={34} text="{y:classes}" o={o(2, cardIn[0])} />
-      <Rich x={180} y={712} ay="middle" size={34} text="{c:concepts}" o={o(2, chipIn[0])} />
-      {THUMB.map((th, i) => (
-        <Credit key={th.src} x={1760} y={846 + i * 22} ax="right" text={`${CLS[i]}: ${CREDIT[th.src]}`} o={o(2, cardIn[i])} />
-      ))}
-
-      {/* 4.3 */}
-      <SlideHead text={bh(P, 3)} o={o(3)} />
-      <HText x={PH3.x} y={PH3.y + PH3.h + 12} size={26} color={C.chalk2} o={o(3, ph3)}>low-contrast photo</HText>
-      <Credit x={PH3.x} y={PH3.y + PH3.h + 48} text={CREDIT['zebra_plains.jpg']} o={o(3, ph3)} />
-      <Rich x={840} y={PH3.y + PH3.h / 2 - 84} ax="center" size={26} text="{x:concept predictor}" o={o(3, g3)} />
-      <Rich x={V3.x + V3.w / 2} y={V3.y + 3 * V3.rowH + 34} ax="center" size={28} text="{c:concept vector}" o={o(3, col3)} />
-
-      {/* 4.4 */}
-      <SlideHead text={bh(P, 4)} o={o(4)} />
-      <Rich x={M4.x} y={360} size={30} text="the zebra row of the {f:weight matrix} $\chead{W}$" o={o(4, r4)} />
-      <Rich x={M4.x + 1.5 * M4.cw} y={700} ax="center" size={32} color={C.chalk2} text="a {f:weight} says how strongly a {c:concept} counts toward a {y:class}" o={o(4, r4txt)} />
-
-      {/* 4.5 */}
-      <SlideHead text={bh(P, 5)} o={o(5)} />
-      <Rich x={M5.x + 1.5 * M5.cw} y={770} ax="center" size={32} color={C.chalk2} text="one row per {y:class}, one column per {c:concept}" o={o(5, r5txt)} />
-
-      {/* 4.6 */}
-      <SlideHead text={bh(P, 6)} o={o(6)} />
-      <Rich x={X6[0] - 140} y={Y6.a} ax="right" ay="middle" size={30} text="{f:zebra weights}" o={o(6, a6)} />
-      <Rich x={X6[0] - 140} y={Y6.b} ax="right" ay="middle" size={30} text="{c:concept values}" o={o(6, cv6)} />
-      <Rich x={X6[0] - 140} y={Y6.c} ax="right" ay="middle" size={30} color={C.chalk2} text="products" o={o(6, at(resT[0] - 0.1))} />
-      <TexSteps x={1080} y={810} ax="center" t={t} size={48} o={S[6]}
-        parts={[
-          ['\\cout{s}_{\\text{zebra}} = {}', prodT[0] - 0.2],
-          ...[0, 1, 2].map((j) => [`${j ? '{}+' : ''}\\chead{${num(Wm[0][j])}}\\times\\ccon{${num(c0[j])}}`, prodT[j]] as [string, number]),
-          [`{}= \\cout{${num(L0[0])}}`, sum6],
-        ]} />
-
-      {/* 4.7 and 4.10 */}
-      <SlideHead text={bh(P, 7)} o={o(7)} />
-      {P7.html}
-      <SlideHead text={bh(P, 10)} o={o(10)} />
-      {P10.html}
-
-      {/* 4.8 */}
-      <SlideHead text={bh(P, 8)} o={o(8)} />
-      <Tex x={720} y={508} ax="center" size={36} tex="\mathrm{softmax}" o={o(8, arr8)} />
-      <Rich x={495} y={724} ax="center" size={30} text="{y:scores}" o={o(8)} />
-      <Rich x={1300} y={724} ax="center" size={30} text="{y:shares}, summing to one" o={o(8, sum8)} />
-      <Tex x={960} y={830} ax="center" size={48} tex="\hat{y}_k = \dfrac{e^{\cout{s_k}}}{\sum_j e^{\cout{s_j}}}" o={o(8, eq8)} />
-
-      {/* 4.9 */}
-      <SlideHead text={bh(P, 9)} o={o(9)} />
-      <Credit x={PH9.x} y={PH9.y + PH9.h + 12} text={CREDIT['zebra_plains.jpg']} o={o(9)} />
-      <Tex x={1015} y={780} ax="center" size={52} tex={`\\ch_{\\text{stripes}}:\\ \\ccon{${num(c0[0])}} \\;\\to\\; \\cedit{${num(c1[0])}}`} o={o(9, eq9)} />
-
-      {/* 4.11 */}
-      <SlideHead text={bh(P, 11)} o={o(11)} />
-      <Rich x={960} y={790} ax="center" size={30} color={C.chalk2} text={`before the edit: horse ${S0[1].toFixed(2)}`} o={o(11, prev11)} />
-
-      {/* 4.12 */}
-      <SlideHead text={bh(P, 12)} o={o(12)} />
-      <Rich x={180} y={330} size={32} text="{x:image}: unchanged" o={o(12, tickI)} />
-      <Rich x={560} y={330} size={32} text="{f:matrix W}: unchanged" o={o(12, tickW)} />
-      <Tex x={W12.x + 1.5 * W12.cw} y={W12.y - 44} ax="center" size={44} tex="\chead{W}" o={o(12, tickW)} />
-      <Rich x={W12.x + 1.5 * W12.cw} y={W12.y + 3 * W12.ch + 22} ax="center" size={26} color={C.chalk2} text="each {c:value} scales its column" o={o(12, at(w(12, 'Each') - 0.1))} />
-      {dLayers.map(([tex, t0], i) => <Tex key={i} x={720} y={W12.y + 1.5 * W12.ch} size={56} tex={tex} o={o(12, at(t0))} />)}
-      <Rich x={720} y={790} size={32} text={`only {c:stripes} moved: $\\Delta\\ch_{\\text{stripes}} = \\cedit{${num(DC)}}$`} o={o(12, only12)} />
-
-      {/* 4.13 */}
-      <SlideHead text={bh(P, 13)} o={o(13)} />
-      <Rich x={520} y={710} ax="center" size={30} text="{e:edited} {c:belief}" o={o(13, c13)} />
-      <Rich x={960} y={710} ax="center" size={30} text="{f:same weights}" o={o(13, f13)} />
-      <Rich x={1435} y={710} ax="center" size={30} text="{y:new answer}" o={o(13, y13)} />
-      <HText x={960} y={820} ax="center" size={36} weight={600} color={C.chalk} o={o(13, t13)}>no retraining</HText>
-
-      <EvTag x={1760} y={890} ax="right" kind="illustrative" text="hand-chosen worksheet" o={tagO} />
-      <Header t={t} part={4} title={P.title} />
-      <ArchMap on={['c', 'f']} o={inv(0, 0.5, t)} />
-    </Stage>
-  );
+      <G o={S[3]}>
+        {flow(580, 710, 550, C.input, a(3, 'predictor'))}
+        <Block x={870} y={550} w={280} h={190} kind="input" o={a(3, 'predictor')} />
+        <Txt x={870} y={510} size={30} o={a(3, 'predictor')}>concept predictor</Txt>
+        <MathSvg x={870} y={578} tex="\gth" size={44} o={a(3, 'theta')} />
+        {flow(1030, 1150, 550, C.concept, a(3, 'predicts'))}
+        <Values x={1180} y={450} labels={CON} values={c0} color={C.concept} o={a(3, 'predicts')} />
+        <MathSvg x={1370} y={350} tex="\cvec" size={46} o={a(3, 'hat')} />
+        <Txt x={365} y={755} size={28} fill={C.input}>input image</Txt>
+      </G>
+      {headPass(4)}
+      <G o={S[5]}>
+        <Values x={190} y={445} labels={CON} values={c0} color={C.concept} />
+        <Txt x={380} y={350} size={30} fill={C.concept}>values for this image</Txt>
+        <MathSvg x={380} y={755} tex="\cvec" size={44} />
+        <line x1={720} x2={720} y1={330} y2={800} stroke={C.line2} strokeWidth={2} />
+        <Matrix x={1070} y={445} vals={Wm} rows={CLS} cols={CON} cw={215} ch={90} size={36} headSize={26}
+          valColor={() => FC} colColors={CON.map(() => C.concept)} o={a(5, 'table')} />
+        <Txt x={1385} y={335} size={30} fill={FC} o={a(5, 'table')}>weights inside the linear layer</Txt>
+        <MathSvg x={1385} y={790} tex="\chead{W}" size={44} o={a(5, 'W')} />
+      </G>
+      <G o={S[6]}>
+        <Txt x={430} y={440} size={30} anchor="end" fill={FC}>zebra weights</Txt>
+        <Txt x={430} y={540} size={30} anchor="end" fill={C.concept}>this image's values</Txt>
+        <Txt x={430} y={670} size={30} anchor="end">contributions</Txt>
+        {CON.map((con, j) => <g key={con}>
+          <Txt x={calcX[j]} y={350} size={30} fill={C.concept}>{con}</Txt>
+          <Txt x={calcX[j]} y={440} size={42} mono fill={FC}>{num(Wm[0][j])}</Txt>
+          <Txt x={calcX[j]} y={490} size={30} fill={C.chalk2} o={a(6, calcWords[j])}>×</Txt>
+          <Txt x={calcX[j]} y={540} size={42} mono fill={C.concept}>{num(c0[j])}</Txt>
+          <line x1={calcX[j] - 110} x2={calcX[j] + 110} y1={600} y2={600} stroke={C.line2} strokeWidth={2} />
+          <Txt x={calcX[j]} y={670} size={44} mono o={a(6, 'which', j)}>{num(Z.terms[0][j])}</Txt>
+          {j > 0 ? <Txt x={calcX[j] - 160} y={670} size={36} o={a(6, 'Add')}>+</Txt> : null}
+        </g>)}
+        <Txt x={1570} y={670} size={36} o={a(6, 'Add')}>=</Txt>
+        <Txt x={1690} y={670} size={48} mono weight={700} o={a(6, 'get')}>{num(L0[0])}</Txt>
+        <Txt x={1690} y={735} size={26} o={a(6, 'output')}>zebra score</Txt>
+      </G>
+      {headPass(7)}
+      {probabilityPass(8)}
+      <G o={S[9]}>
+        <Person x={730} y={435} s={1} o={a(9, 'observer')} />
+        {flow(810, 990, 520, C.edit, a(9, 'correct'))}
+        <Values x={1040} y={430} labels={CON} values={a(9, '1.') > 0.5 ? c1 : c0} color={C.concept} edited={a(9, 'correct') > 0.5} />
+        <EditMark x={1440} y={405} o={a(9, 'correct')} />
+      </G>
+      {headPass(10)}
+      {probabilityPass(11)}
+      <G o={S[12]}>
+        <Txt x={500} y={430} size={32} fill={C.concept}>change in stripes</Txt>
+        <MathSvg x={500} y={550} size={54} tex={`\\cedit{${num(c1[0] - c0[0])}}`} o={a(12, '0.9')} />
+        <Txt x={800} y={550} size={48} o={a(12, 'weight')}>×</Txt>
+        <Txt x={1050} y={430} size={32} fill={FC}>zebra's stripes weight</Txt>
+        <MathSvg x={1050} y={550} size={54} tex={`\\chead{${num(Wm[0][0])}}`} o={a(12, '3.')} />
+        <Txt x={1320} y={550} size={48} o={a(12, 'increases')}>=</Txt>
+        <Txt x={1570} y={430} size={32}>change in zebra score</Txt>
+        <Txt x={1570} y={550} size={54} mono o={a(12, '2.7')}>+{num(Z.delta[0])}</Txt>
+      </G>
+      {pipeline(13)}
+    </Svg>
+    {S.map((alpha, k) => k > 0 ? <SlideHead key={k} text={bh(P, k)} o={alpha} /> : null)}
+    <Rich x={960} y={800} ax="center" size={32} text="{f:task head}: a linear layer or a multilayer perceptron (MLP)" o={o(1, a(1, 'single'))} />
+    <Rich x={960} y={860} ax="center" size={30} text="our worked example uses one {f:linear layer}" o={o(1, a(1, 'use'))} />
+    {PHOTOS.map((src, i) => <Credit key={src} x={1760} y={815 + i * 23} ax="right" text={CREDIT[src]} o={S[2]} />)}
+    <Rich x={1370} y={735} ax="center" size={28} text="assumed outputs for this photo" o={o(3, a(3, 'assumed'))} />
+    <Tex x={960} y={835} ax="center" size={44} tex="\cvec = \gth(\cin{x})" o={o(3, a(3, 'Together'))} />
+    <Rich x={1370} y={800} ax="center" size={28} text="the hat means {c:predicted}" o={o(3, a(3, 'means'))} />
+    <Credit x={170} y={885} text={CREDIT['zebra_plains.jpg']} o={S[3]} />
+    <Rich x={960} y={840} ax="center" size={32} text="The {f:task head} reads only the {c:concepts}, not the {x:image}" o={o(4, a(4, 'directly'))} />
+    <Rich x={380} y={830} ax="center" size={28} text="{c:change with the image}" o={o(5, a(5, 'fixed'))} />
+    <Rich x={1385} y={840} ax="center" size={28} text="{f:fixed during prediction}" o={o(5, a(5, 'fixed'))} />
+    <Rich x={1385} y={885} ax="center" size={25} text="this example has no bias" o={o(5)} />
+    <TexSteps x={960} y={810} ax="center" t={t} size={44} o={S[6]} parts={[
+      ['\\text{zebra score} = ', b(6)],
+      ...Wm[0].map((weight, j) => [`${j ? '{}+' : ''}\\chead{${num(weight)}}\\times\\ccon{${num(c0[j])}}`, bw(P, 6, calcWords[j])] as [string, number]),
+      [`{}=\\cout{${num(L0[0])}}`, bw(P, 6, 'get')],
+    ]} />
+    <Rich x={960} y={780} ax="center" size={30} text="scores = layer weights × predicted concept values" o={o(7, a(7, 'shorthand'))} />
+    <Tex x={960} y={880} ax="center" size={44} tex="\cout{\mathbf{s}} = \fph(\cvec) = \chead{W}\cvec" o={o(7, a(7, 'shorthand'))} />
+    <Tex x={960} y={820} ax="center" size={44} tex="p_k = \frac{e^{s_k}}{\sum_j e^{s_j}}" o={o(8, a(8, 'Exponentiate'))} />
+    <Rich x={1400} y={770} ax="center" size={28} text="probabilities sum to one" o={o(8, a(8, 'sum'))} />
+    <Tex x={1090} y={800} ax="center" size={48} tex={`\\text{stripes: }\\ccon{${num(c0[0])}} \\to \\cedit{${num(c1[0])}}`} o={o(9, a(9, 'correct'))} />
+    <Credit x={220} y={885} text={CREDIT['zebra_plains.jpg']} o={S[9]} />
+    <Rich x={960} y={840} ax="center" size={32} text="same {x:image}, same {x:predictor}, same {f:weights}; one {e:corrected concept}" o={o(10, a(10, 'image'))} />
+    <Rich x={650} y={810} ax="center" size={34} text={`before: horse ${S0[1].toFixed(2)}`} o={o(11, a(11, 'changes'))} />
+    <Rich x={1270} y={810} ax="center" size={34} text={`after: zebra ${S1[0].toFixed(2)}`} o={o(11, a(11, 'changes'))} />
+    <Tex x={960} y={770} ax="center" size={50} tex={`\\text{zebra score: }${num(L0[0])} + ${num(Z.delta[0])} = ${num(L1[0])}`} o={o(12, a(12, 'takes'))} />
+    <Rich x={960} y={860} ax="center" size={30} text="all other contributions stay the same" o={o(12, a(12, 'other'))} />
+    <Rich x={960} y={800} ax="center" size={34} text="{e:correct a concept}, then run the {f:same task head} again" o={o(13, a(13, 'correct'))} />
+    <Rich x={960} y={870} ax="center" size={32} text="no retraining" o={o(13, a(13, 'retraining'))} />
+    <EvTag x={1760} y={930} ax="right" kind="illustrative" text="hand-chosen concept outputs and weights; arithmetic computed from these values" o={tag} />
+    <Header t={t} part={4} title={P.title} />
+    <ArchMap on={['x', 'g', 'c', 'f', 'y']} o={inv(0, 0.5, t)} />
+  </Stage>;
 };

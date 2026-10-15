@@ -66,3 +66,17 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     version. Updated pages 14, 15, 17 and 18 only; the other 314 page content streams are unchanged. Verified all
     318 slide ID/page footers, 28 section bookmarks and the four revised pages visually. Notes and arrow builds
     work in the deck. The saved timelines and beat list retain their original hashes. No film or publication work.
+15. **Concept values versus layer weights (PDF comment on page 67; s04.1-13, pages 65-77).** Reworked the section
+    around an explicit image -> concept predictor -> predicted concepts -> task head -> scores -> softmax ->
+    probabilities diagram. Defined the hat as predicted, and stated that the illustrated concept outputs are
+    assumed rather than measured from the photo. The task head can be a linear layer or an MLP; this worked
+    example uses one linear layer without bias. Separated the per-image concept values from the layer's fixed
+    weight table, labelled every value, and introduced W times c hat only after a single zebra-score calculation.
+    Replaced the dense matrix products and column-delta display with layer diagrams and one score-change example.
+    The concept edit passes through the same head and softmax. All original D.zoo values are unchanged. Content,
+    type checking, 21 Python tests and three deck tests passed; all 13 slides were inspected, including notes and
+    arrow-driven builds. Saved film timelines and the beat list retain their original hashes.
+16. **Annotation PDF revision 3.** Saved `review/cbm-lecture-review-2026-10-15-r3.pdf`, retaining the original and
+    revision 2. Replaced pages 65-77 in revision 2; the other 305 page content streams are unchanged, including the
+    earlier saliency edits. Verified all 318 page footers, 28 section bookmarks and all 13 revised pages visually.
+    No audio generation, film rebuild or publishing was performed.

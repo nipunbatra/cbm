@@ -209,44 +209,44 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 ## From concepts to predictions: the arithmetic  (s04)
 
-1. **After the concepts, the task head is arithmetic you can do by hand**  
-   How do concept values become an answer? In the simplest case, the task head is arithmetic small enough to do by hand.
+1. **Follow the image all the way to class probabilities**  
+   Start with an image. The concept predictor estimates the concepts in it. The task head reads those estimates and produces class scores. Softmax converts the scores into class probabilities. The task head can be a single linear layer or a multilayer perceptron, an MLP. We will use one linear layer so that we can see every calculation.
 
 2. **Three classes and three concepts**  
-   Three classes: zebra, horse, and giraffe. Three concepts: stripes, horse-like shape, and long neck.
+   Our possible classes are zebra, horse and giraffe. For every image, we predict the same three concepts, in this order: stripes, horse-like shape and long neck. These concept names are fixed before we train the model.
 
-3. **The concept vector ĉ holds one value per concept**  
-   Given this low-contrast photograph, the concept predictor reports stripes 0.1, horse-like shape 0.9, and long neck 0.1. Stacked in a column, they form the concept vector, c hat.
+3. **The concept predictor turns this image into three estimates**  
+   The concept predictor, g theta, is a neural network that takes the image as input. For this hand-chosen example, suppose it predicts stripes 0.1, horse-like shape 0.9 and long neck 0.1. These are assumed outputs for this photograph, not measurements from a trained network. Together they form c hat, the predicted concept vector for this image. The hat means predicted.
 
-4. **The task head keeps one row of weights for each class**  
-   The task head is a weight matrix, W, with one row per class. The zebra row holds 3 for stripes, 1 for horse-like shape, and 0 for long neck.
+4. **The task head turns predicted concepts into class scores**  
+   Now pass that same concept vector to the task head, f phi. It takes the three concept values and returns one score for each class. Its input is the predicted concepts. It does not see the image directly. This is where we could use a linear layer or an MLP.
 
-5. **The full weight matrix W: rows are classes, columns are concepts**  
-   With all three rows: stripes count toward zebra, a long neck toward giraffe, and horse-like shape mostly toward horse.
+5. **The concept values describe this image; the weights belong to the layer**  
+   For our example, choose a single linear layer with no bias. Its weight table, W, has a row for each class and a column for each concept. The zebra row is 3, 1, 0. These are weights, not another image's concept values. We normally learn the weights during training and keep them fixed when predicting new images. Here, both the weights and the concept values are hand-chosen to make the arithmetic easy.
 
-6. **A class score is one row of weights times the concept values**  
-   To score zebra, multiply each weight by its concept value, and add. 3 times 0.1 is 0.3, 1 times 0.9 is 0.9, and 0 times 0.1 is 0. Zebra scores 1.2.
+6. **Inside the layer: multiply each concept value by its weight, then add**  
+   Let us compute just the zebra score. Stripes contributes 3 times 0.1, which is 0.3. Horse-like shape contributes 1 times 0.9, which is 0.9. Long neck contributes 0 times 0.1, which is 0. Add these contributions to get 1.2. This is one output of the linear layer.
 
-7. **Every row gives one score: s = Wĉ**  
-   Horse: minus 0.1, plus 1.8, minus 0.1, giving 1.6. Giraffe: minus 0.1, plus 0, plus 0.3, giving 0.2. These are the class scores, or logits.
+7. **The same layer produces all three class scores**  
+   Repeat that calculation with the horse row and the giraffe row. The layer returns zebra 1.2, horse 1.6 and giraffe 0.2. These scores are also called logits. Only now do we write the shorthand: scores equal W times c hat. This is just the linear layer applied to the predicted concept vector.
 
-8. **The largest score wins, and a softmax turns scores into shares**  
-   The largest score is 1.6, so the model says horse. A softmax turns the scores into shares that sum to one: horse gets about 0.52.
+8. **Softmax turns the scores into class probabilities**  
+   Pass the score vector through softmax. Exponentiate each score and divide by the total. This gives class probabilities that sum to one. Horse has the largest score, 1.6, and the largest probability, about 0.52. The predicted class is horse.
 
-9. **A person edits one concept value: stripes 0.1 to 1**  
-   Now an observer looks at the image and sees stripes. They change one coordinate: stripes, from 0.1 to 1.
+9. **A person corrects one predicted concept**  
+   Now an observer looks at the image and sees stripes. They correct the stripes value from 0.1 to 1. The other concept values stay the same. This edit replaces one entry in the predicted concept vector.
 
-10. **Same matrix, new concept vector: recompute the scores**  
-   Recompute with the same matrix. Zebra: 3, plus 0.9, plus 0, which gives 3.9. Horse: minus 1, plus 1.8, minus 0.1, giving 0.7. Giraffe: minus 1, plus 0, plus 0.3, giving minus 0.7.
+10. **Pass the corrected concepts through the same layer**  
+   Feed the corrected concept vector into the same linear layer. Its weights have not changed. The new scores are zebra 3.9, horse 0.7 and giraffe minus 0.7. The image and the concept predictor are unchanged. We only replace one concept value before running the task head again.
 
-11. **After the edit, zebra leads**  
-   After the softmax, zebra leads, with a share of about 0.95.
+11. **After softmax, zebra has the highest probability**  
+   Apply softmax to the new scores. Zebra now has probability about 0.95. The predicted class changes from horse to zebra.
 
-12. **The scores moved by 0.9 times the stripes column of W**  
-   The image did not change, and neither did the matrix. Each concept value scales its own column of W. Only stripes moved, by 0.9, so the scores moved by 0.9 times the stripes column: plus 2.7 for zebra, and minus 0.9 for the other two.
+12. **Why did the zebra score rise?**  
+   Only the stripes value changed, by 0.9. The zebra weight for stripes is 3. So the zebra score increases by 3 times 0.9, which is 2.7. That takes it from 1.2 to 3.9. The other contributions stay the same.
 
-13. **A person corrected a belief of the model, and nothing was retrained**  
-   So a person corrected one of the model's beliefs, and nothing had to be retrained.
+13. **The concept vector is the point where a person can intervene**  
+   The full path is still image, concept predictor, concept vector, task head, scores and softmax. A person can correct a concept in the middle, then run the same task head again. The answer can change without retraining either network.
 
 ## How does the model learn the concepts?  (s05)
 

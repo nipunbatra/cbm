@@ -40,9 +40,15 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 - Revised annotation PDF: `review/cbm-lecture-review-2026-10-15-r2.pdf`. Pages 14, 15, 17 and 18 include the PDF
   comments above; all other page content and all 318 page numbers are preserved. Keep the original PDF for its
   annotation references. The updated narration remains available through N in the deck.
+- PDF page 67 review: s04 now follows image, concept predictor, predicted concepts, task head, class scores and
+  softmax probabilities. It distinguishes per-image concept estimates from fixed layer weights, explains the
+  illustrative values, and introduces the matrix shorthand after a labelled linear-layer calculation. The head
+  may generally be an MLP; this example uses one linear layer without bias. The original D.zoo values are unchanged.
+- Latest annotation PDF: `review/cbm-lecture-review-2026-10-15-r3.pdf`, with revised s04 pages 65-77 and all revision 2
+  changes retained. There are still 318 pages and 28 section bookmarks. Earlier PDFs remain for annotation references.
 
 ## Pending
-1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck and asks for changes. For each
+1. **Nipun's slide-by-slide review (now, in Codex).** He annotates slides in the deck or PDF and asks for changes. For each
    change: edit the narration line and/or the scene, run `npm run content` and `npm run check`, look at the slide in
    `npm run deck`, and add an entry to `review/CHANGES_PENDING_VIDEO.md`. Keep the style rules in `AGENTS.md`.
 2. **Remake the film after the review** (not now): regenerate the voice for changed lines, real timeline, music,
