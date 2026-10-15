@@ -1,0 +1,182 @@
+{
+ "model": "gemini-3.1-pro-preview",
+ "date": "2026-10-10",
+ "temperature": 0,
+ "label_free": {
+  "zebra": {
+   "features": {
+    "prompt": "List the most important features for recognizing something as a \"zebra\".",
+    "raw": "{\"items\": [\"Black and white stripes\", \"Horse-like body\", \"Erect mane\", \"Hooved feet\", \"Long tufted tail\", \"Large rounded ears\", \"Elongated muzzle\"]}",
+    "items": [
+     "Black and white stripes",
+     "Horse-like body",
+     "Erect mane",
+     "Hooved feet",
+     "Long tufted tail",
+     "Large rounded ears",
+     "Elongated muzzle"
+    ]
+   },
+   "around": {
+    "prompt": "List the things most commonly seen around a \"zebra\".",
+    "raw": "{\"items\":[\"Tall savanna grass\",\"Acacia trees\",\"Wildebeest herds\",\"Waterholes\",\"Lions\",\"Oxpecker birds\",\"Safari vehicles\",\"Dust clouds\"]}",
+    "items": [
+     "Tall savanna grass",
+     "Acacia trees",
+     "Wildebeest herds",
+     "Waterholes",
+     "Lions",
+     "Oxpecker birds",
+     "Safari vehicles",
+     "Dust clouds"
+    ]
+   },
+   "superclasses": {
+    "prompt": "Give superclasses for the word \"zebra\".",
+    "raw": "{\"items\":[\"equine animal\",\"odd-toed ungulate\",\"hoofed mammal\",\"herbivorous mammal\",\"placental mammal\",\"vertebrate animal\",\"wild animal\",\"living organism\"]}",
+    "items": [
+     "equine animal",
+     "odd-toed ungulate",
+     "hoofed mammal",
+     "herbivorous mammal",
+     "placental mammal",
+     "vertebrate animal",
+     "wild animal",
+     "living organism"
+    ]
+   }
+  },
+  "horse": {
+   "features": {
+    "prompt": "List the most important features for recognizing something as a \"horse\".",
+    "raw": "{\"items\":[\"Long face and snout\",\"Flowing mane on neck\",\"Single-toed hooves\",\"Long hairy tail\",\"Four long slender legs\",\"Upright pointed ears\",\"Large eyes on sides\",\"Muscular equine build\"]}",
+    "items": [
+     "Long face and snout",
+     "Flowing mane on neck",
+     "Single-toed hooves",
+     "Long hairy tail",
+     "Four long slender legs",
+     "Upright pointed ears",
+     "Large eyes on sides",
+     "Muscular equine build"
+    ]
+   },
+   "around": {
+    "prompt": "List the things most commonly seen around a \"horse\".",
+    "raw": "{\"items\":[\"Leather saddle\",\"Metal horseshoes\",\"Bale of hay\",\"Water trough\",\"Riding bridle\",\"Wooden stable\",\"Nylon halter\",\"Grooming brush\"]}",
+    "items": [
+     "Leather saddle",
+     "Metal horseshoes",
+     "Bale of hay",
+     "Water trough",
+     "Riding bridle",
+     "Wooden stable",
+     "Nylon halter",
+     "Grooming brush"
+    ]
+   },
+   "superclasses": {
+    "prompt": "Give superclasses for the word \"horse\".",
+    "raw": "{\"items\":[\"equine\",\"odd-toed ungulate\",\"mammal\",\"vertebrate\",\"animal\",\"beast of burden\",\"herbivore\",\"living organism\"]}",
+    "items": [
+     "equine",
+     "odd-toed ungulate",
+     "mammal",
+     "vertebrate",
+     "animal",
+     "beast of burden",
+     "herbivore",
+     "living organism"
+    ]
+   }
+  },
+  "giraffe": {
+   "features": {
+    "prompt": "List the most important features for recognizing something as a \"giraffe\".",
+    "raw": "{\"items\":[\"Extremely long neck\",\"Long slender legs\",\"Spotted coat pattern\",\"Ossicones on head\",\"Sloping back\",\"Long prehensile tongue\",\"Tufted tail\",\"Small head\"]}",
+    "items": [
+     "Extremely long neck",
+     "Long slender legs",
+     "Spotted coat pattern",
+     "Ossicones on head",
+     "Sloping back",
+     "Long prehensile tongue",
+     "Tufted tail",
+     "Small head"
+    ]
+   },
+   "around": {
+    "prompt": "List the things most commonly seen around a \"giraffe\".",
+    "raw": "{\"items\":[\"Acacia trees\",\"Tall savanna grass\",\"Other giraffes\",\"Oxpecker birds\",\"Zebras\",\"Waterholes\",\"Safari vehicles\",\"Lions\"]}",
+    "items": [
+     "Acacia trees",
+     "Tall savanna grass",
+     "Other giraffes",
+     "Oxpecker birds",
+     "Zebras",
+     "Waterholes",
+     "Safari vehicles",
+     "Lions"
+    ]
+   },
+   "superclasses": {
+    "prompt": "Give superclasses for the word \"giraffe\".",
+    "raw": "{\"items\":[\"mammal\",\"animal\",\"herbivore\",\"ungulate\",\"vertebrate\",\"organism\",\"ruminant\",\"living thing\"]}",
+    "items": [
+     "mammal",
+     "animal",
+     "herbivore",
+     "ungulate",
+     "vertebrate",
+     "organism",
+     "ruminant",
+     "living thing"
+    ]
+   }
+  }
+ },
+ "labo": {
+  "zebra": {
+   "prompt": "Describe what a zebra looks like in a photograph, as 8 short visual sentences that would help tell it apart from similar animals.",
+   "raw": "{\"items\":[\"Bold black and white stripes.\",\"Short stiff upright mane.\",\"Stocky horse-like body.\",\"Dark rounded muzzle.\",\"Large striped ears.\",\"Tail with a dark tuft.\",\"Striped legs down to the hooves.\",\"Unique facial stripe patterns.\"]}",
+   "items": [
+    "Bold black and white stripes.",
+    "Short stiff upright mane.",
+    "Stocky horse-like body.",
+    "Dark rounded muzzle.",
+    "Large striped ears.",
+    "Tail with a dark tuft.",
+    "Striped legs down to the hooves.",
+    "Unique facial stripe patterns."
+   ]
+  },
+  "horse": {
+   "prompt": "Describe what a horse looks like in a photograph, as 8 short visual sentences that would help tell it apart from similar animals.",
+   "raw": "{\"items\": [\"Long flowing mane along the neck.\", \"Elongated straight or convex facial profile.\", \"Large wide-set eyes on the sides.\", \"Pointed mobile ears standing upright.\", \"Muscular deep chest and sloping shoulders.\", \"Long slender legs ending in single solid hooves.\", \"Tail covered entirely in long flowing hair.\", \"Smooth short coat in various colors.\"]}",
+   "items": [
+    "Long flowing mane along the neck.",
+    "Elongated straight or convex facial profile.",
+    "Large wide-set eyes on the sides.",
+    "Pointed mobile ears standing upright.",
+    "Muscular deep chest and sloping shoulders.",
+    "Long slender legs ending in single solid hooves.",
+    "Tail covered entirely in long flowing hair.",
+    "Smooth short coat in various colors."
+   ]
+  },
+  "giraffe": {
+   "prompt": "Describe what a giraffe looks like in a photograph, as 8 short visual sentences that would help tell it apart from similar animals.",
+   "raw": "{\"items\": [\"Extremely long vertical neck\", \"Large brown polygonal coat patches\", \"Thin cream lines between patches\", \"Two small fur-covered horn-like ossicones\", \"Very long slender legs\", \"Distinctly sloping back from shoulders\", \"Long tail with dark hair tuft\", \"Elongated face with dark lips\"]}",
+   "items": [
+    "Extremely long vertical neck",
+    "Large brown polygonal coat patches",
+    "Thin cream lines between patches",
+    "Two small fur-covered horn-like ossicones",
+    "Very long slender legs",
+    "Distinctly sloping back from shoulders",
+    "Long tail with dark hair tuft",
+    "Elongated face with dark lips"
+   ]
+  }
+ }
+}

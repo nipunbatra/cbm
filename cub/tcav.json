@@ -1,0 +1,56 @@
+{
+ "class": "Herring Gull",
+ "n_class_images": 60,
+ "scale": 100.0,
+ "n_repeats": 10,
+ "n_per_set": 150,
+ "has_wing_color::grey": {
+  "n_concept_pool": 3267,
+  "tcav_runs": [
+   1.0,
+   1.0,
+   1.0,
+   0.933,
+   1.0,
+   1.0,
+   0.983,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "tcav_mean": 0.992,
+  "cav_train_acc": 0.95
+ },
+ "has_wing_color::yellow": {
+  "n_concept_pool": 1019,
+  "tcav_runs": [
+   0.433,
+   0.083,
+   0.367,
+   0.0,
+   0.0,
+   0.0,
+   0.717,
+   0.0,
+   0.1,
+   0.683
+  ],
+  "tcav_mean": 0.238,
+  "cav_train_acc": 0.967
+ },
+ "random": {
+  "tcav_runs": [
+   1.0,
+   1.0,
+   0.0,
+   0.867,
+   0.0,
+   0.8,
+   0.0,
+   1.0,
+   1.0,
+   0.433
+  ],
+  "tcav_mean": 0.61
+ }
+}

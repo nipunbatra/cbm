@@ -1,0 +1,8 @@
+## s14 | Final replay | 0.4 | 0.8
+[[One last time: a black box maps the {x:photo} to a {y:species}]] One last time, the gull. A black box maps the photograph straight to a species. || 0.8
+[[Open it: {c:named concepts} sit on the path to the {y:prediction}]] Open it up. Input. Encoder. Concept predictor. Named concepts. Task head. Prediction. || 0.8
+[[A person {e:corrects} one concept, and the {y:prediction} follows]] A person sees that the wingtips are black and corrects that concept. The head now says American herring gull, at 0.91. || 1.0
+[[The interface is only as good as its parts]] But the interface is only as good as its parts: the concepts it names, where they look, and the head that reads them. A concept may be missing, a detector may look at the water, and a head may hold a wrong rule. || 1.2
+[[{c:Concepts} that can be inspected, evaluated and {e:corrected}]] In short, concept bottleneck models put named values that people can read in the middle of a prediction. Those values can be inspected, evaluated, and sometimes corrected. || 0.8
+[[The interface must carry what the {y:prediction} depends on]] The challenge is to make sure the interface faithfully represents the information on which the prediction depends. Put simply, whatever the answer uses should be visible in the concepts. || 1.2
+[[What to remember]] Four things to remember. Post-hoc methods explain a model after the fact, while a concept bottleneck makes the answer pass through named concepts. Fixing a concept helps only if the head reads it the right way. A soft score can carry more than its name says, and that extra information leaks to the head. And newer variants find concepts with fewer labels, so check that each one looks at the right evidence. || 2.0

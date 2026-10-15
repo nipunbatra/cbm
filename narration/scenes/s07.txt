@@ -1,0 +1,12 @@
+## s07 | A correct edit can still hurt | 0.4 | 0.8
+[[Does a correct edit always help?]] So far, every correction has helped. Does a correct edit always help? Here is a case where it does not. || 1.0
+[[A support message that belongs in {y:billing}]] A support message reads: The app works, but I was charged twice. Please refund the extra payment. It belongs in the billing queue. || 0.6
+[[The {x:concept predictor} reads two {c:concepts} from the message]] The concept predictor rates duplicate charge at only 0.2, and refund requested at 1. || 0.6
+[[The {f:task head}, in words]] The task head computes a billing score. It starts at 1.2, takes away 2 for each unit of duplicate charge, and adds 0.6 for each unit of refund requested. || 0.6
+[[The same {f:head} in symbols]] In symbols, the score s is 1.2, minus 2 times duplicate charge, plus 0.6 times refund requested. A sigmoid turns that score into the billing share. || 0.6
+[[Before the edit, the message goes to {y:billing}]] Before any edit, the score is 1.2, minus 0.4, plus 0.6, which gives 1.4. Billing receives 0.80, so the message is already routed correctly. || 1.0
+[[A reviewer {e:correctly} sets duplicate charge to 1]] A reviewer reads the message and correctly sets duplicate charge to 1. || 1.6
+[[After the edit, the message leaves {y:billing}]] Now the score is 1.2, minus 2, plus 0.6, which gives minus 0.2. Billing falls to 0.45, and the message goes to general support. || 1.2
+[[The fault is in the {f:head}: a weight with the wrong sign]] The edit was correct. The fault lies downstream: this head learned a negative weight for duplicate charge, the wrong sign for billing. || 0.8
+[[Correcting a {c:concept} does not repair the {f:decision rule}]] Correcting a concept does not repair an incorrect decision rule. An intervention is only as good as the head that receives it, so its effect has to be measured rather than assumed. || 1.0
+[[A constructed case: the failure can happen]] This head was built faulty on purpose, to show that the failure can happen. It says nothing about how often it does. || 1.0

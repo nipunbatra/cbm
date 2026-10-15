@@ -1,0 +1,5099 @@
+{
+ "clip": {
+  "model": "openai/clip-vit-base-patch32",
+  "species": [
+   "American herring gull",
+   "glaucous-winged gull",
+   "ring-billed gull",
+   "great black-backed gull",
+   "laughing gull",
+   "glaucous gull"
+  ],
+  "probs": [
+   0.5433,
+   0.2094,
+   0.0909,
+   0.108,
+   0.0004,
+   0.0479
+  ],
+  "top": 0,
+  "template": "a photo of a {}, a type of bird.",
+  "grid": 14,
+  "patch": 0.16,
+  "drop": [
+   [
+    0.1884,
+    0.0382,
+    0.0791,
+    0.0442,
+    0.0963,
+    0.1089,
+    0.1055,
+    0.1167,
+    0.0919,
+    0.0346,
+    0.0926,
+    0.0229,
+    0.0384,
+    0.1258
+   ],
+   [
+    0.0924,
+    0.1007,
+    0.185,
+    0.165,
+    0.2932,
+    0.1652,
+    0.1885,
+    0.1382,
+    0.1385,
+    0.0867,
+    0.0623,
+    0.0367,
+    0.0449,
+    0.1192
+   ],
+   [
+    0.1809,
+    0.3121,
+    0.1923,
+    0.2405,
+    0.2459,
+    0.3211,
+    0.4008,
+    0.2977,
+    0.2643,
+    0.2145,
+    0.2127,
+    0.1585,
+    0.1584,
+    0.1335
+   ],
+   [
+    0.2203,
+    0.9187,
+    0.4476,
+    0.2311,
+    0.2796,
+    0.4259,
+    0.2577,
+    0.2755,
+    0.2916,
+    0.1295,
+    0.0893,
+    0.0639,
+    0.1581,
+    0.2433
+   ],
+   [
+    -0.0058,
+    0.7686,
+    0.642,
+    0.2525,
+    0.2652,
+    0.4024,
+    0.361,
+    0.5133,
+    0.2003,
+    0.2909,
+    0.1955,
+    0.1706,
+    0.1581,
+    0.1856
+   ],
+   [
+    0.0882,
+    0.0191,
+    0.0456,
+    0.0981,
+    0.2362,
+    0.4841,
+    0.3977,
+    0.4199,
+    0.3656,
+    0.1474,
+    0.1938,
+    0.208,
+    0.1728,
+    0.1438
+   ],
+   [
+    0.1409,
+    0.1164,
+    0.2381,
+    0.1828,
+    0.1994,
+    0.2549,
+    0.2015,
+    0.3151,
+    0.0713,
+    0.0641,
+    0.0347,
+    0.0377,
+    0.1294,
+    0.0747
+   ],
+   [
+    0.2366,
+    0.0877,
+    0.2962,
+    0.2899,
+    0.2567,
+    0.3869,
+    0.3187,
+    0.3156,
+    0.1762,
+    0.0557,
+    0.0804,
+    0.1279,
+    0.0963,
+    0.0445
+   ],
+   [
+    0.1647,
+    0.0829,
+    0.3267,
+    0.2781,
+    0.1565,
+    0.2193,
+    0.1463,
+    0.0775,
+    0.207,
+    0.1858,
+    0.2224,
+    0.1764,
+    0.1962,
+    0.1586
+   ],
+   [
+    0.1269,
+    0.0106,
+    -0.0,
+    0.0423,
+    0.068,
+    0.0948,
+    0.069,
+    0.1009,
+    0.1222,
+    0.0471,
+    0.0722,
+    0.1527,
+    0.0709,
+    0.1606
+   ],
+   [
+    0.1203,
+    0.0916,
+    0.0899,
+    0.0346,
+    0.0494,
+    0.0602,
+    0.0857,
+    0.065,
+    0.0856,
+    0.0938,
+    0.1391,
+    0.1046,
+    0.0239,
+    -0.006
+   ],
+   [
+    0.106,
+    0.096,
+    0.1234,
+    0.142,
+    0.1076,
+    0.0412,
+    0.0568,
+    0.09,
+    0.0756,
+    0.1315,
+    0.0765,
+    0.1018,
+    0.017,
+    0.0399
+   ],
+   [
+    -0.0335,
+    -0.0471,
+    -0.0226,
+    -0.0405,
+    0.019,
+    0.0238,
+    0.0567,
+    0.1331,
+    0.0402,
+    0.0242,
+    0.0537,
+    0.1106,
+    0.0408,
+    -0.0043
+   ],
+   [
+    -0.0217,
+    -0.0414,
+    -0.0512,
+    -0.0549,
+    -0.047,
+    -0.0597,
+    -0.0226,
+    -0.048,
+    -0.0151,
+    -0.0452,
+    0.0532,
+    -0.0048,
+    -0.0107,
+    0.0307
+   ]
+  ],
+  "drop_max": 0.9187
+ },
+ "gull": {
+  "regions": {
+   "wingtip": [
+    0.785,
+    0.555,
+    0.27,
+    0.12
+   ],
+   "bill": [
+    0.14,
+    0.295,
+    0.14,
+    0.08
+   ],
+   "tail": [
+    0.8,
+    0.505,
+    0.18,
+    0.06
+   ],
+   "head": [
+    0.31,
+    0.26,
+    0.24,
+    0.17
+   ]
+  }
+ },
+ "bird": {
+  "concepts": [
+   "wingtip grey",
+   "wingtip black",
+   "bill pointed",
+   "head white",
+   "tail rounded"
+  ],
+  "weights": [
+   -2.0,
+   2.0,
+   0.4,
+   -0.2,
+   0.2
+  ],
+  "bias": 0.0,
+  "before": {
+   "c": [
+    0.8,
+    0.2,
+    0.9,
+    0.85,
+    0.6
+   ],
+   "z": -0.89,
+   "terms": [
+    -1.6,
+    0.4,
+    0.36,
+    -0.17,
+    0.12
+   ],
+   "share": [
+    0.7089,
+    0.2911
+   ]
+  },
+  "after": {
+   "c": [
+    0.0,
+    1.0,
+    0.9,
+    0.85,
+    0.6
+   ],
+   "z": 2.31,
+   "terms": [
+    -0.0,
+    2.0,
+    0.36,
+    -0.17,
+    0.12
+   ],
+   "share": [
+    0.0903,
+    0.9097
+   ]
+  },
+  "classes": [
+   "Glaucous-winged gull",
+   "American herring gull"
+  ],
+  "labels": [
+   "wingtip grey",
+   "wingtip black",
+   "bill pointed",
+   "head white",
+   "tail rounded"
+  ]
+ },
+ "zoo": {
+  "classes": [
+   "zebra",
+   "horse",
+   "giraffe"
+  ],
+  "concepts": [
+   "stripes",
+   "horse-like shape",
+   "long neck"
+  ],
+  "W": [
+   [
+    3.0,
+    1.0,
+    0.0
+   ],
+   [
+    -1.0,
+    2.0,
+    -1.0
+   ],
+   [
+    -1.0,
+    0.0,
+    3.0
+   ]
+  ],
+  "c": [
+   0.1,
+   0.9,
+   0.1
+  ],
+  "c_new": [
+   1.0,
+   0.9,
+   0.1
+  ],
+  "terms": [
+   [
+    0.3,
+    0.9,
+    0.0
+   ],
+   [
+    -0.1,
+    1.8,
+    -0.1
+   ],
+   [
+    -0.1,
+    0.0,
+    0.3
+   ]
+  ],
+  "terms_new": [
+   [
+    3.0,
+    0.9,
+    0.0
+   ],
+   [
+    -1.0,
+    1.8,
+    -0.1
+   ],
+   [
+    -1.0,
+    0.0,
+    0.3
+   ]
+  ],
+  "logits": [
+   1.2,
+   1.6,
+   0.2
+  ],
+  "logits_new": [
+   3.9,
+   0.7,
+   -0.7
+  ],
+  "softmax": [
+   0.3497,
+   0.5217,
+   0.1286
+  ],
+  "softmax_new": [
+   0.9516,
+   0.0388,
+   0.0096
+  ],
+  "delta": [
+   2.7,
+   -0.9,
+   -0.9
+  ],
+  "argmax": 1,
+  "argmax_new": 0
+ },
+ "train": {
+  "lambda_c": 2,
+  "lambda_y": 1,
+  "strategy": "joint",
+  "optimizer": "Adam",
+  "lr": 0.003,
+  "epochs": 60,
+  "batch": 64
+ },
+ "sleep": {
+  "concepts": [
+   "spindle present",
+   "K-complex present",
+   "slow-wave dominance"
+  ],
+  "weights": [
+   2.6,
+   1.2,
+   -1.8
+  ],
+  "bias": -1.5,
+  "before": {
+   "c": [
+    0.12,
+    0.8,
+    0.15
+   ],
+   "z": -0.498,
+   "terms": [
+    0.312,
+    0.96,
+    -0.27
+   ],
+   "share": [
+    0.622,
+    0.378
+   ]
+  },
+  "after": {
+   "c": [
+    1.0,
+    0.8,
+    0.15
+   ],
+   "z": 1.79,
+   "terms": [
+    2.6,
+    0.96,
+    -0.27
+   ],
+   "share": [
+    0.1431,
+    0.8569
+   ]
+  },
+  "classes": [
+   "Other stage",
+   "N2 candidate"
+  ]
+ },
+ "eeg": {
+  "fs": 100,
+  "seconds": 6.0,
+  "y": [
+   0.212,
+   0.107,
+   -0.221,
+   -0.374,
+   -0.602,
+   -0.588,
+   -0.503,
+   -0.161,
+   0.1,
+   0.517,
+   0.756,
+   0.839,
+   0.629,
+   0.514,
+   0.192,
+   -0.193,
+   -0.653,
+   -0.853,
+   -1.011,
+   -0.987,
+   -0.747,
+   -0.659,
+   -0.387,
+   -0.119,
+   -0.026,
+   0.151,
+   0.291,
+   0.404,
+   0.438,
+   0.614,
+   0.755,
+   0.585,
+   0.652,
+   0.443,
+   0.162,
+   0.051,
+   -0.274,
+   -0.572,
+   -0.565,
+   -0.481,
+   -0.368,
+   -0.095,
+   0.084,
+   0.299,
+   0.423,
+   0.27,
+   0.212,
+   0.019,
+   -0.088,
+   -0.253,
+   -0.223,
+   -0.13,
+   0.051,
+   0.181,
+   0.101,
+   0.123,
+   0.116,
+   -0.194,
+   -0.268,
+   -0.374,
+   -0.338,
+   -0.316,
+   -0.231,
+   -0.038,
+   0.157,
+   0.387,
+   0.291,
+   0.209,
+   0.072,
+   -0.166,
+   -0.351,
+   -0.497,
+   -0.4,
+   -0.272,
+   0.067,
+   0.311,
+   0.51,
+   0.702,
+   0.673,
+   0.669,
+   0.432,
+   0.259,
+   -0.045,
+   -0.079,
+   -0.257,
+   -0.266,
+   -0.112,
+   -0.096,
+   -0.014,
+   0.078,
+   -0.189,
+   -0.286,
+   -0.344,
+   -0.403,
+   -0.469,
+   -0.447,
+   -0.336,
+   -0.281,
+   -0.323,
+   -0.24,
+   -0.227,
+   -0.281,
+   -0.153,
+   -0.103,
+   0.203,
+   0.419,
+   0.703,
+   0.918,
+   1.103,
+   0.996,
+   0.88,
+   0.643,
+   0.063,
+   -0.213,
+   -0.761,
+   -0.867,
+   -1.041,
+   -0.845,
+   -0.647,
+   -0.439,
+   0.032,
+   0.278,
+   0.315,
+   0.32,
+   0.258,
+   0.099,
+   0.116,
+   -0.054,
+   -0.055,
+   -0.103,
+   -0.102,
+   -0.193,
+   -0.159,
+   -0.429,
+   -0.589,
+   -0.873,
+   -1.087,
+   -1.14,
+   -1.109,
+   -0.92,
+   -0.715,
+   -0.466,
+   -0.33,
+   -0.189,
+   -0.051,
+   -0.31,
+   -0.532,
+   -0.678,
+   -0.827,
+   -1.162,
+   -1.189,
+   -1.264,
+   -1.354,
+   -1.23,
+   -1.326,
+   -1.397,
+   -1.537,
+   -1.538,
+   -1.622,
+   -1.548,
+   -1.478,
+   -1.293,
+   -0.923,
+   -0.832,
+   -0.636,
+   -0.578,
+   -0.591,
+   -0.618,
+   -0.561,
+   -0.571,
+   -0.431,
+   -0.202,
+   0.146,
+   0.4,
+   0.611,
+   0.674,
+   0.608,
+   0.602,
+   0.375,
+   0.066,
+   -0.072,
+   -0.11,
+   -0.002,
+   0.258,
+   0.532,
+   1.036,
+   1.207,
+   1.555,
+   1.607,
+   1.559,
+   1.44,
+   1.187,
+   0.812,
+   0.622,
+   0.699,
+   0.596,
+   0.716,
+   0.843,
+   0.75,
+   0.74,
+   0.86,
+   0.8,
+   0.738,
+   0.732,
+   0.686,
+   0.676,
+   0.785,
+   0.73,
+   0.624,
+   0.619,
+   0.395,
+   0.215,
+   -0.046,
+   -0.121,
+   -0.12,
+   0.034,
+   0.35,
+   0.597,
+   0.964,
+   1.195,
+   1.419,
+   1.213,
+   1.242,
+   1.004,
+   0.807,
+   0.538,
+   0.456,
+   0.428,
+   0.296,
+   0.212,
+   0.055,
+   -0.044,
+   -0.336,
+   -0.687,
+   -0.763,
+   -0.903,
+   -0.907,
+   -0.535,
+   -0.111,
+   0.164,
+   0.409,
+   0.636,
+   0.825,
+   0.673,
+   0.447,
+   0.156,
+   -0.115,
+   -0.269,
+   -0.367,
+   -0.344,
+   -0.277,
+   0.005,
+   0.109,
+   0.327,
+   0.208,
+   0.213,
+   0.103,
+   -0.103,
+   -0.01,
+   -0.047,
+   -0.107,
+   0.084,
+   0.204,
+   0.153,
+   0.405,
+   0.401,
+   0.362,
+   0.202,
+   0.145,
+   0.055,
+   0.063,
+   -0.044,
+   -0.118,
+   -0.1,
+   -0.334,
+   -0.467,
+   -0.708,
+   -0.634,
+   -0.727,
+   -0.675,
+   -0.508,
+   -0.245,
+   0.127,
+   0.467,
+   0.766,
+   0.942,
+   1.023,
+   0.796,
+   0.47,
+   0.098,
+   -0.22,
+   -0.31,
+   -0.473,
+   -0.467,
+   -0.362,
+   -0.234,
+   -0.012,
+   0.148,
+   0.101,
+   0.077,
+   0.012,
+   -0.02,
+   -0.125,
+   0.019,
+   0.099,
+   0.339,
+   0.348,
+   0.464,
+   0.455,
+   0.18,
+   -0.069,
+   -0.268,
+   -0.479,
+   -0.641,
+   -0.533,
+   -0.305,
+   -0.231,
+   0.003,
+   0.143,
+   0.331,
+   0.238,
+   0.151,
+   0.134,
+   -0.176,
+   -0.21,
+   -0.276,
+   -0.369,
+   -0.297,
+   -0.112,
+   -0.123,
+   -0.044,
+   -0.017,
+   0.113,
+   0.244,
+   0.285,
+   0.293,
+   0.464,
+   0.654,
+   0.815,
+   0.786,
+   0.672,
+   0.416,
+   0.057,
+   -0.24,
+   -0.467,
+   -0.629,
+   -0.647,
+   -0.546,
+   -0.545,
+   -0.443,
+   -0.366,
+   -0.044,
+   -0.037,
+   0.014,
+   0.0,
+   -0.289,
+   -0.624,
+   -0.842,
+   -0.61,
+   -0.206,
+   0.422,
+   0.98,
+   1.053,
+   0.881,
+   0.554,
+   0.32,
+   0.168,
+   0.133,
+   0.274,
+   0.134,
+   -0.004,
+   -0.406,
+   -0.716,
+   -0.83,
+   -0.452,
+   0.006,
+   0.383,
+   0.443,
+   0.093,
+   -0.337,
+   -0.423,
+   -0.282,
+   0.314,
+   0.996,
+   1.138,
+   0.94,
+   0.261,
+   -0.591,
+   -1.212,
+   -1.175,
+   -0.82,
+   -0.373,
+   -0.05,
+   -0.024,
+   -0.377,
+   -0.795,
+   -0.541,
+   -0.139,
+   0.531,
+   0.899,
+   0.987,
+   0.639,
+   0.422,
+   -0.006,
+   0.178,
+   0.388,
+   0.774,
+   0.704,
+   0.405,
+   -0.174,
+   -0.95,
+   -1.133,
+   -1.05,
+   -0.653,
+   -0.04,
+   0.392,
+   0.568,
+   0.451,
+   0.245,
+   0.119,
+   -0.003,
+   -0.061,
+   -0.066,
+   -0.156,
+   -0.466,
+   -0.463,
+   -0.437,
+   -0.234,
+   0.172,
+   0.331,
+   0.537,
+   0.299,
+   0.14,
+   -0.147,
+   -0.352,
+   -0.32,
+   -0.304,
+   -0.148,
+   -0.086,
+   -0.093,
+   -0.025,
+   -0.03,
+   0.018,
+   -0.07,
+   0.043,
+   0.034,
+   0.287,
+   0.292,
+   0.336,
+   0.48,
+   0.522,
+   0.259,
+   0.115,
+   -0.065,
+   -0.27,
+   -0.293,
+   -0.376,
+   -0.279,
+   -0.036,
+   0.064,
+   0.269,
+   0.219,
+   0.118,
+   -0.117,
+   -0.159,
+   -0.555,
+   -0.723,
+   -0.829,
+   -0.774,
+   -0.617,
+   -0.262,
+   -0.173,
+   0.029,
+   0.226,
+   0.289,
+   0.432,
+   0.426,
+   0.321,
+   0.338,
+   0.49,
+   0.712,
+   0.56,
+   0.795,
+   0.624,
+   0.55,
+   0.11,
+   -0.218,
+   -0.661,
+   -0.92,
+   -0.931,
+   -0.949,
+   -0.847,
+   -0.584,
+   -0.301,
+   0.113,
+   0.382,
+   0.514,
+   0.533,
+   0.398,
+   0.332,
+   0.187,
+   0.134,
+   0.061,
+   -0.144,
+   -0.255,
+   -0.288,
+   -0.401,
+   -0.484,
+   -0.488,
+   -0.536,
+   -0.347,
+   -0.217,
+   0.04,
+   0.275,
+   0.476,
+   0.616,
+   0.697,
+   0.595,
+   0.459,
+   0.213,
+   -0.087,
+   -0.15,
+   -0.278,
+   -0.171,
+   -0.011,
+   0.044,
+   0.293,
+   0.32,
+   0.204,
+   -0.019,
+   -0.288,
+   -0.594,
+   -0.75,
+   -0.84,
+   -0.727,
+   -0.6,
+   -0.225,
+   0.074,
+   0.312,
+   0.45,
+   0.547,
+   0.346,
+   0.338,
+   0.174,
+   0.053,
+   -0.009,
+   -0.081,
+   -0.029,
+   0.056,
+   0.047,
+   -0.01,
+   -0.203,
+   -0.19,
+   -0.244,
+   -0.288,
+   -0.285,
+   -0.255,
+   0.098,
+   0.257,
+   0.307,
+   0.597,
+   0.495,
+   0.411,
+   0.277,
+   0.184,
+   -0.105,
+   -0.199,
+   -0.165,
+   -0.157,
+   -0.194,
+   -0.127,
+   -0.135,
+   -0.09,
+   -0.053,
+   -0.106,
+   -0.167,
+   -0.121,
+   -0.186,
+   -0.061,
+   0.082,
+   0.143,
+   0.176,
+   0.052,
+   -0.156,
+   -0.328,
+   -0.613,
+   -0.777,
+   -0.637,
+   -0.509,
+   -0.171,
+   0.123,
+   0.637,
+   0.988,
+   1.193,
+   1.14,
+   1.094,
+   0.854,
+   0.426,
+   -0.031,
+   -0.323
+  ],
+  "spindle": {
+   "t0": 3.4,
+   "t1": 4.4,
+   "hz": 13.0
+  },
+  "kcomplex": {
+   "t0": 1.35,
+   "t1": 2.3
+  },
+  "note": "schematic: seeded sinusoids + authored events, arbitrary units, not a recording"
+ },
+ "faulty": {
+  "concepts": [
+   "duplicate charge",
+   "refund requested"
+  ],
+  "weights": [
+   -2.0,
+   0.6
+  ],
+  "bias": 1.2,
+  "before": {
+   "c": [
+    0.2,
+    1.0
+   ],
+   "z": 1.4,
+   "terms": [
+    -0.4,
+    0.6
+   ],
+   "share": [
+    0.1978,
+    0.8022
+   ]
+  },
+  "after": {
+   "c": [
+    1.0,
+    1.0
+   ],
+   "z": -0.2,
+   "terms": [
+    -2.0,
+    0.6
+   ],
+   "share": [
+    0.5498,
+    0.4502
+   ]
+  },
+  "classes": [
+   "General support",
+   "Billing queue"
+  ],
+  "true_concepts": [
+   1.0,
+   1.0
+  ],
+  "message": "The app works, but I was charged twice. Please refund the extra payment."
+ },
+ "text_ok": {
+  "concepts": [
+   "duplicate charge",
+   "refund requested",
+   "login problem"
+  ],
+  "weights": [
+   3.2,
+   1.4,
+   -2.0
+  ],
+  "bias": -2.5,
+  "before": {
+   "c": [
+    0.2,
+    0.95,
+    0.05
+   ],
+   "z": -0.63,
+   "terms": [
+    0.64,
+    1.33,
+    -0.1
+   ],
+   "share": [
+    0.6525,
+    0.3475
+   ]
+  },
+  "after": {
+   "c": [
+    1.0,
+    0.95,
+    0.05
+   ],
+   "z": 1.93,
+   "terms": [
+    3.2,
+    1.33,
+    -0.1
+   ],
+   "share": [
+    0.1268,
+    0.8732
+   ]
+  }
+ },
+ "incomplete": {
+  "vocab": [
+   "blue",
+   "large"
+  ],
+  "objects": [
+   {
+    "name": "blue circle",
+    "shape": "circle",
+    "c": [
+     1,
+     0
+    ],
+    "y": "class A"
+   },
+   {
+    "name": "blue square",
+    "shape": "square",
+    "c": [
+     1,
+     0
+    ],
+    "y": "class B"
+   }
+  ],
+  "best_accuracy": 0.5
+ },
+ "leak": {
+  "classes": [
+   "plains zebra",
+   "Grévy's zebra"
+  ],
+  "mu": [
+   0.72,
+   0.96
+  ],
+  "sd": 0.017,
+  "threshold": 0.84,
+  "hard_label": [
+   1,
+   1
+  ],
+  "soft_accuracy": 1.0,
+  "hard_accuracy": 0.5,
+  "n_per_class": 5000,
+  "seed": 11,
+  "xs": [
+   0.6,
+   0.6025,
+   0.605,
+   0.6075,
+   0.61,
+   0.6125,
+   0.615,
+   0.6175,
+   0.62,
+   0.6225,
+   0.625,
+   0.6275,
+   0.63,
+   0.6325,
+   0.635,
+   0.6375,
+   0.64,
+   0.6425,
+   0.645,
+   0.6475,
+   0.65,
+   0.6525,
+   0.655,
+   0.6575,
+   0.66,
+   0.6625,
+   0.665,
+   0.6675,
+   0.67,
+   0.6725,
+   0.675,
+   0.6775,
+   0.68,
+   0.6825,
+   0.685,
+   0.6875,
+   0.69,
+   0.6925,
+   0.695,
+   0.6975,
+   0.7,
+   0.7025,
+   0.705,
+   0.7075,
+   0.71,
+   0.7125,
+   0.715,
+   0.7175,
+   0.72,
+   0.7225,
+   0.725,
+   0.7275,
+   0.73,
+   0.7325,
+   0.735,
+   0.7375,
+   0.74,
+   0.7425,
+   0.745,
+   0.7475,
+   0.75,
+   0.7525,
+   0.755,
+   0.7575,
+   0.76,
+   0.7625,
+   0.765,
+   0.7675,
+   0.77,
+   0.7725,
+   0.775,
+   0.7775,
+   0.78,
+   0.7825,
+   0.785,
+   0.7875,
+   0.79,
+   0.7925,
+   0.795,
+   0.7975,
+   0.8,
+   0.8025,
+   0.805,
+   0.8075,
+   0.81,
+   0.8125,
+   0.815,
+   0.8175,
+   0.82,
+   0.8225,
+   0.825,
+   0.8275,
+   0.83,
+   0.8325,
+   0.835,
+   0.8375,
+   0.84,
+   0.8425,
+   0.845,
+   0.8475,
+   0.85,
+   0.8525,
+   0.855,
+   0.8575,
+   0.86,
+   0.8625,
+   0.865,
+   0.8675,
+   0.87,
+   0.8725,
+   0.875,
+   0.8775,
+   0.88,
+   0.8825,
+   0.885,
+   0.8875,
+   0.89,
+   0.8925,
+   0.895,
+   0.8975,
+   0.9,
+   0.9025,
+   0.905,
+   0.9075,
+   0.91,
+   0.9125,
+   0.915,
+   0.9175,
+   0.92,
+   0.9225,
+   0.925,
+   0.9275,
+   0.93,
+   0.9325,
+   0.935,
+   0.9375,
+   0.94,
+   0.9425,
+   0.945,
+   0.9475,
+   0.95,
+   0.9525,
+   0.955,
+   0.9575,
+   0.96,
+   0.9625,
+   0.965,
+   0.9675,
+   0.97,
+   0.9725,
+   0.975,
+   0.9775,
+   0.98,
+   0.9825,
+   0.985,
+   0.9875,
+   0.99,
+   0.9925,
+   0.995,
+   0.9975,
+   1.0
+  ],
+  "pdf": [
+   [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0001,
+    0.0001,
+    0.0002,
+    0.0004,
+    0.0007,
+    0.0012,
+    0.002,
+    0.0033,
+    0.0053,
+    0.0085,
+    0.0132,
+    0.0202,
+    0.0301,
+    0.0439,
+    0.0628,
+    0.0878,
+    0.1201,
+    0.1608,
+    0.2107,
+    0.2703,
+    0.3391,
+    0.4165,
+    0.5006,
+    0.5887,
+    0.6775,
+    0.7631,
+    0.8411,
+    0.9073,
+    0.9577,
+    0.9892,
+    1.0,
+    0.9892,
+    0.9577,
+    0.9073,
+    0.8411,
+    0.7631,
+    0.6775,
+    0.5887,
+    0.5006,
+    0.4165,
+    0.3391,
+    0.2703,
+    0.2107,
+    0.1608,
+    0.1201,
+    0.0878,
+    0.0628,
+    0.0439,
+    0.0301,
+    0.0202,
+    0.0132,
+    0.0085,
+    0.0053,
+    0.0033,
+    0.002,
+    0.0012,
+    0.0007,
+    0.0004,
+    0.0002,
+    0.0001,
+    0.0001,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0001,
+    0.0001,
+    0.0002,
+    0.0004,
+    0.0007,
+    0.0012,
+    0.002,
+    0.0033,
+    0.0053,
+    0.0085,
+    0.0132,
+    0.0202,
+    0.0301,
+    0.0439,
+    0.0628,
+    0.0878,
+    0.1201,
+    0.1608,
+    0.2107,
+    0.2703,
+    0.3391,
+    0.4165,
+    0.5006,
+    0.5887,
+    0.6775,
+    0.7631,
+    0.8411,
+    0.9073,
+    0.9577,
+    0.9892,
+    1.0,
+    0.9892,
+    0.9577,
+    0.9073,
+    0.8411,
+    0.7631,
+    0.6775,
+    0.5887,
+    0.5006,
+    0.4165,
+    0.3391,
+    0.2703,
+    0.2107,
+    0.1608,
+    0.1201,
+    0.0878,
+    0.0628
+   ]
+  ]
+ },
+ "cem": {
+  "c_plus": [
+   0.82,
+   0.3
+  ],
+  "c_minus": [
+   0.22,
+   0.74
+  ],
+  "path": [
+   [
+    0.22,
+    0.74
+   ],
+   [
+    0.28,
+    0.696
+   ],
+   [
+    0.34,
+    0.652
+   ],
+   [
+    0.4,
+    0.608
+   ],
+   [
+    0.46,
+    0.564
+   ],
+   [
+    0.52,
+    0.52
+   ],
+   [
+    0.58,
+    0.476
+   ],
+   [
+    0.64,
+    0.432
+   ],
+   [
+    0.7,
+    0.388
+   ],
+   [
+    0.76,
+    0.344
+   ],
+   [
+    0.82,
+    0.3
+   ]
+  ],
+  "p_example": 0.7,
+  "mix_example": [
+   0.64,
+   0.432
+  ]
+ },
+ "measured": {
+  "protocol": {
+   "seed": 17,
+   "epochs": 60,
+   "train_n": 768,
+   "val_n": 256,
+   "test_n": 512,
+   "n_seeds": 1,
+   "image_px": 64,
+   "policy": "oracle: replace the concept with the largest absolute error by its true 0/1 value",
+   "random_repetitions": 32,
+   "human": false
+  },
+  "concepts": [
+   "is_red",
+   "is_blue",
+   "is_circle",
+   "is_square",
+   "is_large"
+  ],
+  "classes": [
+   "small red circle",
+   "large red circle",
+   "small red square",
+   "large red square",
+   "small blue circle",
+   "large blue circle",
+   "small blue square",
+   "large blue square"
+  ],
+  "acc": {
+   "black_box": 0.7871,
+   "multitask": 0.8203,
+   "cbm": 0.8164
+  },
+  "concept_acc": {
+   "multitask": 0.9234,
+   "cbm": 0.9242
+  },
+  "per_concept_acc_cbm": [
+   1.0,
+   1.0,
+   0.8398,
+   0.8281,
+   0.9531
+  ],
+  "params": {
+   "black_box": 54704,
+   "multitask": 54869,
+   "cbm": 54653
+  },
+  "oracle": [
+   0.8164,
+   0.9727,
+   0.9844,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "random_mean": [
+   0.8164,
+   0.873,
+   0.9214,
+   0.9578,
+   0.9858,
+   1.0
+  ],
+  "random_min": [
+   0.8164,
+   0.8516,
+   0.9004,
+   0.9414,
+   0.9766,
+   1.0
+  ],
+  "random_max": [
+   0.8164,
+   0.8945,
+   0.9414,
+   0.9727,
+   0.9961,
+   1.0
+  ],
+  "all_true": 1.0,
+  "one_wrong_bit": {
+   "n": 29,
+   "before": 0.37931033968925476,
+   "after": 1.0,
+   "fixed": 18,
+   "harmed": 0
+  },
+  "multitask_unchanged": "Class logits unchanged after altering concept-head parameters, verified exactly.",
+  "example": {
+   "index": 10,
+   "image": "test_010.png",
+   "probs": [
+    1.0,
+    0.0,
+    0.0387,
+    0.9882,
+    0.7816
+   ],
+   "corrected": [
+    1.0,
+    0.0,
+    0.0387,
+    0.9882,
+    0.0
+   ],
+   "corrected_index": 4,
+   "true": [
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ],
+   "pred_class": 3,
+   "true_class": 2,
+   "after_class": 2,
+   "logits": [
+    -0.2728,
+    0.5708,
+    1.3143,
+    2.6376,
+    -3.5249,
+    -1.2725,
+    -1.6713,
+    0.1419
+   ],
+   "logits_after": [
+    1.0474,
+    -0.3631,
+    2.1726,
+    1.5616,
+    -2.228,
+    -2.3573,
+    -0.84,
+    -0.8813
+   ],
+   "softmax": [
+    0.0348,
+    0.0809,
+    0.1701,
+    0.6388,
+    0.0013,
+    0.0128,
+    0.0086,
+    0.0527
+   ],
+   "softmax_after": [
+    0.1571,
+    0.0383,
+    0.484,
+    0.2627,
+    0.0059,
+    0.0052,
+    0.0238,
+    0.0228
+   ]
+  },
+  "metrics_sha256": "fe60c34283bf95a8c37327963e68ffa11d5241d84502ea1b94a6aade18b2c81b"
+ },
+ "kiln": {
+  "concepts": [
+   "chimney visible",
+   "elongated footprint",
+   "circular footprint",
+   "smoke plume"
+  ],
+  "weights": [
+   3.0,
+   0.6,
+   -0.6,
+   0.2
+  ],
+  "bias": -1.5,
+  "before": {
+   "c": [
+    0.21,
+    0.88,
+    0.12,
+    0.3
+   ],
+   "z": -0.354,
+   "terms": [
+    0.63,
+    0.528,
+    -0.072,
+    0.06
+   ],
+   "share": [
+    0.5876,
+    0.4124
+   ]
+  },
+  "after": {
+   "c": [
+    1.0,
+    0.88,
+    0.12,
+    0.3
+   ],
+   "z": 2.016,
+   "terms": [
+    3.0,
+    0.528,
+    -0.072,
+    0.06
+   ],
+   "share": [
+    0.1175,
+    0.8825
+   ]
+  },
+  "classes": [
+   "Kiln-type candidate A",
+   "Kiln-type candidate B"
+  ]
+ },
+ "probe": {
+  "seed": 303,
+  "n": 512,
+  "model": "strict CBM (saved predictions, not retrained)",
+  "corr_r_plarge_within_small": 0.3972986036200072,
+  "corr_r_plarge_within_large": 0.49932694981482895,
+  "r2_radius_from_soft": 0.801365111130441,
+  "r2_radius_from_hard": 0.7729652421194173,
+  "r2_cx_from_soft": -0.007890185038720077,
+  "r2_cx_from_hard": -0.009734517240863827,
+  "r2_cy_from_soft": 0.022128253347796667,
+  "r2_cy_from_hard": -0.010092766386576635,
+  "r2_bg_from_soft": -0.022400239011541423,
+  "r2_bg_from_hard": -0.010755730458183344,
+  "r2_shade_from_soft": 0.019733986480331422,
+  "r2_shade_from_hard": -0.004963882244731099,
+  "radius": [
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19
+  ],
+  "mean_p_large": [
+   0.0,
+   0.0001,
+   0.0006,
+   0.0128,
+   0.086,
+   0.2545,
+   0.6349,
+   0.866,
+   0.9871,
+   0.9971,
+   0.9993,
+   0.9993
+  ],
+  "n_per_radius": [
+   45,
+   40,
+   43,
+   48,
+   43,
+   37,
+   30,
+   50,
+   37,
+   35,
+   55,
+   49
+  ]
+ },
+ "worked": {
+  "classes": [
+   "zebra",
+   "horse",
+   "giraffe"
+  ],
+  "train": [
+   "zebra_03.jpg",
+   "zebra_04.jpg",
+   "zebra_05.jpg",
+   "zebra_07.jpg",
+   "zebra_08.jpg",
+   "zebra_09.jpg",
+   "zebra_10.jpg",
+   "zebra_11.jpg",
+   "horse_03.jpg",
+   "horse_05.jpg",
+   "horse_07.jpg",
+   "horse_08.jpg",
+   "horse_09.jpg",
+   "horse_10.jpg",
+   "horse_11.jpg",
+   "horse_16.jpg",
+   "giraffe_02.jpg",
+   "giraffe_03.jpg",
+   "giraffe_04.jpg",
+   "giraffe_05.jpg",
+   "giraffe_08.jpg",
+   "giraffe_12.jpg",
+   "giraffe_13.jpg",
+   "giraffe_14.jpg"
+  ],
+  "test": [
+   "zebra_12.jpg",
+   "zebra_14.jpg",
+   "zebra_17.jpg",
+   "zebra_22.jpg",
+   "horse_17.jpg",
+   "horse_18.jpg",
+   "horse_19.jpg",
+   "horse_20.jpg",
+   "giraffe_17.jpg",
+   "giraffe_18.jpg",
+   "giraffe_19.jpg",
+   "giraffe_23.jpg"
+  ],
+  "example": "zebra_12.jpg",
+  "n_train": 24,
+  "n_test": 12,
+  "note": "teaching computation on 36 Commons photographs (8 train / 4 test per class), not a benchmark",
+  "pcbm": {
+   "bank": [
+    "black and white stripes",
+    "a long neck",
+    "a flowing mane",
+    "brown patches on a pale coat",
+    "hooves",
+    "a saddle",
+    "green grass",
+    "a wooden fence"
+   ],
+   "scores_raw_example": [
+    0.2744,
+    0.2426,
+    0.2343,
+    0.2567,
+    0.2426,
+    0.2225,
+    0.2168,
+    0.2111
+   ],
+   "mean": [
+    0.2147,
+    0.2388,
+    0.2272,
+    0.239,
+    0.2386,
+    0.2242,
+    0.2088,
+    0.1929
+   ],
+   "std": [
+    0.0424,
+    0.0366,
+    0.0226,
+    0.0247,
+    0.0119,
+    0.0197,
+    0.0147,
+    0.0163
+   ],
+   "z_example": [
+    1.4062,
+    0.1039,
+    0.3166,
+    0.7165,
+    0.3387,
+    -0.0867,
+    0.5431,
+    1.1179
+   ],
+   "W": [
+    [
+     1.4856,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     -0.2722,
+     0.2816,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     1.0175,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "b": [
+    -0.0545,
+    0.0473,
+    0.0072
+   ],
+   "nonzero": 4,
+   "total_weights": 24,
+   "train_acc": 1.0,
+   "test_acc": 1.0,
+   "logits_example": [
+    2.0346,
+    0.1082,
+    0.1129
+   ],
+   "probs_example": [
+    0.774,
+    0.1127,
+    0.1133
+   ],
+   "edit": {
+    "concept": "black and white stripes",
+    "z_from": 1.4062,
+    "z_to": -0.6594,
+    "logits": [
+     -1.0342,
+     0.1082,
+     0.1129
+    ],
+    "probs": [
+     0.1373,
+     0.4303,
+     0.4324
+    ]
+   },
+   "hybrid": {
+    "residual_logits_example": [
+     0.3075,
+     -0.2969,
+     -0.0107
+    ],
+    "total_logits_example": [
+     2.3422,
+     -0.1887,
+     0.1022
+    ],
+    "probs_example": [
+     0.8431,
+     0.0671,
+     0.0898
+    ],
+    "edited_total_logits": [
+     -0.7266,
+     -0.1887,
+     0.1022
+    ],
+    "edited_probs": [
+     0.1999,
+     0.3423,
+     0.4578
+    ],
+    "test_acc": 1.0
+   }
+  },
+  "lfcbm": {
+   "llm_model": "gemini-3.1-pro-preview",
+   "llm_date": "2026-10-10",
+   "cutoffs": {
+    "max_len": 30,
+    "class_sim": 0.85,
+    "dup_sim": 0.85,
+    "top5_clip": 0.24,
+    "interp": 0.45
+   },
+   "candidates": [
+    {
+     "concept": "black and white stripes",
+     "from": "zebra: features",
+     "top5_clip": 0.2774,
+     "class_sim": 0.4159,
+     "removed": null,
+     "projection_sim": 0.9122
+    },
+    {
+     "concept": "horse-like body",
+     "from": "zebra: features",
+     "top5_clip": 0.2671,
+     "class_sim": 0.7295,
+     "removed": "contains the class name (horse)"
+    },
+    {
+     "concept": "erect mane",
+     "from": "zebra: features",
+     "top5_clip": 0.2493,
+     "class_sim": 0.4124,
+     "removed": null,
+     "projection_sim": 0.7242
+    },
+    {
+     "concept": "hooved feet",
+     "from": "zebra: features",
+     "top5_clip": 0.2458,
+     "class_sim": 0.2387,
+     "removed": null,
+     "projection_sim": 0.7213
+    },
+    {
+     "concept": "long tufted tail",
+     "from": "zebra: features",
+     "top5_clip": 0.2655,
+     "class_sim": 0.306,
+     "removed": null,
+     "projection_sim": 0.9471
+    },
+    {
+     "concept": "large rounded ears",
+     "from": "zebra: features",
+     "top5_clip": 0.2349,
+     "class_sim": 0.2185,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "elongated muzzle",
+     "from": "zebra: features",
+     "top5_clip": 0.2626,
+     "class_sim": 0.3012,
+     "removed": null,
+     "projection_sim": 0.9811
+    },
+    {
+     "concept": "tall savanna grass",
+     "from": "zebra: around",
+     "top5_clip": 0.2649,
+     "class_sim": 0.3595,
+     "removed": null,
+     "projection_sim": 0.8295
+    },
+    {
+     "concept": "acacia trees",
+     "from": "zebra: around",
+     "top5_clip": 0.2461,
+     "class_sim": 0.1686,
+     "removed": null,
+     "projection_sim": 0.848
+    },
+    {
+     "concept": "wildebeest herds",
+     "from": "zebra: around",
+     "top5_clip": 0.2601,
+     "class_sim": 0.4028,
+     "removed": null,
+     "projection_sim": 0.8045
+    },
+    {
+     "concept": "waterholes",
+     "from": "zebra: around",
+     "top5_clip": 0.2557,
+     "class_sim": 0.1299,
+     "removed": null,
+     "projection_sim": 0.9543
+    },
+    {
+     "concept": "lions",
+     "from": "zebra: around",
+     "top5_clip": 0.2225,
+     "class_sim": 0.4607,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "oxpecker birds",
+     "from": "zebra: around",
+     "top5_clip": 0.2577,
+     "class_sim": 0.3728,
+     "removed": null,
+     "projection_sim": 0.7222
+    },
+    {
+     "concept": "safari vehicles",
+     "from": "zebra: around",
+     "top5_clip": 0.2542,
+     "class_sim": 0.2923,
+     "removed": null,
+     "projection_sim": 0.9164
+    },
+    {
+     "concept": "dust clouds",
+     "from": "zebra: around",
+     "top5_clip": 0.2085,
+     "class_sim": 0.1242,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "equine animal",
+     "from": "zebra: superclasses",
+     "top5_clip": 0.2797,
+     "class_sim": 0.7086,
+     "removed": null,
+     "projection_sim": 0.9715
+    },
+    {
+     "concept": "odd-toed ungulate",
+     "from": "zebra: superclasses",
+     "top5_clip": 0.2828,
+     "class_sim": 0.2796,
+     "removed": null,
+     "projection_sim": 0.985
+    },
+    {
+     "concept": "hoofed mammal",
+     "from": "zebra: superclasses",
+     "top5_clip": 0.2708,
+     "class_sim": 0.4632,
+     "removed": null,
+     "projection_sim": 0.7009
+    },
+    {
+     "concept": "herbivorous mammal",
+     "from": "zebra: superclasses",
+     "top5_clip": 0.2702,
+     "class_sim": 0.3712,
+     "removed": null,
+     "projection_sim": 0.9695
+    },
+    {
+     "concept": "placental mammal",
+     "from": "zebra: superclasses",
+     "top5_clip": 0.2354,
+     "class_sim": 0.3176,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "vertebrate animal",
+     "from": "zebra: superclasses",
+     "top5_clip": 0.263,
+     "class_sim": 0.4761,
+     "removed": null,
+     "projection_sim": 0.9918
+    },
+    {
+     "concept": "wild animal",
+     "from": "zebra: superclasses",
+     "top5_clip": 0.2534,
+     "class_sim": 0.4993,
+     "removed": null,
+     "projection_sim": 0.9102
+    },
+    {
+     "concept": "living organism",
+     "from": "zebra: superclasses",
+     "top5_clip": 0.2252,
+     "class_sim": 0.3161,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "long face and snout",
+     "from": "horse: features",
+     "top5_clip": 0.2521,
+     "class_sim": 0.3458,
+     "removed": null,
+     "projection_sim": 0.9828
+    },
+    {
+     "concept": "flowing mane on neck",
+     "from": "horse: features",
+     "top5_clip": 0.2528,
+     "class_sim": 0.3864,
+     "removed": null,
+     "projection_sim": 0.8736
+    },
+    {
+     "concept": "single-toed hooves",
+     "from": "horse: features",
+     "top5_clip": 0.2633,
+     "class_sim": 0.3805,
+     "removed": null,
+     "projection_sim": 0.6876
+    },
+    {
+     "concept": "long hairy tail",
+     "from": "horse: features",
+     "top5_clip": 0.2432,
+     "class_sim": 0.377,
+     "removed": null,
+     "projection_sim": 0.8783
+    },
+    {
+     "concept": "four long slender legs",
+     "from": "horse: features",
+     "top5_clip": 0.2541,
+     "class_sim": 0.2384,
+     "removed": null,
+     "projection_sim": 0.8799
+    },
+    {
+     "concept": "upright pointed ears",
+     "from": "horse: features",
+     "top5_clip": 0.2516,
+     "class_sim": 0.2279,
+     "removed": null,
+     "projection_sim": 0.9737
+    },
+    {
+     "concept": "large eyes on sides",
+     "from": "horse: features",
+     "top5_clip": 0.2139,
+     "class_sim": 0.205,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "muscular equine build",
+     "from": "horse: features",
+     "top5_clip": 0.2471,
+     "class_sim": 0.5207,
+     "removed": null,
+     "projection_sim": 0.8815
+    },
+    {
+     "concept": "leather saddle",
+     "from": "horse: around",
+     "top5_clip": 0.2324,
+     "class_sim": 0.4782,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "metal horseshoes",
+     "from": "horse: around",
+     "top5_clip": 0.2299,
+     "class_sim": 0.3838,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "bale of hay",
+     "from": "horse: around",
+     "top5_clip": 0.2301,
+     "class_sim": 0.2689,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "water trough",
+     "from": "horse: around",
+     "top5_clip": 0.2364,
+     "class_sim": 0.1696,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "riding bridle",
+     "from": "horse: around",
+     "top5_clip": 0.2567,
+     "class_sim": 0.3702,
+     "removed": null,
+     "projection_sim": 0.9223
+    },
+    {
+     "concept": "wooden stable",
+     "from": "horse: around",
+     "top5_clip": 0.2428,
+     "class_sim": 0.2376,
+     "removed": null,
+     "projection_sim": 0.9624
+    },
+    {
+     "concept": "nylon halter",
+     "from": "horse: around",
+     "top5_clip": 0.2277,
+     "class_sim": 0.2724,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "grooming brush",
+     "from": "horse: around",
+     "top5_clip": 0.2365,
+     "class_sim": 0.2734,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "equine",
+     "from": "horse: superclasses",
+     "top5_clip": 0.2828,
+     "class_sim": 0.6809,
+     "removed": "near-duplicate of 'equine animal'"
+    },
+    {
+     "concept": "mammal",
+     "from": "horse: superclasses",
+     "top5_clip": 0.2536,
+     "class_sim": 0.4607,
+     "removed": null,
+     "projection_sim": 0.8434
+    },
+    {
+     "concept": "vertebrate",
+     "from": "horse: superclasses",
+     "top5_clip": 0.2515,
+     "class_sim": 0.4337,
+     "removed": "near-duplicate of 'vertebrate animal'"
+    },
+    {
+     "concept": "animal",
+     "from": "horse: superclasses",
+     "top5_clip": 0.2583,
+     "class_sim": 0.6637,
+     "removed": null,
+     "projection_sim": 0.7833
+    },
+    {
+     "concept": "beast of burden",
+     "from": "horse: superclasses",
+     "top5_clip": 0.2351,
+     "class_sim": 0.3155,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "herbivore",
+     "from": "horse: superclasses",
+     "top5_clip": 0.2534,
+     "class_sim": 0.4061,
+     "removed": null,
+     "projection_sim": 0.8924
+    },
+    {
+     "concept": "extremely long neck",
+     "from": "giraffe: features",
+     "top5_clip": 0.2956,
+     "class_sim": 0.2462,
+     "removed": null,
+     "projection_sim": 0.9595
+    },
+    {
+     "concept": "long slender legs",
+     "from": "giraffe: features",
+     "top5_clip": 0.2375,
+     "class_sim": 0.2692,
+     "removed": "near-duplicate of 'four long slender legs'"
+    },
+    {
+     "concept": "spotted coat pattern",
+     "from": "giraffe: features",
+     "top5_clip": 0.2537,
+     "class_sim": 0.3038,
+     "removed": null,
+     "projection_sim": 0.8342
+    },
+    {
+     "concept": "ossicones on head",
+     "from": "giraffe: features",
+     "top5_clip": 0.2224,
+     "class_sim": 0.2048,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "sloping back",
+     "from": "giraffe: features",
+     "top5_clip": 0.2168,
+     "class_sim": 0.1537,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "long prehensile tongue",
+     "from": "giraffe: features",
+     "top5_clip": 0.2431,
+     "class_sim": 0.25,
+     "removed": null,
+     "projection_sim": 0.9328
+    },
+    {
+     "concept": "tufted tail",
+     "from": "giraffe: features",
+     "top5_clip": 0.2591,
+     "class_sim": 0.2969,
+     "removed": "near-duplicate of 'long tufted tail'"
+    },
+    {
+     "concept": "small head",
+     "from": "giraffe: features",
+     "top5_clip": 0.2349,
+     "class_sim": 0.3673,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "other giraffes",
+     "from": "giraffe: around",
+     "top5_clip": 0.3061,
+     "class_sim": 0.8964,
+     "removed": "contains the class name (giraffe)"
+    },
+    {
+     "concept": "zebras",
+     "from": "giraffe: around",
+     "top5_clip": 0.3039,
+     "class_sim": 0.9228,
+     "removed": "contains the class name (zebra)"
+    },
+    {
+     "concept": "ungulate",
+     "from": "giraffe: superclasses",
+     "top5_clip": 0.2685,
+     "class_sim": 0.3714,
+     "removed": null,
+     "projection_sim": 0.7412
+    },
+    {
+     "concept": "organism",
+     "from": "giraffe: superclasses",
+     "top5_clip": 0.2191,
+     "class_sim": 0.4022,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    },
+    {
+     "concept": "ruminant",
+     "from": "giraffe: superclasses",
+     "top5_clip": 0.2488,
+     "class_sim": 0.3731,
+     "removed": null,
+     "projection_sim": 0.9903
+    },
+    {
+     "concept": "living thing",
+     "from": "giraffe: superclasses",
+     "top5_clip": 0.235,
+     "class_sim": 0.3225,
+     "removed": "barely active on the photos (CLIP top-5 mean below 0.24)"
+    }
+   ],
+   "n_candidates": 59,
+   "n_after_filters": 34,
+   "final": [
+    "black and white stripes",
+    "erect mane",
+    "hooved feet",
+    "long tufted tail",
+    "elongated muzzle",
+    "tall savanna grass",
+    "acacia trees",
+    "wildebeest herds",
+    "waterholes",
+    "oxpecker birds",
+    "safari vehicles",
+    "equine animal",
+    "odd-toed ungulate",
+    "hoofed mammal",
+    "herbivorous mammal",
+    "vertebrate animal",
+    "wild animal",
+    "long face and snout",
+    "flowing mane on neck",
+    "single-toed hooves",
+    "long hairy tail",
+    "four long slender legs",
+    "upright pointed ears",
+    "muscular equine build",
+    "riding bridle",
+    "wooden stable",
+    "mammal",
+    "animal",
+    "herbivore",
+    "extremely long neck",
+    "spotted coat pattern",
+    "long prehensile tongue",
+    "ungulate",
+    "ruminant"
+   ],
+   "n_final": 34,
+   "backbone": "ResNet-50 (torchvision IMAGENET1K_V2), 2048-d pooled features",
+   "projection_steps": 1500,
+   "projection_pool": "60 unlabelled photos x 6 random crops = 360 images",
+   "example_activation_z": [
+    1.3569,
+    -0.0092,
+    0.3758,
+    0.8845,
+    0.4464,
+    0.4719,
+    0.2728,
+    1.0881,
+    0.3497,
+    0.8185,
+    0.5863,
+    -0.1149,
+    0.7694,
+    0.6161,
+    1.0508,
+    0.9579,
+    0.9337,
+    -0.395,
+    0.0224,
+    0.6407,
+    0.5413,
+    0.2385,
+    0.0224,
+    -0.271,
+    -0.3476,
+    -0.2753,
+    1.1187,
+    1.0447,
+    1.013,
+    -0.0479,
+    0.6083,
+    0.1692,
+    0.5142,
+    -0.8278
+   ],
+   "example_clip_target": [
+    0.2744,
+    0.2365,
+    0.2341,
+    0.2685,
+    0.2493,
+    0.2439,
+    0.2136,
+    0.2462,
+    0.2345,
+    0.2371,
+    0.24,
+    0.2483,
+    0.2881,
+    0.2676,
+    0.2654,
+    0.2622,
+    0.2486,
+    0.2225,
+    0.2344,
+    0.2611,
+    0.2365,
+    0.2345,
+    0.2525,
+    0.1997,
+    0.1951,
+    0.2078,
+    0.2485,
+    0.2513,
+    0.2441,
+    0.2433,
+    0.2517,
+    0.2323,
+    0.2671,
+    0.2278
+   ],
+   "example_corr_projection_vs_clip": 0.6505,
+   "W": [
+    [
+     1.4595,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0571,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.3843,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.393,
+     0.1551,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.1796,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "b": [
+    -0.0191,
+    -0.0138,
+    0.0329
+   ],
+   "nonzero": 6,
+   "total_weights": 102,
+   "train_acc": 1.0,
+   "test_acc": 1.0,
+   "logits_example": [
+    2.0234,
+    -0.3996,
+    -0.0235
+   ],
+   "probs_example": [
+    0.8212,
+    0.0728,
+    0.106
+   ]
+  },
+  "labo": {
+   "llm_model": "gemini-3.1-pro-preview",
+   "candidates": [
+    {
+     "concept": "Bold black and white stripes",
+     "class": "zebra",
+     "disc": 0.0829
+    },
+    {
+     "concept": "Short stiff upright mane",
+     "class": "zebra",
+     "disc": 0.0007
+    },
+    {
+     "concept": "Stocky horse-like body",
+     "class": "zebra",
+     "disc": -0.0166
+    },
+    {
+     "concept": "Dark rounded muzzle",
+     "class": "zebra",
+     "disc": 0.0091
+    },
+    {
+     "concept": "Large striped ears",
+     "class": "zebra",
+     "disc": 0.049
+    },
+    {
+     "concept": "Tail with a dark tuft",
+     "class": "zebra",
+     "disc": 0.0065
+    },
+    {
+     "concept": "Striped legs down to the hooves",
+     "class": "zebra",
+     "disc": 0.0465
+    },
+    {
+     "concept": "Unique facial stripe patterns",
+     "class": "zebra",
+     "disc": 0.0511
+    },
+    {
+     "concept": "Long flowing mane along the neck",
+     "class": "horse",
+     "disc": 0.0126
+    },
+    {
+     "concept": "Elongated straight or convex facial profile",
+     "class": "horse",
+     "disc": -0.0316
+    },
+    {
+     "concept": "Large wide-set eyes on the sides",
+     "class": "horse",
+     "disc": -0.0164
+    },
+    {
+     "concept": "Pointed mobile ears standing upright",
+     "class": "horse",
+     "disc": -0.0262
+    },
+    {
+     "concept": "Muscular deep chest and sloping shoulders",
+     "class": "horse",
+     "disc": -0.0206
+    },
+    {
+     "concept": "Long slender legs ending in single solid hooves",
+     "class": "horse",
+     "disc": -0.0119
+    },
+    {
+     "concept": "Tail covered entirely in long flowing hair",
+     "class": "horse",
+     "disc": 0.0015
+    },
+    {
+     "concept": "Smooth short coat in various colors",
+     "class": "horse",
+     "disc": -0.0054
+    },
+    {
+     "concept": "Extremely long vertical neck",
+     "class": "giraffe",
+     "disc": 0.0483
+    },
+    {
+     "concept": "Large brown polygonal coat patches",
+     "class": "giraffe",
+     "disc": 0.0014
+    },
+    {
+     "concept": "Thin cream lines between patches",
+     "class": "giraffe",
+     "disc": -0.034
+    },
+    {
+     "concept": "Two small fur-covered horn-like ossicones",
+     "class": "giraffe",
+     "disc": -0.0095
+    },
+    {
+     "concept": "Very long slender legs",
+     "class": "giraffe",
+     "disc": 0.024
+    },
+    {
+     "concept": "Distinctly sloping back from shoulders",
+     "class": "giraffe",
+     "disc": 0.0017
+    },
+    {
+     "concept": "Long tail with dark hair tuft",
+     "class": "giraffe",
+     "disc": 0.0116
+    },
+    {
+     "concept": "Elongated face with dark lips",
+     "class": "giraffe",
+     "disc": 0.0034
+    }
+   ],
+   "selected": [
+    {
+     "class": "zebra",
+     "concept": "Bold black and white stripes",
+     "disc_norm": 1.0,
+     "coverage_gain": 0.692,
+     "score": 0.9076
+    },
+    {
+     "class": "zebra",
+     "concept": "Unique facial stripe patterns",
+     "disc_norm": 0.6802,
+     "coverage_gain": 0.1025,
+     "score": 0.5069
+    },
+    {
+     "class": "zebra",
+     "concept": "Large striped ears",
+     "disc_norm": 0.6592,
+     "coverage_gain": 0.0404,
+     "score": 0.4736
+    },
+    {
+     "class": "horse",
+     "concept": "Long flowing mane along the neck",
+     "disc_norm": 1.0,
+     "coverage_gain": 0.7874,
+     "score": 0.9362
+    },
+    {
+     "class": "horse",
+     "concept": "Tail covered entirely in long flowing hair",
+     "disc_norm": 0.7494,
+     "coverage_gain": 0.0225,
+     "score": 0.5314
+    },
+    {
+     "class": "horse",
+     "concept": "Smooth short coat in various colors",
+     "disc_norm": 0.5932,
+     "coverage_gain": 0.0439,
+     "score": 0.4284
+    },
+    {
+     "class": "giraffe",
+     "concept": "Extremely long vertical neck",
+     "disc_norm": 1.0,
+     "coverage_gain": 0.7712,
+     "score": 0.9314
+    },
+    {
+     "class": "giraffe",
+     "concept": "Very long slender legs",
+     "disc_norm": 0.7046,
+     "coverage_gain": 0.0228,
+     "score": 0.5
+    },
+    {
+     "class": "giraffe",
+     "concept": "Long tail with dark hair tuft",
+     "disc_norm": 0.5536,
+     "coverage_gain": 0.0366,
+     "score": 0.3985
+    }
+   ],
+   "selection_rule": "0.7 x normalised discriminability + 0.3 x coverage gain (facility location on CLIP text similarity), greedy, 3 per class",
+   "example_scores": [
+    27.8183,
+    28.064,
+    28.5195,
+    24.4031,
+    24.2559,
+    20.0152,
+    24.133,
+    22.2518,
+    24.6095
+   ],
+   "W_prior": [
+    [
+     0.3333,
+     0.3333,
+     0.3333,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.3333,
+     0.3333,
+     0.3333,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.3333,
+     0.3333,
+     0.3333
+    ]
+   ],
+   "W_trained": [
+    [
+     0.5429,
+     0.4385,
+     0.466,
+     -0.1881,
+     -0.0949,
+     -0.1165,
+     -0.0133,
+     0.0465,
+     -0.1311
+    ],
+    [
+     0.0286,
+     -0.0322,
+     -0.0331,
+     0.4433,
+     0.4253,
+     0.393,
+     -0.1438,
+     -0.1003,
+     0.0391
+    ],
+    [
+     -0.1569,
+     -0.006,
+     -0.0186,
+     -0.0715,
+     -0.088,
+     -0.0332,
+     0.5327,
+     0.4526,
+     0.3359
+    ]
+   ],
+   "b_trained": [
+    -0.1378,
+    0.1235,
+    -0.1148
+   ],
+   "logits_prior": [
+    28.1339,
+    22.8914,
+    23.6647
+   ],
+   "probs_prior": [
+    0.9835,
+    0.0052,
+    0.0113
+   ],
+   "logits_trained": [
+    28.8255,
+    23.3306,
+    21.4708
+   ],
+   "probs_trained": [
+    0.9953,
+    0.0041,
+    0.0006
+   ],
+   "test_acc_prior": 0.9166666666666666,
+   "test_acc_trained": 1.0
+  },
+  "cem": {
+   "concepts": [
+    "stripes",
+    "horse-like shape",
+    "long neck"
+   ],
+   "c_plus": {
+    "stripes": [
+     0.82,
+     0.3
+    ],
+    "horse-like shape": [
+     0.75,
+     0.4
+    ],
+    "long neck": [
+     0.85,
+     0.2
+    ]
+   },
+   "c_minus": {
+    "stripes": [
+     0.22,
+     0.74
+    ],
+    "horse-like shape": [
+     0.3,
+     0.8
+    ],
+    "long neck": [
+     0.2,
+     0.7
+    ]
+   },
+   "p": {
+    "stripes": 0.1,
+    "horse-like shape": 0.9,
+    "long neck": 0.1
+   },
+   "embedding": [
+    0.28,
+    0.696,
+    0.705,
+    0.44,
+    0.265,
+    0.65
+   ],
+   "embedding_edit": [
+    0.82,
+    0.3,
+    0.705,
+    0.44,
+    0.265,
+    0.65
+   ],
+   "head": [
+    [
+     3.2514,
+     -2.3844,
+     1.2414,
+     -1.1034,
+     0.0,
+     -0.0
+    ],
+    [
+     -1.0838,
+     0.7948,
+     2.4828,
+     -2.2069,
+     -0.9665,
+     0.7435
+    ],
+    [
+     -1.0838,
+     0.7948,
+     0.0,
+     -0.0,
+     2.8996,
+     -2.2305
+    ]
+   ],
+   "logits": [
+    -0.3595,
+    1.2562,
+    -0.4317
+   ],
+   "logits_edit": [
+    2.3405,
+    0.3562,
+    -1.3317
+   ],
+   "probs": [
+    0.1436,
+    0.7227,
+    0.1336
+   ],
+   "probs_edit": [
+    0.8599,
+    0.1182,
+    0.0219
+   ],
+   "note": "illustrative embeddings; the head reads each concept embedding along c+ minus c-, so its scores equal Part 4 plus a constant"
+  },
+  "photo_size": {
+   "zebra_03.jpg": [
+    960,
+    640
+   ],
+   "zebra_04.jpg": [
+    960,
+    640
+   ],
+   "zebra_05.jpg": [
+    960,
+    640
+   ],
+   "zebra_07.jpg": [
+    960,
+    640
+   ],
+   "zebra_08.jpg": [
+    960,
+    640
+   ],
+   "zebra_09.jpg": [
+    960,
+    640
+   ],
+   "zebra_10.jpg": [
+    960,
+    640
+   ],
+   "zebra_11.jpg": [
+    960,
+    640
+   ],
+   "horse_03.jpg": [
+    960,
+    742
+   ],
+   "horse_05.jpg": [
+    960,
+    638
+   ],
+   "horse_07.jpg": [
+    960,
+    640
+   ],
+   "horse_08.jpg": [
+    960,
+    545
+   ],
+   "horse_09.jpg": [
+    960,
+    640
+   ],
+   "horse_10.jpg": [
+    960,
+    640
+   ],
+   "horse_11.jpg": [
+    960,
+    1362
+   ],
+   "horse_16.jpg": [
+    960,
+    600
+   ],
+   "giraffe_02.jpg": [
+    960,
+    640
+   ],
+   "giraffe_03.jpg": [
+    960,
+    640
+   ],
+   "giraffe_04.jpg": [
+    960,
+    640
+   ],
+   "giraffe_05.jpg": [
+    960,
+    640
+   ],
+   "giraffe_08.jpg": [
+    960,
+    640
+   ],
+   "giraffe_12.jpg": [
+    960,
+    640
+   ],
+   "giraffe_13.jpg": [
+    960,
+    1440
+   ],
+   "giraffe_14.jpg": [
+    960,
+    1280
+   ],
+   "zebra_12.jpg": [
+    960,
+    640
+   ],
+   "zebra_14.jpg": [
+    960,
+    640
+   ],
+   "zebra_17.jpg": [
+    960,
+    640
+   ],
+   "zebra_22.jpg": [
+    960,
+    720
+   ],
+   "horse_17.jpg": [
+    960,
+    640
+   ],
+   "horse_18.jpg": [
+    960,
+    676
+   ],
+   "horse_19.jpg": [
+    960,
+    691
+   ],
+   "horse_20.jpg": [
+    960,
+    748
+   ],
+   "giraffe_17.jpg": [
+    960,
+    1415
+   ],
+   "giraffe_18.jpg": [
+    960,
+    718
+   ],
+   "giraffe_19.jpg": [
+    960,
+    640
+   ],
+   "giraffe_23.jpg": [
+    960,
+    640
+   ]
+  },
+  "photo_credit": {
+   "zebra_03.jpg": {
+    "title": "Burchell's zebra (Equus quagga) male 1d old.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Burchell%27s_zebra_(Equus_quagga)_male_1d_old.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Charles J. Sharp",
+    "desc": "Burchell's zebra (Equus quagga) male, one day old, Phinda Private Game Reserve, Kwa-Zulu Natal, South Africa"
+   },
+   "zebra_04.jpg": {
+    "title": "Burchell's zebra (Equus quagga burchellii).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Burchell%27s_zebra_(Equus_quagga_burchellii).jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Charles J. Sharp",
+    "desc": "Burchell's zebra (Equus quagga burchellii), Etosha National Park, Namibia"
+   },
+   "zebra_05.jpg": {
+    "title": "Burchell's zebra (Equus quagga burchellii) 2.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Burchell%27s_zebra_(Equus_quagga_burchellii)_2.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Charles J. Sharp",
+    "desc": "Burchell's zebra (Equus quagga burchellii), Etosha National Park, Namibia"
+   },
+   "zebra_07.jpg": {
+    "title": "Burchell's zebra (Equus quagga burchellii) juvenile Namibia.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Burchell%27s_zebra_(Equus_quagga_burchellii)_juvenile_Namibia.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Charles J. Sharp",
+    "desc": "Burchell's zebra (Equus quagga burchellii) juvenile, Etosha National Park, Namibia"
+   },
+   "zebra_08.jpg": {
+    "title": "Burchell's zebra (Equus quagga burchellii) suckling.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Burchell%27s_zebra_(Equus_quagga_burchellii)_suckling.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Charles J. Sharp",
+    "desc": "Burchell's zebra (Equus quagga burchellii) suckling, Etosha National Park, Namibia"
+   },
+   "zebra_09.jpg": {
+    "title": "Cebra común (Equus quagga), parque nacional de Amboseli, Kenia, 2024-05-22, DD 103.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Cebra_com%C3%BAn_(Equus_quagga),_parque_nacional_de_Amboseli,_Kenia,_2024-05-22,_DD_103.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Diego Delso",
+    "desc": "Plains zebra (Equus quagga), Amboseli National Park, Kenya"
+   },
+   "zebra_10.jpg": {
+    "title": "Cebra común (Equus quagga), parque nacional de Amboseli, Kenia, 2024-05-22, DD 104.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Cebra_com%C3%BAn_(Equus_quagga),_parque_nacional_de_Amboseli,_Kenia,_2024-05-22,_DD_104.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Diego Delso",
+    "desc": "Plains zebra (Equus quagga), Amboseli National Park, Kenya"
+   },
+   "zebra_11.jpg": {
+    "title": "Cebra común (Equus quagga), parque nacional de Amboseli, Kenia, 2024-05-22, DD 106.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Cebra_com%C3%BAn_(Equus_quagga),_parque_nacional_de_Amboseli,_Kenia,_2024-05-22,_DD_106.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Diego Delso",
+    "desc": "Plains zebra (Equus quagga), Amboseli National Park, Kenya"
+   },
+   "zebra_12.jpg": {
+    "title": "Cebra común (Equus quagga), parque nacional de Tarangire, Tanzania, 2024-05-25, DD 89.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Cebra_com%C3%BAn_(Equus_quagga),_parque_nacional_de_Tarangire,_Tanzania,_2024-05-25,_DD_89.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Diego Delso",
+    "desc": "Plains zebra (Equus quagga), Tarangire National Park, Tanzania"
+   },
+   "zebra_14.jpg": {
+    "title": "Cebra común (Equus quagga), zona de conservación de Ngorongoro, Tanzania, 2024-05-27, DD 41.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Cebra_com%C3%BAn_(Equus_quagga),_zona_de_conservaci%C3%B3n_de_Ngorongoro,_Tanzania,_2024-05-27,_DD_41.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Diego Delso",
+    "desc": "Plains zebra (Equus quagga), Ngorongoro Conservation Area, Tanzania"
+   },
+   "zebra_17.jpg": {
+    "title": "Cebras comunes (Equus quagga), parque nacional de Tarangire, Tanzania, 2024-05-25, DD 90.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Cebras_comunes_(Equus_quagga),_parque_nacional_de_Tarangire,_Tanzania,_2024-05-25,_DD_90.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Diego Delso",
+    "desc": "Plains zebras (Equus quagga), Tarangire National Park, Tanzania"
+   },
+   "zebra_22.jpg": {
+    "title": "Equus quagga boehmi (couple).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Equus_quagga_boehmi_(couple).jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Hans Hillewaert",
+    "desc": "Grant's Zebra close Chilanga near Lusaka, Zambia"
+   },
+   "horse_03.jpg": {
+    "title": "Bromo-Tengger-Semeru-National-Park Indonesia Horses-02.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Bromo-Tengger-Semeru-National-Park_Indonesia_Horses-02.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "CEphoto, Uwe Aranas",
+    "desc": "Bromo Tengger Semeru National Park, East Java, Indonesia: A Java Pony (Equus ferus caballus), resting at the 250 steps a"
+   },
+   "horse_05.jpg": {
+    "title": "Chevaux estive Pyrenees.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Chevaux_estive_Pyrenees.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Myrabella",
+    "desc": "Herd of horses on summer mountain pasture in the Pyrenees, near the lake of Estaens (Ibón de Estanés)."
+   },
+   "horse_07.jpg": {
+    "title": "Domestic horse at Suryachaur and the mountains in the back1.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Domestic_horse_at_Suryachaur_and_the_mountains_in_the_back1.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Shadow Ayush",
+    "desc": "Suryachaur has a large open area, chaur literally meaning ground. This makes it a great place to view a long stretch of "
+   },
+   "horse_08.jpg": {
+    "title": "Draft horse pulling logs in Parc naturel Hautes Fagnes, Eupen, Belgium (VeloTour 54 to 55, DSCF3703).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Draft_horse_pulling_logs_in_Parc_naturel_Hautes_Fagnes,_Eupen,_Belgium_(VeloTour_54_to_55,_DSCF3703).jpg",
+    "license": "CC BY 4.0",
+    "artist": "Trougnouf",
+    "desc": "Draft horse pulling logs in High Fens – Eifel Nature Park, Eupen, Belgium (VeloTour intersection 54 to 55))"
+   },
+   "horse_09.jpg": {
+    "title": "Dülmen, Börnste, Weide -- 2015 -- 9921.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_B%C3%B6rnste,_Weide_--_2015_--_9921.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Dietmar Rabich",
+    "desc": "Autumn in the Börnste hamlet, Kirchspiel, Dülmen, North Rhine-Westphalia, Germany"
+   },
+   "horse_10.jpg": {
+    "title": "Equus ferus caballus, Hückeswagen (DE) -- 2022 -- 0057.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Equus_ferus_caballus,_H%C3%BCckeswagen_(DE)_--_2022_--_0057.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Anil Öztas",
+    "desc": "Horse (equus ferus caballus) in Hückeswagen, Germany"
+   },
+   "horse_11.jpg": {
+    "title": "Face of Horse in Manno (Switzerland)2.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Face_of_Horse_in_Manno_(Switzerland)2.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Commonists",
+    "desc": "Face of Horse in Manno (Switzerland).jpg"
+   },
+   "horse_16.jpg": {
+    "title": "Horse, Vic-la-Gardiole, Hérault 01.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Horse,_Vic-la-Gardiole,_H%C3%A9rault_01.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Christian Ferrer",
+    "desc": "A grazing Camargue horse (Equus caballus) in the pines forest of the Bois des Aresquiers. Vic-la-Gardiole, Hérault, Fran"
+   },
+   "horse_17.jpg": {
+    "title": "Horse-drawn sleighs 2012 G1.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Horse-drawn_sleighs_2012_G1.jpg",
+    "license": "Public domain",
+    "artist": "George Chernilevsky",
+    "desc": "Horse-drawn sleighs in settlement Slavne near Vinnytsia, Ukraine."
+   },
+   "horse_18.jpg": {
+    "title": "Horse December 2014-1.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Horse_December_2014-1.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Alvesgaspar",
+    "desc": "Portrait of a Lusitano horse, Portugal"
+   },
+   "horse_19.jpg": {
+    "title": "Horse December 2014-2.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Horse_December_2014-2.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Alvesgaspar",
+    "desc": "Lusitano horse, Portugal"
+   },
+   "horse_20.jpg": {
+    "title": "Horse December 2014-3.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Horse_December_2014-3.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Alvesgaspar",
+    "desc": "Lusitano horse, Portugal"
+   },
+   "giraffe_02.jpg": {
+    "title": "076 Baby Angolan giraffes running in Etosha National Park Photo by Giles Laurent.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:076_Baby_Angolan_giraffes_running_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Giles Laurent",
+    "desc": "Baby Angolan giraffes running after each other in Etosha National Park, Namibia"
+   },
+   "giraffe_03.jpg": {
+    "title": "077 Angolan giraffes cuddling at sunset in Etosha National Park Photo by Giles Laurent.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:077_Angolan_giraffes_cuddling_at_sunset_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Giles Laurent",
+    "desc": "Angolan giraffes cuddling at sunset in Etosha National Park, Namibia"
+   },
+   "giraffe_04.jpg": {
+    "title": "106 Angolan giraffe walking in the Kalahari Desert of Namibia Photo by Giles Laurent.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:106_Angolan_giraffe_walking_in_the_Kalahari_Desert_of_Namibia_Photo_by_Giles_Laurent.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Giles Laurent",
+    "desc": "Male Angolan giraffe walking in the Kalahari Desert of Namibia"
+   },
+   "giraffe_05.jpg": {
+    "title": "182 Angolan giraffe drinking in Etosha National Park Photo by Giles Laurent.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:182_Angolan_giraffe_drinking_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Giles Laurent",
+    "desc": "Angolan giraffe drinking in Etosha National Park, Namibia"
+   },
+   "giraffe_08.jpg": {
+    "title": "Angolan giraffe (Giraffa camelopardalis angolensis) female with young 2 months.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Angolan_giraffe_(Giraffa_camelopardalis_angolensis)_female_with_young_2_months.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Charles J. Sharp",
+    "desc": "Angolan giraffe (Giraffa camelopardalis angolensis) female with young 2 months, Chobe National Park, Botswana"
+   },
+   "giraffe_12.jpg": {
+    "title": "Giraffa camelopardalis (Girafe) - 382.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Giraffa_camelopardalis_(Girafe)_-_382.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Another one of my pictures: This photograph was taken by Medium69 (William Croch",
+    "desc": "Giraffa camelopardalis (Giraffe) in the ZooParc de Beauval in Saint-Aignan-sur-Cher, France."
+   },
+   "giraffe_13.jpg": {
+    "title": "Giraffa camelopardalis (Girafe) - 384.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Giraffa_camelopardalis_(Girafe)_-_384.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Another one of my pictures: This photograph was taken by Medium69 (William Croch",
+    "desc": "Giraffa camelopardalis (Giraffe) in the ZooParc de Beauval in Saint-Aignan-sur-Cher, France."
+   },
+   "giraffe_14.jpg": {
+    "title": "Giraffa camelopardalis angolensis.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Giraffa_camelopardalis_angolensis.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Hans Hillewaert",
+    "desc": "A bull Southern savannah giraffe close to Namutoni, Etosha, Namibia"
+   },
+   "giraffe_17.jpg": {
+    "title": "Giraffa camelopardalis rothschildi qtl1.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Giraffa_camelopardalis_rothschildi_qtl1.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Quartl",
+    "desc": "Rothschild Giraffe (Giraffa camelopardalis rothschildi) in the Opelzoo, Kronberg/Königstein, Germany."
+   },
+   "giraffe_18.jpg": {
+    "title": "Giraffa camelopardalis rothschildi qtl2.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Giraffa_camelopardalis_rothschildi_qtl2.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Quartl",
+    "desc": "Running young Rothschild Giraffe (Giraffa camelopardalis rothschildi) in the Opelzoo, Kronberg/Königstein, Germany."
+   },
+   "giraffe_19.jpg": {
+    "title": "Giraffe (Giraffa camelopardalis) females.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Giraffe_(Giraffa_camelopardalis)_females.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Charles J. Sharp",
+    "desc": "Giraffe (Giraffa camelopardalis) females, Tswalu Kalahari Reserve, South Africa"
+   },
+   "giraffe_23.jpg": {
+    "title": "Giraffe in Zulu Nyala Reserve 02.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Giraffe_in_Zulu_Nyala_Reserve_02.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Bernard Gagnon",
+    "desc": "South African giraffe (Giraffa camelopardalis giraffa) in Zulu Nyala Game Reserve, South Africa"
+   }
+  },
+  "llm": {
+   "model": "gemini-3.1-pro-preview",
+   "date": "2026-10-10",
+   "lf_zebra": {
+    "features": {
+     "prompt": "List the most important features for recognizing something as a \"zebra\".",
+     "raw": "{\"items\": [\"Black and white stripes\", \"Horse-like body\", \"Erect mane\", \"Hooved feet\", \"Long tufted tail\", \"Large rounded ears\", \"Elongated muzzle\"]}"
+    },
+    "around": {
+     "prompt": "List the things most commonly seen around a \"zebra\".",
+     "raw": "{\"items\":[\"Tall savanna grass\",\"Acacia trees\",\"Wildebeest herds\",\"Waterholes\",\"Lions\",\"Oxpecker birds\",\"Safari vehicles\",\"Dust clouds\"]}"
+    },
+    "superclasses": {
+     "prompt": "Give superclasses for the word \"zebra\".",
+     "raw": "{\"items\":[\"equine animal\",\"odd-toed ungulate\",\"hoofed mammal\",\"herbivorous mammal\",\"placental mammal\",\"vertebrate animal\",\"wild animal\",\"living organism\"]}"
+    }
+   },
+   "labo": {
+    "zebra": {
+     "prompt": "Describe what a zebra looks like in a photograph, as 8 short visual sentences that would help tell it apart from similar animals.",
+     "raw": "{\"items\":[\"Bold black and white stripes.\",\"Short stiff upright mane.\",\"Stocky horse-like body.\",\"Dark rounded muzzle.\",\"Large striped ears.\",\"Tail with a dark tuft.\",\"Striped legs down to the hooves.\",\"Unique facial stripe patterns.\"]}",
+     "items": [
+      "Bold black and white stripes.",
+      "Short stiff upright mane.",
+      "Stocky horse-like body.",
+      "Dark rounded muzzle.",
+      "Large striped ears.",
+      "Tail with a dark tuft.",
+      "Striped legs down to the hooves.",
+      "Unique facial stripe patterns."
+     ]
+    },
+    "horse": {
+     "prompt": "Describe what a horse looks like in a photograph, as 8 short visual sentences that would help tell it apart from similar animals.",
+     "raw": "{\"items\": [\"Long flowing mane along the neck.\", \"Elongated straight or convex facial profile.\", \"Large wide-set eyes on the sides.\", \"Pointed mobile ears standing upright.\", \"Muscular deep chest and sloping shoulders.\", \"Long slender legs ending in single solid hooves.\", \"Tail covered entirely in long flowing hair.\", \"Smooth short coat in various colors.\"]}",
+     "items": [
+      "Long flowing mane along the neck.",
+      "Elongated straight or convex facial profile.",
+      "Large wide-set eyes on the sides.",
+      "Pointed mobile ears standing upright.",
+      "Muscular deep chest and sloping shoulders.",
+      "Long slender legs ending in single solid hooves.",
+      "Tail covered entirely in long flowing hair.",
+      "Smooth short coat in various colors."
+     ]
+    },
+    "giraffe": {
+     "prompt": "Describe what a giraffe looks like in a photograph, as 8 short visual sentences that would help tell it apart from similar animals.",
+     "raw": "{\"items\": [\"Extremely long vertical neck\", \"Large brown polygonal coat patches\", \"Thin cream lines between patches\", \"Two small fur-covered horn-like ossicones\", \"Very long slender legs\", \"Distinctly sloping back from shoulders\", \"Long tail with dark hair tuft\", \"Elongated face with dark lips\"]}",
+     "items": [
+      "Extremely long vertical neck",
+      "Large brown polygonal coat patches",
+      "Thin cream lines between patches",
+      "Two small fur-covered horn-like ossicones",
+      "Very long slender legs",
+      "Distinctly sloping back from shoulders",
+      "Long tail with dark hair tuft",
+      "Elongated face with dark lips"
+     ]
+    }
+   }
+  },
+  "extras": {
+   "example_feature_first": [
+    -0.0343,
+    -0.0312,
+    0.0005,
+    -0.0207
+   ],
+   "example_feature_last": 0.0165,
+   "feature_dim": 512,
+   "lf_targets": {
+    "concepts": [
+     "black and white stripes",
+     "erect mane",
+     "hooved feet",
+     "long tufted tail",
+     "elongated muzzle",
+     "tall savanna grass",
+     "acacia trees",
+     "wildebeest herds",
+     "waterholes",
+     "oxpecker birds",
+     "safari vehicles",
+     "equine animal",
+     "odd-toed ungulate",
+     "hoofed mammal",
+     "herbivorous mammal",
+     "vertebrate animal",
+     "wild animal",
+     "long face and snout",
+     "flowing mane on neck",
+     "single-toed hooves",
+     "long hairy tail",
+     "four long slender legs",
+     "upright pointed ears",
+     "muscular equine build",
+     "riding bridle",
+     "wooden stable",
+     "mammal",
+     "animal",
+     "herbivore",
+     "extremely long neck",
+     "spotted coat pattern",
+     "long prehensile tongue",
+     "ungulate",
+     "ruminant"
+    ],
+    "photos": {
+     "zebra": "zebra_12.jpg",
+     "horse": "horse_17.jpg",
+     "giraffe": "giraffe_17.jpg"
+    },
+    "rows": {
+     "zebra": [
+      0.2744,
+      0.2365,
+      0.2341,
+      0.2685,
+      0.2493,
+      0.2439,
+      0.2136,
+      0.2462,
+      0.2345,
+      0.2371,
+      0.24,
+      0.2483,
+      0.2881,
+      0.2676,
+      0.2654,
+      0.2622,
+      0.2486,
+      0.2225,
+      0.2344,
+      0.2611,
+      0.2365,
+      0.2345,
+      0.2525,
+      0.1997,
+      0.1951,
+      0.2078,
+      0.2485,
+      0.2513,
+      0.2441,
+      0.2433,
+      0.2517,
+      0.2323,
+      0.2671,
+      0.2278
+     ],
+     "horse": [
+      0.1681,
+      0.191,
+      0.2361,
+      0.2051,
+      0.199,
+      0.1683,
+      0.1608,
+      0.2005,
+      0.2029,
+      0.1481,
+      0.2364,
+      0.252,
+      0.2235,
+      0.2142,
+      0.2085,
+      0.2243,
+      0.2113,
+      0.2175,
+      0.1706,
+      0.2384,
+      0.2216,
+      0.1932,
+      0.231,
+      0.2365,
+      0.2247,
+      0.2536,
+      0.2016,
+      0.2235,
+      0.1979,
+      0.2031,
+      0.1882,
+      0.1957,
+      0.2466,
+      0.2349
+     ],
+     "giraffe": [
+      0.2079,
+      0.2526,
+      0.2293,
+      0.2559,
+      0.2574,
+      0.2585,
+      0.2106,
+      0.1737,
+      0.2139,
+      0.2103,
+      0.2333,
+      0.2377,
+      0.2706,
+      0.2692,
+      0.2514,
+      0.2551,
+      0.2407,
+      0.2418,
+      0.2424,
+      0.2609,
+      0.2447,
+      0.2637,
+      0.2453,
+      0.1797,
+      0.1897,
+      0.2031,
+      0.2379,
+      0.2511,
+      0.2453,
+      0.3076,
+      0.242,
+      0.2505,
+      0.2664,
+      0.2385
+     ]
+    }
+   }
+  }
+ },
+ "cub": {
+  "n_images": 11788,
+  "n_train": 5994,
+  "n_test": 5794,
+  "n_concepts": 112,
+  "n_groups": 28,
+  "certainty_share": {
+   "1": 0.1074,
+   "2": 0.062,
+   "3": 0.2776,
+   "4": 0.553
+  },
+  "acc": {
+   "independent": 0.4993,
+   "sequential": 0.6886,
+   "joint": 0.7346,
+   "hard_sequential": 0.5287,
+   "oracle_true_concepts": 1.0,
+   "standard": 0.7327
+  },
+  "concept_acc": 0.909,
+  "joint_concept_acc": 0.8569,
+  "intervention": {
+   "groups": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+   ],
+   "independent": [
+    0.4993,
+    0.5667,
+    0.6353,
+    0.6874,
+    0.7317,
+    0.7888,
+    0.8306,
+    0.8701,
+    0.8964,
+    0.9171,
+    0.9381,
+    0.9456,
+    0.9552,
+    0.962,
+    0.9675,
+    0.975,
+    0.9787,
+    0.9818,
+    0.9853,
+    0.9879,
+    0.9924,
+    0.9939,
+    0.9952,
+    0.996,
+    0.9967,
+    0.9974,
+    0.9983,
+    0.9993,
+    1.0
+   ],
+   "sequential": [
+    0.6886,
+    0.7299,
+    0.7653,
+    0.7938,
+    0.8186,
+    0.8505,
+    0.8744,
+    0.8947,
+    0.9098,
+    0.9218,
+    0.9331,
+    0.9377,
+    0.9449,
+    0.9516,
+    0.9567,
+    0.9618,
+    0.9658,
+    0.9688,
+    0.9742,
+    0.9755,
+    0.9808,
+    0.9822,
+    0.9828,
+    0.9828,
+    0.9833,
+    0.9829,
+    0.9839,
+    0.9846,
+    0.9846
+   ],
+   "joint": [
+    0.7346,
+    0.7499,
+    0.7614,
+    0.7761,
+    0.7851,
+    0.7986,
+    0.8101,
+    0.8253,
+    0.8365,
+    0.8438,
+    0.8525,
+    0.8559,
+    0.8647,
+    0.8696,
+    0.8758,
+    0.8807,
+    0.8853,
+    0.889,
+    0.8973,
+    0.9001,
+    0.9047,
+    0.9096,
+    0.9133,
+    0.9091,
+    0.9095,
+    0.9076,
+    0.9072,
+    0.9085,
+    0.902
+   ],
+   "hard_sequential": [
+    0.5287,
+    0.5571,
+    0.5837,
+    0.6082,
+    0.6345,
+    0.667,
+    0.6969,
+    0.7263,
+    0.7541,
+    0.7757,
+    0.7938,
+    0.8076,
+    0.8299,
+    0.8466,
+    0.865,
+    0.8816,
+    0.8925,
+    0.9028,
+    0.9187,
+    0.9282,
+    0.9359,
+    0.9441,
+    0.9544,
+    0.9607,
+    0.9676,
+    0.9715,
+    0.9781,
+    0.9834,
+    0.9846
+   ]
+  },
+  "pcbm": {
+   "acc": 0.6414,
+   "acc_h": 0.7266,
+   "nonzero_frac": 0.8207
+  },
+  "cbd": {
+   "acc": 0.5309,
+   "classname_acc": 0.529,
+   "gull_descriptors": {
+    "California Gull": [
+     "a white bird with a black head and bill",
+     "a yellow ring around its black eyes",
+     "a black ring at the base of its bill",
+     "a black mark on its wing",
+     "a white body with black wingtips",
+     "a long, black tail",
+     "orange legs and feet"
+    ],
+    "Glaucous-winged Gull": [
+     "a large bird with a wingspan of up to 2.5 feet",
+     "white with grey wings and a black tail",
+     "a yellow beak and yellow legs",
+     "a black band across its eyes"
+    ],
+    "Heermann Gull": [
+     "a white bird with a black head and bill",
+     "a red spot on its lower mandible",
+     "a yellow ring around its eyes",
+     "black wingtips",
+     "a white tail with a black terminal band",
+     "orange legs and feet"
+    ],
+    "Herring Gull": [
+     "a large bird with a wingspan of up to 2.3 meters",
+     "a white body with black wingtips",
+     "a yellow beak and legs",
+     "a red spot on its beak",
+     "webbed feet"
+    ],
+    "Ivory Gull": [
+     "a white bird",
+     "black wingtips",
+     "a black bill",
+     "pink legs",
+     "yellow eyes"
+    ],
+    "Ring-billed Gull": [
+     "a white bird with a black ring around its bill",
+     "a black head and back with a white underside",
+     "a long, black tail",
+     "black wingtips with white stripes",
+     "red eyes",
+     "webbed feet"
+    ],
+    "Slaty-backed Gull": [
+     "a large gull with a wingspan of up to 2.3 meters",
+     "are dark grey and the underparts are white",
+     "and neck are white with a black cap",
+     "is yellow with a red spot near the tip",
+     "and feet are yellow",
+     "have a black trailing edge"
+    ],
+    "Western Gull": [
+     "a large bird with a wingspan of up to 2.5 feet",
+     "white with a grey back and wings",
+     "a black head and bill",
+     "a red spot on its bill",
+     "yellow eyes",
+     "webbed feet"
+    ]
+   },
+   "gull_photo": {
+    "per_species": {
+     "Herring Gull": {
+      "descriptors": [
+       "a large bird with a wingspan of up to 2.3 meters",
+       "a white body with black wingtips",
+       "a yellow beak and legs",
+       "a red spot on its beak",
+       "webbed feet"
+      ],
+      "cos": [
+       0.32425329089164734,
+       0.3392239511013031,
+       0.3390677273273468,
+       0.34001249074935913,
+       0.32773837447166443
+      ],
+      "score": 0.3340591788291931
+     },
+     "Western Gull": {
+      "descriptors": [
+       "a large bird with a wingspan of up to 2.5 feet",
+       "white with a grey back and wings",
+       "a black head and bill",
+       "a red spot on its bill",
+       "yellow eyes",
+       "webbed feet"
+      ],
+      "cos": [
+       0.3161051273345947,
+       0.32515543699264526,
+       0.32637569308280945,
+       0.3338693380355835,
+       0.3331245481967926,
+       0.31837141513824463
+      ],
+      "score": 0.3255002498626709
+     },
+     "California Gull": {
+      "descriptors": [
+       "a white bird with a black head and bill",
+       "a yellow ring around its black eyes",
+       "a black ring at the base of its bill",
+       "a black mark on its wing",
+       "a white body with black wingtips",
+       "a long, black tail",
+       "orange legs and feet"
+      ],
+      "cos": [
+       0.32538163661956787,
+       0.32763394713401794,
+       0.32378682494163513,
+       0.31241798400878906,
+       0.3293514847755432,
+       0.3209383487701416,
+       0.32802122831344604
+      ],
+      "score": 0.32393309473991394
+     },
+     "Glaucous-winged Gull": {
+      "descriptors": [
+       "a large bird with a wingspan of up to 2.5 feet",
+       "white with grey wings and a black tail",
+       "a yellow beak and yellow legs",
+       "a black band across its eyes"
+      ],
+      "cos": [
+       0.3207152485847473,
+       0.32734307646751404,
+       0.3315185606479645,
+       0.3327832520008087
+      ],
+      "score": 0.32809001207351685
+     },
+     "Slaty-backed Gull": {
+      "descriptors": [
+       "a large gull with a wingspan of up to 2.3 meters",
+       "are dark grey and the underparts are white",
+       "and neck are white with a black cap",
+       "is yellow with a red spot near the tip",
+       "and feet are yellow",
+       "have a black trailing edge"
+      ],
+      "cos": [
+       0.3352997303009033,
+       0.3392336964607239,
+       0.33656424283981323,
+       0.34214895963668823,
+       0.33867526054382324,
+       0.3309147357940674
+      ],
+      "score": 0.33713945746421814
+     }
+    },
+    "top": [
+     [
+      "Slaty-backed Gull",
+      0.33713945746421814
+     ],
+     [
+      "Herring Gull",
+      0.3340591788291931
+     ],
+     [
+      "Glaucous-winged Gull",
+      0.32809001207351685
+     ],
+     [
+      "Western Gull",
+      0.3255002498626709
+     ],
+     [
+      "California Gull",
+      0.32393309473991394
+     ]
+    ],
+    "classname_top": [
+     [
+      "Herring Gull",
+      0.34521815180778503
+     ],
+     [
+      "Slaty backed Gull",
+      0.34212666749954224
+     ],
+     [
+      "California Gull",
+      0.3374626338481903
+     ],
+     [
+      "Western Gull",
+      0.3368864059448242
+     ],
+     [
+      "Glaucous winged Gull",
+      0.33301055431365967
+     ]
+    ]
+   }
+  },
+  "tcav": {
+   "class": "Herring Gull",
+   "n_class_images": 60,
+   "scale": 100.0,
+   "n_repeats": 10,
+   "n_per_set": 150,
+   "has_wing_color::grey": {
+    "n_concept_pool": 3267,
+    "tcav_runs": [
+     1.0,
+     1.0,
+     1.0,
+     0.933,
+     1.0,
+     1.0,
+     0.983,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "tcav_mean": 0.992,
+    "cav_train_acc": 0.95
+   },
+   "has_wing_color::yellow": {
+    "n_concept_pool": 1019,
+    "tcav_runs": [
+     0.433,
+     0.083,
+     0.367,
+     0.0,
+     0.0,
+     0.0,
+     0.717,
+     0.0,
+     0.1,
+     0.683
+    ],
+    "tcav_mean": 0.238,
+    "cav_train_acc": 0.967
+   },
+   "random": {
+    "tcav_runs": [
+     1.0,
+     1.0,
+     0.0,
+     0.867,
+     0.0,
+     0.8,
+     0.0,
+     1.0,
+     1.0,
+     0.433
+    ],
+    "tcav_mean": 0.61
+   }
+  },
+  "gull": {
+   "top_concepts": [
+    [
+     "has_throat_color::white",
+     0.9894716143608093
+    ],
+    [
+     "has_nape_color::white",
+     0.9881834387779236
+    ],
+    [
+     "has_under_tail_color::white",
+     0.9859055280685425
+    ],
+    [
+     "has_forehead_color::white",
+     0.9854606986045837
+    ],
+    [
+     "has_size::medium_(9_-_16_in)",
+     0.9783239960670471
+    ],
+    [
+     "has_wing_color::grey",
+     0.9783039093017578
+    ],
+    [
+     "has_belly_pattern::solid",
+     0.9780198335647583
+    ],
+    [
+     "has_upperparts_color::grey",
+     0.973183274269104
+    ]
+   ],
+   "top_species": [
+    [
+     "Western Gull",
+     0.2745838463306427
+    ],
+    [
+     "Glaucous winged Gull",
+     0.22412225604057312
+    ],
+    [
+     "Slaty backed Gull",
+     0.13394136726856232
+    ],
+    [
+     "Herring Gull",
+     0.1279321312904358
+    ]
+   ],
+   "pred_all": {
+    "has_bill_shape::dagger": 0.0756777673959732,
+    "has_bill_shape::hooked_seabird": 0.8632484078407288,
+    "has_bill_shape::all-purpose": 0.007356258109211922,
+    "has_bill_shape::cone": 0.012715816497802734,
+    "has_wing_color::brown": 0.0062785036861896515,
+    "has_wing_color::grey": 0.9783039093017578,
+    "has_wing_color::yellow": 0.053994014859199524,
+    "has_wing_color::black": 0.018832992762327194,
+    "has_wing_color::white": 0.7861795425415039,
+    "has_wing_color::buff": 0.014025198295712471,
+    "has_upperparts_color::brown": 0.002486087381839752,
+    "has_upperparts_color::grey": 0.973183274269104,
+    "has_upperparts_color::yellow": 0.051017459481954575,
+    "has_upperparts_color::black": 0.029438264667987823,
+    "has_upperparts_color::white": 0.9128865003585815,
+    "has_upperparts_color::buff": 0.026565970852971077,
+    "has_underparts_color::brown": 0.043554600328207016,
+    "has_underparts_color::grey": 0.06248851493000984,
+    "has_underparts_color::yellow": 0.00981824565678835,
+    "has_underparts_color::black": 0.004051997326314449,
+    "has_underparts_color::white": 0.961108386516571,
+    "has_underparts_color::buff": 0.009324409998953342,
+    "has_breast_pattern::solid": 0.9623836278915405,
+    "has_breast_pattern::striped": 0.022021910175681114,
+    "has_breast_pattern::multi-colored": 0.002965194871649146,
+    "has_back_color::brown": 0.005897528491914272,
+    "has_back_color::grey": 0.9698888063430786,
+    "has_back_color::yellow": 0.06662885844707489,
+    "has_back_color::black": 0.004814961459487677,
+    "has_back_color::white": 0.8545332551002502,
+    "has_back_color::buff": 0.011585332453250885,
+    "has_tail_shape::notched_tail": 0.003542769467458129,
+    "has_upper_tail_color::brown": 0.0034422315657138824,
+    "has_upper_tail_color::grey": 0.31270286440849304,
+    "has_upper_tail_color::black": 0.15747573971748352,
+    "has_upper_tail_color::white": 0.9538487792015076,
+    "has_upper_tail_color::buff": 0.023707449436187744,
+    "has_head_pattern::eyebrow": 0.010227380320429802,
+    "has_head_pattern::plain": 0.9273432493209839,
+    "has_breast_color::brown": 0.04846036061644554,
+    "has_breast_color::grey": 0.13171963393688202,
+    "has_breast_color::yellow": 0.010495671071112156,
+    "has_breast_color::black": 0.0020704977214336395,
+    "has_breast_color::white": 0.9498595595359802,
+    "has_breast_color::buff": 0.01086497399955988,
+    "has_throat_color::grey": 0.041889119893312454,
+    "has_throat_color::yellow": 0.03810345381498337,
+    "has_throat_color::black": 0.002134618815034628,
+    "has_throat_color::white": 0.9894716143608093,
+    "has_throat_color::buff": 0.02021763101220131,
+    "has_eye_color::black": 0.9642342925071716,
+    "has_bill_length::about_the_same_as_head": 0.9136680364608765,
+    "has_bill_length::shorter_than_head": 0.04003037139773369,
+    "has_forehead_color::blue": 0.036471590399742126,
+    "has_forehead_color::brown": 0.009442558512091637,
+    "has_forehead_color::grey": 0.018743280321359634,
+    "has_forehead_color::yellow": 0.046188101172447205,
+    "has_forehead_color::black": 0.019736509770154953,
+    "has_forehead_color::white": 0.9854606986045837,
+    "has_under_tail_color::brown": 0.006648065056651831,
+    "has_under_tail_color::grey": 0.15075990557670593,
+    "has_under_tail_color::black": 0.18514187633991241,
+    "has_under_tail_color::white": 0.9859055280685425,
+    "has_under_tail_color::buff": 0.011633800342679024,
+    "has_nape_color::brown": 0.00726065319031477,
+    "has_nape_color::grey": 0.07233192026615143,
+    "has_nape_color::yellow": 0.0813480094075203,
+    "has_nape_color::black": 0.012169218622148037,
+    "has_nape_color::white": 0.9881834387779236,
+    "has_nape_color::buff": 0.0159645676612854,
+    "has_belly_color::brown": 0.043961867690086365,
+    "has_belly_color::grey": 0.08904040604829788,
+    "has_belly_color::yellow": 0.00936898123472929,
+    "has_belly_color::black": 0.006239230744540691,
+    "has_belly_color::white": 0.9496748447418213,
+    "has_belly_color::buff": 0.012016698718070984,
+    "has_wing_shape::rounded-wings": 0.09732555598020554,
+    "has_wing_shape::pointed-wings": 0.006444443948566914,
+    "has_size::small_(5_-_9_in)": 0.0025667629670351744,
+    "has_size::medium_(9_-_16_in)": 0.9783239960670471,
+    "has_size::very_small_(3_-_5_in)": 0.019441548734903336,
+    "has_shape::duck-like": 0.06578627228736877,
+    "has_shape::perching-like": 0.0004264742601662874,
+    "has_back_pattern::solid": 0.6750068664550781,
+    "has_back_pattern::striped": 0.013376716524362564,
+    "has_back_pattern::multi-colored": 0.34138521552085876,
+    "has_tail_pattern::solid": 0.19021180272102356,
+    "has_tail_pattern::striped": 0.022961681708693504,
+    "has_tail_pattern::multi-colored": 0.296299546957016,
+    "has_belly_pattern::solid": 0.9780198335647583,
+    "has_primary_color::brown": 0.009052984416484833,
+    "has_primary_color::grey": 0.9559232592582703,
+    "has_primary_color::yellow": 0.009771184995770454,
+    "has_primary_color::black": 0.0028958525508642197,
+    "has_primary_color::white": 0.9351277947425842,
+    "has_primary_color::buff": 0.013030806556344032,
+    "has_leg_color::grey": 0.007355241104960442,
+    "has_leg_color::black": 0.05691545084118843,
+    "has_leg_color::buff": 0.014078114181756973,
+    "has_bill_color::grey": 0.03509167954325676,
+    "has_bill_color::black": 0.015430049039423466,
+    "has_bill_color::buff": 0.04122994467616081,
+    "has_crown_color::blue": 0.03550028055906296,
+    "has_crown_color::brown": 0.009337708353996277,
+    "has_crown_color::grey": 0.09765800833702087,
+    "has_crown_color::yellow": 0.06195060908794403,
+    "has_crown_color::black": 0.03830663487315178,
+    "has_crown_color::white": 0.9727176427841187,
+    "has_wing_pattern::solid": 0.1088862270116806,
+    "has_wing_pattern::spotted": 0.030805910006165504,
+    "has_wing_pattern::striped": 0.006232841871678829,
+    "has_wing_pattern::multi-colored": 0.5145481824874878
+   },
+   "feature_first": [
+    0.03590787574648857,
+    0.002614259021356702,
+    -0.0010977748315781355,
+    -0.040830451995134354
+   ],
+   "feature_last": -0.035063985735177994
+  },
+  "groups": [
+   "has_back_color",
+   "has_back_pattern",
+   "has_belly_color",
+   "has_belly_pattern",
+   "has_bill_color",
+   "has_bill_length",
+   "has_bill_shape",
+   "has_breast_color",
+   "has_breast_pattern",
+   "has_crown_color",
+   "has_eye_color",
+   "has_forehead_color",
+   "has_head_pattern",
+   "has_leg_color",
+   "has_nape_color",
+   "has_primary_color",
+   "has_shape",
+   "has_size",
+   "has_tail_pattern",
+   "has_tail_shape",
+   "has_throat_color",
+   "has_under_tail_color",
+   "has_underparts_color",
+   "has_upper_tail_color",
+   "has_upperparts_color",
+   "has_wing_color",
+   "has_wing_pattern",
+   "has_wing_shape"
+  ],
+  "herring_gull": {
+   "class_index": 61,
+   "vector": [
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "names": [
+    "has_bill_shape::dagger",
+    "has_bill_shape::hooked_seabird",
+    "has_bill_shape::all-purpose",
+    "has_bill_shape::cone",
+    "has_wing_color::brown",
+    "has_wing_color::grey",
+    "has_wing_color::yellow",
+    "has_wing_color::black",
+    "has_wing_color::white",
+    "has_wing_color::buff",
+    "has_upperparts_color::brown",
+    "has_upperparts_color::grey",
+    "has_upperparts_color::yellow",
+    "has_upperparts_color::black",
+    "has_upperparts_color::white",
+    "has_upperparts_color::buff",
+    "has_underparts_color::brown",
+    "has_underparts_color::grey",
+    "has_underparts_color::yellow",
+    "has_underparts_color::black",
+    "has_underparts_color::white",
+    "has_underparts_color::buff",
+    "has_breast_pattern::solid",
+    "has_breast_pattern::striped",
+    "has_breast_pattern::multi-colored",
+    "has_back_color::brown",
+    "has_back_color::grey",
+    "has_back_color::yellow",
+    "has_back_color::black",
+    "has_back_color::white",
+    "has_back_color::buff",
+    "has_tail_shape::notched_tail",
+    "has_upper_tail_color::brown",
+    "has_upper_tail_color::grey",
+    "has_upper_tail_color::black",
+    "has_upper_tail_color::white",
+    "has_upper_tail_color::buff",
+    "has_head_pattern::eyebrow",
+    "has_head_pattern::plain",
+    "has_breast_color::brown",
+    "has_breast_color::grey",
+    "has_breast_color::yellow",
+    "has_breast_color::black",
+    "has_breast_color::white",
+    "has_breast_color::buff",
+    "has_throat_color::grey",
+    "has_throat_color::yellow",
+    "has_throat_color::black",
+    "has_throat_color::white",
+    "has_throat_color::buff",
+    "has_eye_color::black",
+    "has_bill_length::about_the_same_as_head",
+    "has_bill_length::shorter_than_head",
+    "has_forehead_color::blue",
+    "has_forehead_color::brown",
+    "has_forehead_color::grey",
+    "has_forehead_color::yellow",
+    "has_forehead_color::black",
+    "has_forehead_color::white",
+    "has_under_tail_color::brown",
+    "has_under_tail_color::grey",
+    "has_under_tail_color::black",
+    "has_under_tail_color::white",
+    "has_under_tail_color::buff",
+    "has_nape_color::brown",
+    "has_nape_color::grey",
+    "has_nape_color::yellow",
+    "has_nape_color::black",
+    "has_nape_color::white",
+    "has_nape_color::buff",
+    "has_belly_color::brown",
+    "has_belly_color::grey",
+    "has_belly_color::yellow",
+    "has_belly_color::black",
+    "has_belly_color::white",
+    "has_belly_color::buff",
+    "has_wing_shape::rounded-wings",
+    "has_wing_shape::pointed-wings",
+    "has_size::small_(5_-_9_in)",
+    "has_size::medium_(9_-_16_in)",
+    "has_size::very_small_(3_-_5_in)",
+    "has_shape::duck-like",
+    "has_shape::perching-like",
+    "has_back_pattern::solid",
+    "has_back_pattern::striped",
+    "has_back_pattern::multi-colored",
+    "has_tail_pattern::solid",
+    "has_tail_pattern::striped",
+    "has_tail_pattern::multi-colored",
+    "has_belly_pattern::solid",
+    "has_primary_color::brown",
+    "has_primary_color::grey",
+    "has_primary_color::yellow",
+    "has_primary_color::black",
+    "has_primary_color::white",
+    "has_primary_color::buff",
+    "has_leg_color::grey",
+    "has_leg_color::black",
+    "has_leg_color::buff",
+    "has_bill_color::grey",
+    "has_bill_color::black",
+    "has_bill_color::buff",
+    "has_crown_color::blue",
+    "has_crown_color::brown",
+    "has_crown_color::grey",
+    "has_crown_color::yellow",
+    "has_crown_color::black",
+    "has_crown_color::white",
+    "has_wing_pattern::solid",
+    "has_wing_pattern::spotted",
+    "has_wing_pattern::striped",
+    "has_wing_pattern::multi-colored"
+   ]
+  }
+ },
+ "lit": {
+  "koh_cub_err": {
+   "independent": 0.24,
+   "sequential": 0.243,
+   "joint": 0.199,
+   "standard": 0.175
+  },
+  "koh_oai_rmse": {
+   "independent": 0.435,
+   "sequential": 0.418,
+   "joint": 0.418,
+   "standard": 0.441
+  },
+  "oai": {
+   "concepts": 10,
+   "grades": 4
+  },
+  "menon_b32": {
+   "cbd": 52.57,
+   "classname": 51.95
+  },
+  "zech": {
+   "auc_internal": 0.931,
+   "auc_external": 0.815,
+   "hospital_id_nih": 99.95
+  },
+  "cebab": {
+   "concepts": [
+    "food",
+    "service",
+    "ambiance",
+    "noise"
+   ],
+   "texts": 15089
+  },
+  "wu_icu_patients": 15552,
+  "labo_cub_1shot": {
+   "labo": 54.19,
+   "linear_probe": 47.69
+  }
+ },
+ "saliency_toy": {
+  "classes": [
+   "vertical bar",
+   "horizontal bar",
+   "dot"
+  ],
+  "image": [
+   [
+    0.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.0,
+    1.0,
+    0.0
+   ]
+  ],
+  "W": {
+   "vertical bar": [
+    [
+     -0.5,
+     1.0,
+     -0.5
+    ],
+    [
+     -0.5,
+     1.0,
+     -0.5
+    ],
+    [
+     -0.5,
+     1.0,
+     -0.5
+    ]
+   ],
+   "horizontal bar": [
+    [
+     -0.5,
+     -0.5,
+     -0.5
+    ],
+    [
+     1.0,
+     1.0,
+     1.0
+    ],
+    [
+     -0.5,
+     -0.5,
+     -0.5
+    ]
+   ],
+   "dot": [
+    [
+     -0.25,
+     -0.25,
+     -0.25
+    ],
+    [
+     -0.25,
+     2.0,
+     -0.25
+    ],
+    [
+     -0.25,
+     -0.25,
+     -0.25
+    ]
+   ]
+  },
+  "scores": {
+   "vertical bar": 3.0,
+   "horizontal bar": 0.0,
+   "dot": 1.5
+  },
+  "eps": 0.1,
+  "nudge_centre": {
+   "vertical bar": 0.1,
+   "horizontal bar": 0.1,
+   "dot": 0.2
+  },
+  "nudge_corner": {
+   "vertical bar": -0.05,
+   "horizontal bar": -0.05,
+   "dot": -0.025
+  },
+  "saliency": {
+   "vertical bar": [
+    [
+     0.5,
+     1.0,
+     0.5
+    ],
+    [
+     0.5,
+     1.0,
+     0.5
+    ],
+    [
+     0.5,
+     1.0,
+     0.5
+    ]
+   ],
+   "horizontal bar": [
+    [
+     0.5,
+     0.5,
+     0.5
+    ],
+    [
+     1.0,
+     1.0,
+     1.0
+    ],
+    [
+     0.5,
+     0.5,
+     0.5
+    ]
+   ],
+   "dot": [
+    [
+     0.25,
+     0.25,
+     0.25
+    ],
+    [
+     0.25,
+     2.0,
+     0.25
+    ],
+    [
+     0.25,
+     0.25,
+     0.25
+    ]
+   ]
+  }
+ }
+}

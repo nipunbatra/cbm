@@ -1,0 +1,29 @@
+{
+  "name": "cbm-lecture",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Concept Bottleneck Models: lecture slides and lecture film from one source (Remotion + SVG + KaTeX).",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:animatic": "node tools/render.mjs animatic",
+    "render:1080": "node tools/render.mjs 1080",
+    "render:4k": "node tools/render.mjs 4k",
+    "deck": "node tools/deck.mjs && python3 -m http.server 8766 --directory deck",
+    "deck:build": "node tools/deck.mjs",
+    "deck:pdf": "node tools/deck.mjs && node tools/deck_pdf.mjs deck deck/concept-bottleneck-models.pdf",
+    "content": "sh tools/content.sh",
+    "check": "npx tsc --noEmit -p . && ~/base/bin/python -m pytest -q math/test_narration.py math/numerical_validation.py"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.532",
+    "@remotion/cli": "^4.0.532",
+    "@remotion/renderer": "^4.0.532",
+    "@types/react": "^19.3.0",
+    "katex": "^0.16.22",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remotion": "^4.0.532",
+    "typescript": "^7.0.2"
+  }
+}

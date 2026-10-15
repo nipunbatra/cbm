@@ -1,0 +1,17 @@
+# shared dependencies and large or generated outputs (recreated by tools/setup_worktree.sh or by the build)
+node_modules
+out
+qa
+deck/
+narration/seg
+narration/*.wav
+public/*.wav
+review/*.pdf
+review/*.log
+review/sheets*/
+review/film_frames/
+.pytest_cache/
+__pycache__/
+*.tmp*
+.DS_Store
+._*

@@ -1,0 +1,16 @@
+## s03 | What is a concept? | 0.4 | 0.8
+[[A {c:concept} is a claim that a person can check]] Let us slow down. What exactly is a concept? It is more than a neuron with a name attached: it is a promise that a person can check the claim in the input. || 0.8
+[[Meaning: a definition that an expert can apply]] Three things must be in place. The first is meaning: a definition that a domain expert can apply. For example, grey wingtip: the tips of the folded flight feathers are grey, not black. || 0.6
+[[Grounding: the evidence sits in one region of the {x:photo}]] The second is grounding: where in the input is the evidence? For wingtip colour, it is this region. The estimate should depend on these feathers, and not on the water or the rock. || 0.8
+[[Representation: the simplest {c:concept} is binary]] The third is representation: how the concept becomes a number. The simplest is binary: c j is zero or one. || 0.6
+[[A soft {c:concept} turns a logit into a value between 0 and 1]] A soft concept passes a logit, z, through the sigmoid, giving a value between zero and one. A logit of 1.4 gives 0.80. || 0.6
+[[A soft score is not automatically a probability]] A soft score of 0.8 is not automatically a calibrated probability. Whether eighty percent of such cases really have grey wingtips has to be checked on data. || 0.8
+[[Categorical: one value from a list, with scores that sum to 1]] Some concepts are categorical. Wing colour takes one value from a list, so its scores form a softmax over the options, and they sum to one. || 0.6
+[[Continuous: a measurement, such as bill length]] Others are continuous, such as bill length in millimetres, predicted by regression. || 0.6
+[[Richer {c:concepts}: a vector or a whole distribution]] Richer models give each concept a vector, an embedding, or a whole probability distribution. We will meet these in Part 10. || 0.8
+[[Unknown: not visible is different from absent]] And sometimes the evidence is missing. In CUB, a wingtip hidden behind a rock is labelled not visible. Unknown is not the same as absent, and the representation should be able to say so. || 1.0
+[[Six ways to store a {c:concept} as a number]] So a concept can be stored in six ways: binary, soft, categorical, continuous, a vector or distribution, and unknown. || 0.8
+[[The same pattern in a sleep {x:EEG} recording]] The same pattern applies across sensors. In a sleep EEG recording, a concept might be: sleep spindle present. || 0.6
+[[A {c:spindle} is a brief burst of brain waves]] A spindle is a brief burst of brain waves, about 11 to 16 cycles per second, lasting roughly half a second to two seconds. Sleep scorers treat spindles as a sign of stage two sleep. || 0.8
+[[The same pattern in a customer {x:message}]] In a customer message, a concept might be: duplicate charge reported, meaning the customer says one purchase was billed twice. || 0.8
+[[Each {c:concept} is a named claim that a specialist can check]] Each is a named claim about the input that a specialist could check. || 1.0

@@ -1,0 +1,14 @@
+## s05 | How does the model learn the concepts? | 0.4 | 0.8
+[[Where do the {c:concept values} come from?]] So far the concept values were given. Where do they come from? The concept predictor learns them from labelled examples. || 0.6
+[[Each training example carries three things]] Each training example carries three things: an input x i, concept labels c i, and a task label y i. For a herring gull in CUB: the photo, zeros and ones, and the species. || 0.8
+[[The {l:concept loss} compares each {c:predicted concept} with its {c:label}]] The concept loss, L c, compares the predicted concepts with the labels: typically a binary cross-entropy for each concept, averaged. || 0.8
+[[One {l:term} of the {l:concept loss}, worked out]] One term: grey wing has label 1; suppose the predictor says 0.8. The term is minus log 0.8, about 0.22. Closer to 1 costs less. || 0.8
+[[The {l:task loss} compares the prediction with the {y:task label}]] The task loss, L y, is typically a cross-entropy over the classes: minus the log of the share given to the correct class. || 0.8
+[[A weighted sum combines the two {l:losses}]] A weighted sum combines the two; lambda c and lambda y set how much each counts. || 1.0
+[[Three ways to train the {x:concept predictor} and the {f:task head}]] In the original paper, Koh and colleagues compared three ways to train. || 0.6
+[[Independent: each part is trained on its own labels]] Independent: fit the predictor to the concept labels, and separately fit the head on the true concepts. At test time, though, the head receives predicted concepts. || 0.8
+[[Sequential: freeze the {x:predictor}, then train the {f:head} on its outputs]] Sequential: fit the predictor, freeze it, then fit the head on the concepts it predicts. The head learns from the predictor's actual mistakes. || 0.8
+[[Joint: train the whole system at once, with both {l:losses}]] Joint: train the whole system at once, with both losses. || 0.6
+[[In joint training, the {l:task loss} also shapes the {x:concept predictor}]] In joint training, the task loss sends its gradient back through the head and the concept values into the predictor, which is then shaped by what helps the task. || 0.8
+[[A {c:concept score} can be pulled two ways]] That can improve task accuracy. It can also hurt concept fidelity, if a concept score drifts toward whatever helps the classifier. That has to be measured. || 1.0
+[[Our measured run: joint training, $\lambda_c = 2$, $\lambda_y = 1$]] The experiment we will meet later used joint training, with the concept loss weighted 2 and the task loss weighted 1. || 1.0

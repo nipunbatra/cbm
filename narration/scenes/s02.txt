@@ -1,0 +1,14 @@
+## s02 | Introducing the concept bottleneck | 0.4 | 0.8
+[[Here is that idea on a real {x:photograph}]] Here is that idea on a real photograph, with numbers small enough to follow. Between the image and the answer, we insert a layer of named variables. || 0.6
+[[A {x:concept predictor} fills the layer, a {f:task head} reads it]] A concept predictor, g theta, maps the image to a vector of concept values, c hat. A task head, f phi, maps those values to the prediction, y hat. || 0.6
+[[The {c:concept vector} has five named entries]] Here the concepts are wingtip grey, wingtip black, bill pointed, head white, and tail rounded. Each receives a value between 0 and 1. || 0.6
+[[The rule: the {f:task head} reads only these five numbers]] The essential rule: the task head receives only these five numbers. No other path from the image reaches it. That narrow interface is the bottleneck. || 1.0
+[[A strict CBM predicts the {c:concepts} first, then the {y:answer} from them alone]] A black box maps the image straight to an answer. A strict concept bottleneck model, or CBM, first predicts the concepts, then predicts the task from the concepts alone. || 0.8
+[[The {c:values} and the {f:head} on these slides are written by hand]] These concept values and this head are written by hand, for teaching. || 0.6
+[[The model believes the wingtips are grey, so it says {y:glaucous-winged gull}]] This model believes the wingtips are grey, at 0.8, and black, at only 0.2. So it ranks glaucous-winged gull first, 0.71 against 0.29. || 1.2
+[[The wingtips are black: an observer {e:corrects} the wing colour]] Look at the photograph: the wingtips are black. An observer corrects the wing colour concepts. Grey becomes 0, and black becomes 1. || 1.4
+[[The same {f:task head} recomputes, and {y:herring gull} now leads]] The task head is unchanged. It simply recomputes, and American herring gull now receives 0.91. || 1.0
+[[An {e:edited} belief, a new prediction]] A person edited an intermediate belief, and the prediction followed. || 0.8
+[[Multi-task learning puts a {c:concept head} beside the class head]] Compare multi-task learning, where a concept head sits beside the class head. || 0.6
+[[There, an {e:edit} to the concepts changes nothing]] Editing that concept output changes nothing, because the class head never reads it. || 0.8
+[[In a CBM, the {c:concepts} lie on the path to the {y:prediction}]] In a concept bottleneck, the concepts lie on the path to the prediction. || 1.2

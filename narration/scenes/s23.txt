@@ -1,0 +1,9 @@
+## s23 | The three schemes on CUB | 0.4 | 0.8
+[[Does the training scheme matter on real photographs?]] Part 5 described three training schemes. Does the choice matter on real photographs? We ran a small version on CUB. || 0.8
+[[Our setup: {x:frozen CLIP features} → {c:112 concepts} → {y:200 species}]] Each photo goes through a frozen CLIP image encoder, giving 512 features. A linear concept predictor maps them to 112 concepts, and a linear task head maps those to 200 species. || 0.8
+[[One photo through the model: {x:features}, then {c:concepts}, then {y:species}]] For our gull photo, the predictor is sure the throat is white and the wings are grey. The head spreads its probability over several gull species. || 0.8
+[[Joint training is the most accurate, independent the least]] Joint training is the most accurate, close to a standard model with no bottleneck. Sequential falls in between, and independent training is the least accurate. || 0.8
+[[An intervention replaces {c:predicted values} with {e:true values}]] Now intervene. Pick a few attribute groups, replace their predicted values with the true values, and let the same head recompute. || 0.8
+[[As more groups are {e:corrected}, the independent model gains most]] The independent model improves fastest. Its head was trained on true concepts, so it trusts corrected ones. The joint model improves least. || 0.8
+[[Why joint gains least: its {f:head} reads {k:detail in the soft scores}]] Its head learned to read fine detail in the soft scores, beyond what the concepts mean, so a corrected value helps it less. We will meet this again as leakage. || 0.8
+[[Fully trained networks show the same pattern]] Koh and colleagues report the same pattern with fully trained networks. || 1.2

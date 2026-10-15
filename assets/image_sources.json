@@ -1,0 +1,63 @@
+{
+ "gull": {
+  "file": "American herring gull at Jones Beach (04450).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:American_herring_gull_at_Jones_Beach_(04450).jpg",
+  "artist": "Rhododendrites",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "description": "American Herring Gull Larus smithsonianus at Jones Beach",
+  "rendition_px": 2560
+ },
+ "zebra_plains": {
+  "file": "Equus quagga burchellii - Etosha, 2014.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Equus_quagga_burchellii_-_Etosha,_2014.jpg",
+  "artist": "Yathin S Krishnappa",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "description": "Plains zebra in Etosha National Park, Namibia",
+  "rendition_px": 2048,
+  "original": [
+   4120,
+   2747
+  ]
+ },
+ "zebra_grevy": {
+  "file": "Zèbre de Grévy (Equus grevyi).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Z%C3%A8bre_de_Gr%C3%A9vy_(Equus_grevyi).jpg",
+  "artist": "Gzen92",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "description": "Grevy’s zebra (Equus grevyi) at zooParc in Beauval (Saint-Aignan, Loir-et-Cher, France).",
+  "rendition_px": 2048,
+  "original": [
+   5372,
+   3648
+  ]
+ },
+ "horse": {
+  "file": "Dülmen, Merfeld, Wildpferdebahn -- 2015 -- 6792.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_Merfeld,_Wildpferdebahn_--_2015_--_6792.jpg",
+  "artist": "Dietmar Rabich",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "description": "Dülmener wild horses in Merfelder Bruch, Dülmen, North Rhine-Westphalia, GermanyThe Wild Horse Hunting Ground is a wild horse stud farm. It is located in Merfelder Bruch in the district of Merfeld nea",
+  "rendition_px": 2048,
+  "original": [
+   4679,
+   3272
+  ]
+ },
+ "giraffe": {
+  "file": "Giraffa camelopardalis angolensis.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Giraffa_camelopardalis_angolensis.jpg",
+  "artist": "Hans Hillewaert",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "description": "A bull Southern savannah giraffe close to Namutoni, Etosha, Namibia",
+  "rendition_px": 2048,
+  "original": [
+   2412,
+   3216
+  ]
+ }
+}

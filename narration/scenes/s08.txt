@@ -1,0 +1,12 @@
+## s08 | What if the concepts are incomplete? | 0.4 | 2.5
+[[The bottleneck can pass on only what the vocabulary names]] A second limit sits in the vocabulary itself: the bottleneck passes on only what we chose to name. || 0.8
+[[Two objects from two different {y:classes}]] Take two objects, a blue circle and a blue square. They belong to different classes. || 0.6
+[[The vocabulary names only {c:colour} and {c:size}]] Suppose the concept vocabulary has only two entries: colour and size. Both objects are blue. Both are small. || 0.8
+[[Both objects get the same {c:concept vector}]] So both map to exactly the same concept vector. c of x 1 equals c of x 2, and yet y 1 differs from y 2. || 1.2
+[[Shape never reaches the {f:task head}]] Watch what reaches the task head. Shape was present in the image. At the bottleneck, it disappears. || 1.4
+[[The same input to the {f:head} gives the same {y:output}]] Any task head that reads only this vector must give both objects the same output. No head, linear or a large neural network, can recover a distinction that never reached it. || 0.8
+[[The best possible accuracy is one half]] On these two examples, the best possible accuracy is fifty percent. || 1.0
+[[Sufficiency: the {c:concepts} say all the {x:input} says about the {y:label}]] The ideal property is called sufficiency. Once the concepts are known, the input says nothing more about the label. || 0.8
+[[Sufficiency in symbols]] In symbols: Y is independent of X, given C. Here it fails: the label depends on shape, which C lacks. || 1.0
+[[A strict CBM guarantees something weaker]] A strict CBM guarantees something weaker. Its own prediction depends on the input only through the concepts. Whether the true label does is a property of the chosen vocabulary. || 1.0
+[[The fix is a richer vocabulary: add {c:shape}]] More accurate colour and size estimates would not help. The fix is a richer vocabulary: add shape. Now the two vectors differ. || 1.0

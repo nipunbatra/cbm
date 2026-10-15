@@ -1,0 +1,14 @@
+## s04 | From concepts to predictions: the arithmetic | 0.4 | 0.8
+[[After the {c:concepts}, the {f:task head} is arithmetic you can do by hand]] How do concept values become an answer? In the simplest case, the task head is arithmetic small enough to do by hand. || 0.6
+[[Three {y:classes} and three {c:concepts}]] Three classes: zebra, horse, and giraffe. Three concepts: stripes, horse-like shape, and long neck. || 0.6
+[[The {c:concept vector} $\cvec$ holds one value per concept]] Given this low-contrast photograph, the concept predictor reports stripes 0.1, horse-like shape 0.9, and long neck 0.1. Stacked in a column, they form the concept vector, c hat. || 0.8
+[[The {f:task head} keeps one row of weights for each {y:class}]] The task head is a weight matrix, W, with one row per class. The zebra row holds 3 for stripes, 1 for horse-like shape, and 0 for long neck. || 0.8
+[[The full {f:weight matrix} $\chead{W}$: rows are {y:classes}, columns are {c:concepts}]] With all three rows: stripes count toward zebra, a long neck toward giraffe, and horse-like shape mostly toward horse. || 0.8
+[[A {y:class score} is one row of {f:weights} times the {c:concept values}]] To score zebra, multiply each weight by its concept value, and add. 3 times 0.1 is 0.3, 1 times 0.9 is 0.9, and 0 times 0.1 is 0. Zebra scores 1.2. || 1.0
+[[Every row gives one {y:score}: $\cout{\mathbf{s}} = \chead{W}\cvec$]] Horse: minus 0.1, plus 1.8, minus 0.1, giving 1.6. Giraffe: minus 0.1, plus 0, plus 0.3, giving 0.2. These are the class scores, or logits. || 0.8
+[[The largest {y:score} wins, and a softmax turns scores into shares]] The largest score is 1.6, so the model says horse. A softmax turns the scores into shares that sum to one: horse gets about 0.52. || 1.4
+[[A person {e:edits} one {c:concept value}: stripes 0.1 to 1]] Now an observer looks at the image and sees stripes. They change one coordinate: stripes, from 0.1 to 1. || 1.4
+[[Same {f:matrix}, new {c:concept vector}: recompute the {y:scores}]] Recompute with the same matrix. Zebra: 3, plus 0.9, plus 0, which gives 3.9. Horse: minus 1, plus 1.8, minus 0.1, giving 0.7. Giraffe: minus 1, plus 0, plus 0.3, giving minus 0.7. || 1.0
+[[After the {e:edit}, {y:zebra} leads]] After the softmax, zebra leads, with a share of about 0.95. || 1.2
+[[The {y:scores} moved by $\cedit{0.9}$ times the stripes column of {f:W}]] The image did not change, and neither did the matrix. Each concept value scales its own column of W. Only stripes moved, by 0.9, so the scores moved by 0.9 times the stripes column: plus 2.7 for zebra, and minus 0.9 for the other two. || 1.2
+[[A {e:person} corrected a {c:belief} of the model, and nothing was retrained]] So a person corrected one of the model's beliefs, and nothing had to be retrained. || 1.0

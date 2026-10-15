@@ -1,0 +1,10 @@
+## s22 | The CUB benchmark | 0.4 | 0.8
+[[The standard benchmark for {c:concept bottlenecks} is a bird dataset]] The gull is not a random choice. The standard benchmark for concept bottlenecks is a bird dataset: Caltech-UCSD Birds, or CUB. || 0.8
+[[Many photographs of many similar species]] It has 11,788 photographs of 200 species. Eight of the species are gulls. || 0.8
+[[Every photograph is described by the same {c:attributes}]] People annotated every photograph with 312 yes-or-no attributes, in 28 groups: bill shape, wing colour, wing pattern, eye colour, and so on. || 0.8
+[[Each attribute is a yes-or-no question]] Each attribute is a question with a yes or no answer. Does this bird have a hooked bill? Is its wing grey? Yes is a one, and no is a zero. || 0.8
+[[Annotators also recorded how sure they were]] Annotators also recorded how sure they were: definitely, probably, guessing, or not visible. About one label in ten is not visible. || 0.8
+[[Single photos are noisy: take a vote within each {y:species}]] Labels on single photos are noisy, so Koh and colleagues took a majority vote within each species. After the vote, every photo of a herring gull has the same labels. || 0.8
+[[Keep only the attributes that many species share]] They then kept the 112 attributes that are present in at least ten species. || 0.8
+[[One training record has three parts]] One training record is a photograph, 112 zeros and ones, and a species. || 0.8
+[[The same record in symbols]] In symbols, the concept labels c form a vector with 112 entries, each zero or one, and the label y is one of 200 species. The model predicts c hat, a value between zero and one for each concept. || 1.2

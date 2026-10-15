@@ -1,0 +1,35 @@
+@voice Orus
+@model gemini-3.8-flash-tts
+@tags [calm] [clear, steady pace of an experienced university lecturer]
+# narration/order.txt: the lecture, in order. One line per scene id; each scene lives in narration/scenes/<id>.txt.
+# Scene file: "## id | title | lead | hold", then one line per slide (= one beat = one TTS clip):
+#   [[Slide heading, colour markup allowed]] Spoken narration ... || pause
+# Numbers are written the way they are spoken; every spoken number traces to src/data.json (math/test_narration.py).
+s00
+s01
+s21
+s02
+s22
+s03
+s04
+s05
+s23
+s06
+s07
+s08
+s09
+s20
+s10
+s15
+s16
+s17
+s18
+s24
+s25
+s19
+s11
+s12
+s13
+s14
+s26
+end

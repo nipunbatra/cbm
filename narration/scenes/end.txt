@@ -1,0 +1,2 @@
+## end | End card | 0.4 | 2.5
+Concept Bottleneck Models. Predicting through interpretable concepts. || 2.0

@@ -1,0 +1,12 @@
+## s06 | Human interventions | 0.4 | 0.8
+[[A person can fix a {c:concept} the model got wrong]] Concepts are useful because a person can check them. When the model gets one wrong, someone who can see the mistake can correct it, with no retraining. || 0.8
+[[An intervention has four steps]] An intervention has four steps. The model predicts concept values. A person checks one and corrects it. The fixed task head recomputes. A new prediction comes out. || 0.8
+[[Wing colour is one group: {e:correct it together}]] Back to the gull. Wing colour is a categorical concept, so the observer corrects the group together: grey to 0, black to 1. || 0.6
+[[Changing only one value could leave an impossible state]] Changing only one of them could leave an impossible state, with both colours on, or neither. || 0.8
+[[Same {f:head}, new {c:values}: herring gull rises]] The head's score for American herring gull moves from 0.29 to 0.91. || 1.0
+[[The same mechanism works on a {x:signal}]] The same mechanism works on a signal. Here is a schematic EEG trace, drawn for teaching rather than recorded from a patient. Near the middle is a short burst at about 13 hertz, the shape of a sleep spindle. || 0.6
+[[The {x:concept predictor} gives {c:spindle} a low value]] The concept predictor gives spindle present only 0.12. K-complex present gets 0.8, and slow-wave dominance 0.15. || 0.6
+[[An illustrative {f:stage head} favours other stage]] With these values, an illustrative stage head favours other stage, at 0.62, over an N2 candidate, at 0.38. || 1.2
+[[A sleep expert {e:marks the spindle as present}]] A sleep expert inspects the trace and marks the spindle as present. 0.12 becomes 1. || 1.4
+[[Same {f:head}, new input: {y:N2 candidate} rises]] Same head, new input. The N2 candidate rises to 0.86. || 1.0
+[[A demonstration of the mechanism, not a clinical result]] This demonstrates the mechanism, not a clinical result. Real sleep staging applies scoring rules to thirty-second epochs, and this head was written by hand. || 1.0
