@@ -1,0 +1,35 @@
+How can a person inspect, and correct, the evidence a neural network uses? Concept bottleneck models predict through a layer of named, human-readable concepts that can be read, evaluated and edited. A graduate lecture film for ES 667 Deep Learning at IIT Gandhinagar.
+
+Covers: a real CLIP black box and its occlusion map; the concept bottleneck x → c → y; worked concept-to-class arithmetic; independent, sequential and joint training; human interventions; why a correct edit can hurt; incomplete vocabularies; concept leakage with a measured probe; worked examples of concept embedding models, post-hoc CBMs, label-free CBMs and LaBo (real CLIP and language-model outputs on 36 photographs); evaluation; and scientific sensing.
+
+Slides: https://nipunbatra.github.io/attention/concept-bottlenecks/
+Course: https://nipunbatra.github.io/dl-2026/
+
+Chapters
+0:00 Title
+0:09 1 · The black box
+1:29 2 · Introducing the concept bottleneck
+3:26 3 · What is a concept?
+5:07 4 · From concepts to predictions: the arithmetic
+7:32 5 · How the model learns the concepts
+9:11 6 · Human interventions
+10:44 7 · A correct edit can still hurt
+12:21 8 · Incomplete concepts
+13:46 9 · Concept leakage
+16:02 9 · Leakage in a trained model
+17:37 10 · Modern CBM architectures
+18:21 10.1 · Concept embedding models
+19:35 10.2 · Post-hoc CBMs
+21:08 10.3 · Label-free CBMs
+22:59 10.4 · LaBo: language in a bottle
+24:19 10.5 · Comparing the variants
+25:03 11 · How should we evaluate a CBM?
+27:30 12 · Scientific sensing
+28:50 13 · An interpretable interface is not the end
+29:56 Final replay
+
+Evidence: numbers tagged COMPUTED come from real model runs (CLIP ViT-B/32, ResNet-50); MEASURED from a saved synthetic shape experiment (one seed, 512 test images, oracle corrections); ILLUSTRATIVE and CONSTRUCTED from hand-written teaching examples. No clinical claims.
+
+Main sources: Koh et al. 2020 (Concept Bottleneck Models); Zarlenga et al. 2022 (Concept Embedding Models); Yuksekgonul et al. 2023 (Post-hoc CBMs); Oikarinen et al. 2023 (Label-free CBMs); Yang et al. 2023 (LaBo); Mahinpei et al. 2021; Havasi et al. 2022; Shin et al. 2023; Knab et al., What's in the Bottle?, TMLR 2026.
+
+Photos (Wikimedia Commons): herring gull by Rhododendrites (CC BY-SA 4.0); zebras, horse and giraffe by Yathin S Krishnappa (CC BY-SA 3.0), Gzen92, Dietmar Rabich, Hans Hillewaert, Diego Delso (CC BY-SA 4.0) and the authors of 36 further Commons photographs (CC BY-SA / CC BY / public domain). Satellite imagery: Sentinel-2 (contains modified Copernicus data), SentinelKilnDB (CC BY-NC 4.0). Narration: synthetic voice (Gemini TTS). Music: original, synthesised.

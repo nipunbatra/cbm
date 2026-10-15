@@ -4,6 +4,10 @@ One source makes three things: live HTML slides, a vector PDF, and a narrated le
 lecture 21, IIT Gandhinagar). The slides are the film's own scene components played in the browser, so a change to a
 slide is a change to the film. Published deck: https://nipunbatra.github.io/attention/concept-bottlenecks/
 
+## Current state
+What is finished, what is pending and how to work on the next round: `docs/CODEX_HANDOFF.md`.
+Published links: `publishing/README.md`.
+
 ## First run in a new worktree
 ```sh
 sh tools/setup_worktree.sh     # links node_modules and the SSD media (audio, renders) kept outside git

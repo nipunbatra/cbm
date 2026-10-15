@@ -4,7 +4,7 @@
 #   sh tools/setup_worktree.sh
 set -e
 cd "$(dirname "$0")/.."
-HOME_REPO="$HOME/git/dl-summaries"
+HOME_REPO="$HOME/git/dl-summaries"   # node_modules is shared with the DETR film there
 SSD="/Volumes/Extreme SSD/cbm-film"
 [ -e node_modules ] || ln -s "$HOME_REPO/detr/node_modules" node_modules
 [ -e qa ] || ln -s "$SSD/cbm-qa" qa

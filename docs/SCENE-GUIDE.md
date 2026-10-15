@@ -1,6 +1,6 @@
 # Writing a scene for the CBM film
 
-Project root: `/Users/nipun/git/dl-summaries/cbm`. Remotion + React + SVG + KaTeX, the same stack as the YOLO and DETR
+Project root: `/Users/nipun/git/cbm`. Remotion + React + SVG + KaTeX, the same stack as the YOLO and DETR
 lecture-films (`../yolo`, `../detr`). Read before writing:
 
 1. `docs/scene_plan.md`: what each scene shows, beat by beat. The global rules at the top are binding (colour =

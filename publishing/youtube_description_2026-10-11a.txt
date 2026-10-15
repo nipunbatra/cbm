@@ -1,0 +1,41 @@
+How can a person inspect, and correct, the evidence a neural network uses? Concept bottleneck models predict through a layer of named, human-readable concepts that can be read, evaluated and edited. A graduate lecture film for ES 667 Deep Learning at IIT Gandhinagar. The slides are generated from the same source as this film, one slide step per narration line.
+
+Covers: a real CLIP black box; post-hoc explanations (saliency, occlusion, TCAV) and their limits versus interpretable-by-design models; the concept bottleneck x → ĉ → ŷ; the CUB-200-2011 benchmark; how a concept becomes a number; worked arithmetic of the task head; independent, sequential and joint training, measured on CUB; human interventions and when a correct edit hurts; incomplete vocabularies and concept leakage; the supervision ladder from labelled concepts to training-free models, with worked vectors for concept embedding models, post-hoc CBMs, label-free CBMs, LaBo, VLG-CBM and classification by description; evaluation; and concept bottlenecks beyond images.
+
+Slides: https://nipunbatra.github.io/attention/concept-bottlenecks/
+Notes: https://nipunbatra.github.io/attention/concept-bottlenecks/notes.html
+Course: https://nipunbatra.github.io/dl-2026/
+
+Chapters
+0:00 Title
+0:09 The black box
+1:30 Post-hoc or interpretable by design?
+4:21 Introducing the concept bottleneck
+6:13 The CUB benchmark
+7:42 What is a concept?
+10:10 From concepts to predictions: the arithmetic
+12:45 How does the model learn the concepts?
+14:44 The three schemes on CUB
+16:03 Human interventions
+17:45 A correct edit can still hurt
+19:36 What if the concepts are incomplete?
+21:11 Concept leakage
+22:41 Leakage in a trained model
+23:52 Modern concept bottleneck architectures
+25:54 Concept embedding models
+28:21 Post-hoc concept bottleneck models
+31:37 Label-free concept bottleneck models
+35:28 Language in a Bottle
+38:31 Grounding the concepts
+40:50 Classification by description
+42:59 Comparing the variants
+44:46 How should we evaluate a CBM?
+48:04 Beyond images
+49:45 An interpretable interface is not the end of the story
+51:32 Final replay
+
+Evidence: numbers tagged COMPUTED come from real model runs (CLIP ViT-B/32, ResNet-50, and our own CUB-200-2011 run on frozen CLIP features); MEASURED from a saved synthetic shape experiment (one seed, 512 test images, oracle corrections); DATASET from CUB annotations; REPORTED from the cited papers; ILLUSTRATIVE, CONSTRUCTED and SCHEMATIC from hand-made teaching examples. No clinical claims.
+
+Main sources: Koh et al. 2020; Wah et al. 2011 (CUB); Simonyan et al. 2014; Kim et al. 2018 (TCAV); Adebayo et al. 2018; Zech et al. 2018; Rudin 2019; Chen et al. 2019; Espinosa Zarlenga et al. 2022 (CEM); Yuksekgonul et al. 2023 (PCBM); Oikarinen et al. 2023 (LF-CBM); Yang et al. 2023 (LaBo); Srivastava et al. 2024 (VLG-CBM); Menon and Vondrick 2023; Mahinpei et al. 2021; Havasi et al. 2022; Abraham et al. 2022 (CEBaB); Ludan et al. 2023; Wu et al. 2022; Jeyakumar et al. 2023 (X-CHAR); Knab et al. 2026 (What's in the Bottle?, TMLR).
+
+Images: herring gull by Rhododendrites (Wikimedia Commons, CC BY-SA 4.0); zebras, horse and giraffe by Yathin S Krishnappa (CC BY-SA 3.0), Gzen92, Dietmar Rabich, Hans Hillewaert, Diego Delso (CC BY-SA 4.0) and the authors of 36 further Commons photographs (CC BY-SA / CC BY / public domain); chest X-ray by Stillwaterising (CC0); knee X-ray from Koh et al. 2020, Fig. 1 (CC BY 4.0). Narration: synthetic voice (Gemini TTS). Music: original, synthesised.

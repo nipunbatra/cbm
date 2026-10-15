@@ -24,3 +24,6 @@ Audio note: the voice for these lines was already generated and checked (asrchec
    `npm run deck` on port 8766).
 6. **Tools: Chrome path.** `tools/chrome.mjs` picks an installed headless Chrome (puppeteer or Playwright cache, or
    `CBM_CHROME`); render, stills and slide_stills use it (the old hard-coded puppeteer copy had been deleted).
+7. **Repository moved to `~/git/cbm`** (the old grounding lab that lived there is now `~/git/cbm-grounding`;
+   `~/git/dl-summaries/cbm` is a symlink). Added `publishing/` (YouTube descriptions, thumbnail, where everything is
+   published) and `docs/CODEX_HANDOFF.md`.
