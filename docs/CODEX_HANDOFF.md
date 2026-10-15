@@ -4,7 +4,7 @@ Read `AGENTS.md` first (how the repository works). This file says what is finish
 wants the next round to go.
 
 ## What this is
-Lecture 21 of ES 667 Deep Learning, "Concept Bottleneck Models". One source in this repository produces the live
+An ES 667 Deep Learning lecture, "Concept Bottleneck Models". One source in this repository produces the live
 slides (`npm run deck`), a vector PDF, the notes page and a narrated film. Each line of `narration/scenes/<id>.txt` is
 one slide: `[[heading]] narration`. Each `src/scenes/S<id>.tsx` draws that section, slide k on beat k.
 Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (generated).
@@ -185,8 +185,8 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
    captions, render, upload unlisted. Claude Code runs this pipeline (`tools/build.sh`, see CLAUDE.md); Codex should
    not run TTS, the timeline or renders.
 3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r16 are already live.
-   Later edits will need another deck/notes/PDF release to `nipunbatra/attention` (`concept-bottlenecks/`) and,
-   if the page count changes, the course page, through pull requests. The film remains a separate pending rebuild.
+   Later edits will need another deck/notes/PDF release on `nipunbatra/cbm` (`gh-pages`) and,
+   if the page count changes, the course page through a pull request. The film remains a separate pending rebuild.
 4. Open checks, low priority:
    - s24 recap says label-free models are judged "at their own sparsity level"; confirm the wording against the
      LF-CBM paper.

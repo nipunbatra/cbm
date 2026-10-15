@@ -1,56 +1,50 @@
-# Concept Bottleneck Models: from black-box predictions to interpretable, editable concepts
+# Concept Bottleneck Models
 
-A ~31-minute graduate lecture-film in the Machine Learning Concepts series (after *Object Detection and YOLO* and
-*Detection Transformers*), built with the same stack: Remotion + React + SVG + KaTeX, Gemini TTS narration (voice
-Orus), an original synthesised music bed, and every number computed and tested in code. 3840 × 2160, 30 fps.
+A graduate lecture for ES 667 Deep Learning at IIT Gandhinagar. One editable source produces a live slide deck,
+matching narration notes, a vector PDF and a narrated film.
 
-Pedagogical source: the 60-minute CBM lecture in `~/git/dl-teaching/attention-followups/concept-bottlenecks-60min`,
-with Knab et al., *What's in the Bottle?* (TMLR 2026) and the primary CBM papers (see `docs/sources.md`).
+- [Slides](https://nipunbatra.github.io/cbm/)
+- [Notes](https://nipunbatra.github.io/cbm/notes.html)
+- [PDF](https://nipunbatra.github.io/cbm/concept-bottleneck-models.pdf)
+- [Deep Learning course](https://nipunbatra.github.io/dl-2026/schedule.html#lecture-20)
 
-## Deliverables
+The reviewed lecture currently has 311 slides in 27 sections. The slides, notes and PDF include review revision 16
+(15 October 2026). The film still uses the earlier narration and will be rebuilt after the slide review.
 
-| Deliverable | Where |
+## Source and local preview
+
+Read `AGENTS.md`, then `docs/CODEX_HANDOFF.md` for the review workflow and current state.
+
+On the existing lecture workstation:
+
+```sh
+sh tools/setup_worktree.sh
+npm run deck
+```
+
+Open http://localhost:8766. Arrow keys step through builds, N shows narration and O opens the overview.
+The setup script links shared dependencies and external media. A fresh machine needs the Node dependencies in
+`package-lock.json` and the Python packages in `requirements.txt`; the current build scripts expect the Python
+interpreter at `~/base/bin/python`. PDF export also uses local Chrome and Puppeteer.
+
+| Source | Purpose |
 |---|---|
-| 4K master | `/Volumes/Extreme SSD/cbm-film/concept_bottleneck_models_4k.mp4` |
-| 1080p master | `/Volumes/Extreme SSD/cbm-film/concept_bottleneck_models_1080p.mp4` |
-| 4K with burned-in captions | `/Volumes/Extreme SSD/cbm-film/concept_bottleneck_models_captioned_4k.mp4` |
-| 1080p animatic (first full cut, reviewed before the final fixes) | `/Volumes/Extreme SSD/cbm-film/concept_bottleneck_models_animatic.mp4` |
-| Subtitles | `out/concept_bottleneck_models.srt`, `out/concept_bottleneck_models.vtt` |
-| Narration with timecodes | `docs/narration.md` (source `narration/script.txt`) |
-| Scene plan | `docs/scene_plan.md` (+ `docs/beats.txt`, `docs/SCENE-GUIDE.md`) |
-| Mathematical notes | `docs/mathematical_notes.md` |
-| Worked examples (Parts 9, 10; for slides) | `docs/worked_examples.md` |
-| Numerical validation | `math/numerical_validation.py` (15 tests), `math/test_narration.py` |
-| Technical fact check | `docs/technical_fact_check.md`, `docs/reviews/` |
-| Sources and image licences | `docs/sources.md`, `assets/image_sources.json` |
-| QA report | `docs/qa_report.md` |
-| Editable source | scenes `src/scenes/`, kit `src/kit/` (`cbm.tsx`, `pipe.tsx`), numbers `math/data.py`, CLIP run `blackbox/`, tools `tools/` |
+| `narration/scenes/` | One slide heading and narration per line |
+| `src/scenes/`, `src/kit/` | React, SVG and KaTeX drawings |
+| `math/data.py`, `src/data.json` | Computed examples and numerical provenance |
+| `docs/lecture.md` | Generated readable lecture |
+| `docs/sources.md`, `assets/image_sources.json` | References and image licences |
+| `review/CHANGES_PENDING_VIDEO.md` | Review changes still awaiting the film rebuild |
+| `publishing/README.md` | Release procedure and publication record |
 
-## Structure (22 scenes, about 31 minutes)
-Title · 1 The black box (real CLIP run + occlusion map) · 2 Introducing the concept bottleneck · 3 What is a concept? ·
-4 From concepts to predictions: the arithmetic · 5 How does the model learn the concepts? · 6 Human interventions ·
-7 A correct edit can still hurt · 8 What if the concepts are incomplete? · 9 Concept leakage, and leakage in a trained
-model (measured probe) · 10 Modern architectures: what changes, 10.1 CEM, 10.2 post-hoc CBM, 10.3 label-free CBM,
-10.4 LaBo, 10.5 side by side (worked on 36 Commons photos, real Gemini JSON) · 11 How should we evaluate a CBM?
-(measured experiment) · 12 Concept bottlenecks in scientific sensing · 13 An interpretable interface is not the end of
-the story · Final replay · End.
+Run `npm run content` and `npm run check` after a content change. These commands leave saved audio and film
+timings untouched. Check the revised slide visually in the deck before committing.
 
-Worked examples for Parts 9 and 10, ready for slides: `docs/worked_examples.md` (sources `leakage/`, `worked/`).
+## Publishing and film
 
-## Rebuild and render
+The `main` branch holds the source and its history. GitHub Pages serves the built deck, notes and PDF from the
+root of `gh-pages`. Publishing is explicit, following `publishing/README.md`; pushing source changes alone does
+not publish a new lecture.
 
-```bash
-tools/build.sh
-```
-
-```bash
-node tools/render.mjs animatic
-```
-
-```bash
-node tools/render.mjs 4k
-```
-
-Render modes: `animatic`, `1080`, `4k`, `4k-cc`, written to `$CBM_OUT` (default `/Volumes/Extreme SSD/cbm-film`).
-Stills: `node tools/stills.mjs s07 [t ...]`. Frame QA + OCR: `~/base/bin/python tools/qa_video.py <mp4>`.
-See `CLAUDE.md` for the pipeline in detail.
+Large audio and film files are kept outside Git under `/Volumes/Extreme SSD/cbm-film/`. Film generation is a
+separate process described in `CLAUDE.md`; it is not part of a slide or Pages release.

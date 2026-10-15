@@ -1,8 +1,8 @@
 # Concept Bottleneck Models: lecture slides and lecture film
 
 One source makes three things: live HTML slides, a vector PDF, and a narrated lecture film (ES 667 Deep Learning,
-lecture 21, IIT Gandhinagar). The slides are the film's own scene components played in the browser, so a change to a
-slide is a change to the film. Published deck: https://nipunbatra.github.io/attention/concept-bottlenecks/
+IIT Gandhinagar). The slides are the film's own scene components played in the browser, so a change to a
+slide is a change to the film. Published deck: https://nipunbatra.github.io/cbm/
 
 ## Current state
 What is finished, what is pending and how to work on the next round: `docs/CODEX_HANDOFF.md`.
@@ -51,5 +51,5 @@ Keys in the deck: right arrow, space or click = next build; left = back; up/down
 
 ## Do not
 - Do not run `tools/tts.py`, `tools/timeline.py` or the renders unless asked: the film is remade later in one pass.
-- Do not publish (attention site, course site, YouTube) unless asked.
+- Do not publish (CBM site, course site, YouTube) unless asked.
 - The internal disk is nearly full: keep large outputs on the SSD (`TMPDIR` above).
