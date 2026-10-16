@@ -500,3 +500,7 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     244 content slides and 18 separators, with 42 navigation bookmarks. Exported the three evaluation
     slides, preserving all 259 other slide bodies. Verified every footer and bookmark destination.
     Earlier annotation PDFs remain available.
+87. **Publish review revision 30.** Source af8ac78 and Pages release e16b208 are pushed and deployed.
+    Live HTML, JavaScript, CSS, notes and PDF match local bytes. Verified the live three-slide evaluation
+    section and map. Course PR #19 is merged and deployed; both PDF labels show 262 pages and all three
+    standalone CBM links are correct. Audio and saved film timing remain unchanged.

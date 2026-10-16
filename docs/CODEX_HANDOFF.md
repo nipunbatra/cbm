@@ -11,8 +11,9 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 29 is live at https://nipunbatra.github.io/cbm/: 260 content slides plus 18 separators, matching notes
-and a 278-page PDF with 42 navigation bookmarks. Grounding is the final optional appendix, after TCAV.
+Revision 30 is live at https://nipunbatra.github.io/cbm/: 244 content slides plus 18 separators, matching notes
+and a 262-page PDF with 42 navigation bookmarks. Part 11 is condensed to three slides. Grounding
+remains the final optional appendix, after TCAV.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
 
@@ -379,3 +380,6 @@ The dated entries below preserve the review history. The film remains on its ear
   S11.tsx and narration/archive/s11-r29.txt are retained outside the active deck. The current drawing
   is EvaluationBrief.tsx. Matching PDF: 262 pages, 42 bookmarks. All 259 other bodies are preserved;
   saved film timing remains unchanged. Rendered layouts, notes and the Part 12 transition checked.
+- r30 publication verified: source af8ac78, Pages e16b208, both successful deployments and five live
+  file hashes checked. Course PR #19 merged with both PDF labels at 262 pages. Live slide map confirms
+  three evaluation slides. Evidence: qa/review-2026-10-16/r30-live-verification.json.
