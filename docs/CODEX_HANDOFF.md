@@ -269,3 +269,13 @@ The dated entries below preserve the review history. The film remains on its ear
 - Published `34cf249` to CBM Pages and updated the course through DL 2026 PR 12 (merge `751a0e0`).
   Both deployments succeeded. Live release bytes match the local files, the course shows 320 pages,
   and the published separator and course row were inspected in the browser. See publishing/README.md.
+
+## 16 October 2026: visible unit CAV (revision 21, prepared)
+
+- s16.8 now draws the unit CAV as a labelled teal arrow on the two-feature plot. Its direction and length
+  come from D.pcbm_toy, with matching vector colours and a plain-language length reminder. Narration names
+  the arrow. The existing worked calculation and slide order are unchanged.
+- Matching PDF: review/cbm-lecture-review-2026-10-16-r21.pdf, 320 pages and 43 bookmarks. Only page 172
+  changed; all other page streams and text, every footer and all bookmarks are verified. The slide and PDF
+  were visually inspected. Content, type checking, 25 Python tests and four deck tests passed.
+- No audio generation, saved timeline rebuild or film rendering. The narration remains pending for the film.

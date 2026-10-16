@@ -1239,7 +1239,7 @@
     {
      "id": "16.8",
      "gap": 0.8,
-     "text": "Now take a new image. In our toy space its features are 1.5 and 2. The unit CAV points one step to the right and none upwards: its entries are 1, 0. Only the horizontal coordinate contributes: 1.5 times 1 plus 2 times 0 gives 1.5. A second image at minus 0.5, 2 scores minus 0.5. A higher score means further towards the striped side. These are concept scores, not probabilities or animal classes.",
+     "text": "Now take a new image. In our toy space its features are 1.5 and 2. The teal unit CAV arrow points one step to the right and none upwards: its entries are 1, 0. Only the horizontal coordinate contributes: 1.5 times 1 plus 2 times 0 gives 1.5. A second image at minus 0.5, 2 scores minus 0.5. A higher score means further towards the striped side. These are concept scores, not probabilities or animal classes.",
      "head": "Score a new image along the {c:striped direction}"
     },
     {

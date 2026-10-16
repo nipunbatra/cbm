@@ -336,3 +336,11 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     CSS, notes and PDF match the local files. The course links remain correct and its visible/accessibility
     PDF labels show 320 pages. Verified the live separator and course row. Audio, saved timelines,
     the beat list and film remain unchanged; the review narration still awaits the later film rebuild.
+58. **Show the unit CAV on the scoring plot (browser s16.8), 16 October 2026.** Added a labelled teal
+    arrow with the direction and length from D.pcbm_toy, matching the vector entries and calculation.
+    A short reminder states length one, one step right and no step up. The narration now names the arrow.
+    Content, type checking, 25 Python tests and four deck tests passed. Inspected the completed slide.
+    Saved film timelines and the beat list are unchanged; the narration awaits the film rebuild.
+59. **Annotation PDF revision 21.** Replaced page 172 (s16.8) in the 320-page, 43-bookmark PDF.
+    All other 319 page streams and text are identical to r20; every footer and bookmark is checked.
+    Rendered and inspected the revised PDF page. Previous review PDFs remain available.

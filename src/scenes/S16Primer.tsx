@@ -84,6 +84,13 @@ export const S16Primer: React.FC<SceneProps> = ({t,P}) => {
 
     <Svg o={s8}>
       <Plane boundary={1} points={.22}>
+        <g opacity={cue(8,'unit')}>
+          {/* Translate the unit direction to the boundary at the new images' height. */}
+          <circle cx={X(TOY.boundary)} cy={Y(a[1])} r={6} fill={C.concept} />
+          <Flow pts={[[X(TOY.boundary),Y(a[1])],[X(TOY.boundary+v[0]),Y(a[1]+v[1])]]}
+            color={C.concept} sw={6} head={16} />
+          <Txt x={X(TOY.boundary+v[0]/2)} y={Y(a[1])+52} size={28} weight={700} fill={C.concept}>unit CAV</Txt>
+        </g>
         {TOY.new_features.map(([x,y]: number[],i: number) => <g key={i} opacity={i ? c8 : 1}>
           <line x1={X(x)} y1={Y(y)} x2={X(x)} y2={840} stroke={C.input} strokeWidth={3} strokeDasharray="7 7" />
           <circle cx={X(x)} cy={Y(y)} r={17} fill={C.input} stroke={C.chalk} strokeWidth={3} />
@@ -93,7 +100,8 @@ export const S16Primer: React.FC<SceneProps> = ({t,P}) => {
         <Txt x={X(0)} y={870} size={24} fill={C.chalk2}>{fmt(TOY.boundary)}</Txt>
       </Plane>
     </Svg>
-    <Rich x={1080} y={370} text={`unit {c:CAV} = ${feature(v)}`} size={36} o={s8*cue(8,'unit')} />
+    <Rich x={1080} y={370} text={`unit {c:CAV} = {c:${feature(v)}}`} size={36} o={s8*cue(8,'unit')} />
+    <HText x={1080} y={425} size={27} color={C.chalk2} o={s8*cue(8,'unit')}>{`length ${fmt(Math.hypot(...v))}: one step right, no step up`}</HText>
     <HText x={1080} y={470} w={640} size={32} o={s8*cue(8,'horizontal')}>Here, only the horizontal feature counts.</HText>
     <Rich x={1080} y={590} text={`{x:${fmt(a[0])}} × {c:${v[0]}} + {x:${a[1]}} × {c:${v[1]}} = {c:${fmt(TOY.scores[0])}}`} size={38} o={s8*cue(8,'gives')} />
     <Rich x={1080} y={720} w={640} text="Higher score = further towards {c:striped}." size={32} o={s8*cue(8,'higher')} />
