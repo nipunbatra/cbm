@@ -149,6 +149,8 @@ export const Deck: React.FC = () => {
 
   const stop = STOPS[pos.s][pos.k];
   const nb = sc.beats.length;
+  const build = STOPS[pos.s].slice(0, pos.k + 1).filter((s) => s.beat === stop.beat).length;
+  const builds = STOPS[pos.s].filter((s) => s.beat === stop.beat).length;
   const words = (sc.beats[stop.beat].words ?? []).map((w) => w.w);
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#000', display: 'flex', flexDirection: 'column', fontFamily: F.sans }}>
@@ -165,7 +167,7 @@ export const Deck: React.FC = () => {
       </div>
       {notes ? (
         <div style={{ height: 187, flexShrink: 0, boxSizing: 'border-box', overflow: 'auto', padding: '14px 28px', background: '#0b0d10', color: '#cfd6dd', fontSize: 19, lineHeight: 1.45 }}>
-          <div style={{ color: '#7d8894', fontSize: 14, marginBottom: 6 }}>{`${sc.id} · ${sc.title} · slide ${stop.beat + 1} of ${nb} · build ${pos.k + 1} of ${STOPS[pos.s].length}`}</div>
+          <div style={{ color: '#7d8894', fontSize: 14, marginBottom: 6 }}>{`${sc.id} · ${sc.title} · slide ${stop.beat + 1} of ${nb} · build ${build} of ${builds}`}</div>
           {words.length ? (<span><span style={{ color: '#7d8894' }}>{words.slice(0, stop.from).join(' ')} </span>
             <span style={{ color: '#ffffff' }}>{words.slice(stop.from, stop.to).join(' ')}</span>
             <span style={{ color: '#5b6570' }}> {words.slice(stop.to).join(' ')}</span></span>) : sc.beats[stop.beat].text}
@@ -175,8 +177,7 @@ export const Deck: React.FC = () => {
       <Controls sections={script.scenes.map((s) => ({ id: s.id, title: s.title, slides: s.beats.map((b) =>
         ('head' in b && !String(b.head).includes('$') ? String(b.head).replace(/\{[xcfelkym]:([^{}]*)\}/g, '$1').trim() : '') || b.text.split(/(?<=[.!?])\s/)[0]
       ) }))} section={pos.s} slide={stop.beat}
-        build={STOPS[pos.s].slice(0, pos.k + 1).filter((s) => s.beat === stop.beat).length}
-        builds={STOPS[pos.s].filter((s) => s.beat === stop.beat).length}
+        build={build} builds={builds}
         notes={notes} animate={animate} canPrev={pos.s > 0 || pos.k > 0}
         canNext={pos.s < TL.scenes.length - 1 || pos.k < STOPS[pos.s].length - 1}
         onPrev={prev} onNext={() => next()} onJump={(s, beat) => go({ s, k: lastStopOfBeat(s, beat) }, false)}

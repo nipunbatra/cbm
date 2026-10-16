@@ -11,6 +11,8 @@ Tested in the Codex browser against the local production build, at 1280 x 720 an
 - Enter on Notes toggles narration without advancing the slide. Arrow keys still navigate from a focused button.
 - Animation and full screen toggles update their pressed states; entering and leaving full screen both work.
 - The phone toolbar wraps without horizontal overflow. The map is readable and its close button remains available.
+- Corner recovery and pointer hover were checked with real mouse events. Synthetic touch input is not supported by the in-app browser; physical-touch recovery was not exercised.
+- Notes and the toolbar use the same within-slide build count.
 - Slide content, print mode, audio and recorded film timing are independent of the controls.
 
 Reproduce from `npm run deck`, open `http://localhost:8766/#s21.8`, then use C and M.
