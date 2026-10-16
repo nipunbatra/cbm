@@ -1454,18 +1454,30 @@
     },
     {
      "id": "19.7",
-     "gap": 1.2,
-     "text": "Each change makes concepts cheaper or predictions more accurate. None makes grounding automatic. A phrase from a language model, or a CLIP similarity, does not show that the model sees that property in the image. That has to be checked.",
-     "head": "Naming a {c:concept} does not ground it"
+     "gap": 1.0,
+     "text": "Here is a control experiment. A pretrained image encoder already extracts useful features. Pass them through a layer with randomly chosen weights, keep that layer fixed, and train only the final class head using class labels. The layer was never taught to detect yellow bills or other named concepts. When the head can use enough of these mixed features, reported experiments show that class accuracy can approach concept-based models. So good predictions do not establish what each intermediate value means. Random describes how the weights are chosen; fixed describes whether they change.",
+     "head": "High class accuracy does not prove meaningful {c:concepts}"
     },
     {
      "id": "19.8",
+     "gap": 1.0,
+     "text": "Zoom in on the random layer. Each weight says how much of an image feature to add or subtract. Random means drawing these coefficients by chance, without learning them from labels. In this illustrative example, the encoder gives features 2 and 1. Suppose the weights are 0.4 and minus 0.2. Multiply and add: 0.8 minus 0.2 gives 0.6. This is a mixed image feature, not an estimate of yellow bill. In this baseline, we draw the weights once and leave them untrained.",
+     "head": "Random weights: draw the {e:mixing coefficients} by chance"
+    },
+    {
+     "id": "19.9",
+     "gap": 1.2,
+     "text": "Fixed, or frozen, means keeping the weights unchanged throughout training. The encoder keeps its pretrained weights, and the random layer keeps its one draw. Only the class head adjusts its weights using class labels. Fixed weights do not mean fixed outputs. Photo A has features 2 and 1, which give 0.6. Photo B has features 1 and 2; the same weights give 0. The head can learn from these differences, even though neither value has a guaranteed concept meaning. Check the concepts themselves as well as class accuracy.",
+     "head": "Fixed means: training does not update these {e:weights}"
+    },
+    {
+     "id": "19.10",
      "gap": 1.2,
      "text": "One question sums up the table: who supplies the concepts, and who checks them? In CBMs and concept embedding models, people label the concepts, so people check them. In post-hoc models, a concept bank supplies them, checked only by whoever built it. In classification by description, a language model supplies the descriptions and there is no automatic factual check. We must review them.",
      "head": "Who supplies the {c:concepts}, and who checks them?"
     },
     {
-     "id": "19.9",
+     "id": "19.11",
      "gap": 1.2,
      "text": "This is the general trade-off. Each rung up the ladder removes a human labour cost, and with it a human check. The labour saved on labelling has to be spent later, on checking that the concepts are really in the image.",
      "head": "Each rung up the ladder removes a cost and a {e:check}"

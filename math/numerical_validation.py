@@ -327,3 +327,14 @@ def test_pcbm_two_feature_direction_and_scores():
 
 if __name__ == '__main__':
     raise SystemExit(pytest.main(['-q', __file__]))
+
+
+def test_fixed_random_layer_intuition():
+    """The same frozen mix can give different outputs for different image features."""
+    d = D['random_layer_toy']
+    assert d['weights'] == [0.4, -0.2]
+    assert d['features'] == [[2.0, 1.0], [1.0, 2.0]]
+    for row, terms, output in zip(d['features'], d['terms'], d['outputs']):
+        assert all(close(x * w, term, 1e-9) for x, w, term in zip(row, d['weights'], terms))
+        assert close(sum(terms), output, 1e-9)
+    assert d['outputs'] == [0.6, 0.0]

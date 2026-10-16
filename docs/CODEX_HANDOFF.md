@@ -354,3 +354,10 @@ The dated entries below preserve the review history. The film remains on its ear
   44 pages were exported and all 217 other slide bodies preserved. Removed sources/data and old PDFs remain.
   Source af64f30 and Pages release 92d82ad are pushed and deployed. Live deck assets, notes and PDF match
   local bytes; course PR #16 is merged and deployed, with both PDF labels showing 261 pages.
+
+- 16 Oct, browser old s24.4: revision 28 expands the recap warning into a three-slide sequence:
+  the random-layer control (s19.7), a worked definition of random weights (s19.8), and fixed weights
+  with changing inputs and a trained head (s19.9). The full VLG-CBM section stays archived. Toy values
+  come from math/data.py and have a numerical test. The checked PDF has 263 pages and 40 bookmarks;
+  12 pages were exported and all 251 other slide bodies preserved. Type, numerical and deck checks pass;
+  completed slides, progressive reveals and notes were inspected. Film timing remains unchanged.

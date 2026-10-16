@@ -33,6 +33,7 @@ Controls stay visible while hovered or used with keyboard focus. The map groups 
   `src/modernSections.json` supplies the persistent rung/group labels, map/notes headings and PDF bookmarks.
   Removed scenes s17, s18 and s24, and separators s40, s48 and s49 remain as archived source, outside
   `narration/order.txt`. The main lecture moves directly from the PCBM phrase example to rung three.
+  The recap retains a three-slide random-layer control (s19.7-9), without the full VLG-CBM walkthrough.
   New review scenes receive preview timing without changing the saved film timeline.
 - **Numbers:** `math/data.py` writes `src/data.json` (scenes read it as `D`). Never type a number on a slide that
   exists in data.json; spoken numbers must trace to it (`math/test_narration.py` checks).

@@ -279,6 +279,17 @@ D['saliency_toy'] = {
     'saliency_max': r(max(np.abs(w).max() for w in _W.values())),
 }
 
+# Random-layer intuition: these small numbers are chosen for teaching, not measured features.
+# The weights illustrate a possible draw. They are reused for every image and never fitted.
+_random_features = np.array([[2., 1.], [1., 2.]])
+_random_weights = np.array([0.4, -0.2])
+_random_terms = _random_features * _random_weights
+D['random_layer_toy'] = {
+    'evidence': 'illustrative: hand-chosen features and possible random weights; arithmetic computed',
+    'features': _random_features.tolist(), 'weights': _random_weights.tolist(),
+    'terms': _random_terms.round(4).tolist(), 'outputs': _random_terms.sum(axis=1).round(4).tolist(),
+}
+
 # Measured input gradients and finite difference from worked/saliency.py.
 D['saliency_real'] = json.load(open(ROOT / 'worked/saliency.json'))
 

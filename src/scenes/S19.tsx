@@ -4,13 +4,14 @@
 // 19.2 "data needed" with the x / c / y key (CBM, CEM filled: the supervision ladder starts);
 // 19.3 the rest of the "data needed" column (concept labels dropped; CBD: none);
 // 19.4 "concepts from"; 19.5 "what the head reads" (the PCBM-h residual in purple); 19.6 "trained" (symbols + words);
-// 19.7 the table clears: the grounding warning alone, with breathing space.
-// 19.8 intuition: who supplies the concepts, and who checks them (one line per variant family).
-// 19.9 intuition: the ladder as a staircase rising rung by rung; human labour and human checking fall together (schematic).
+// 19.7-9 random-layer control: setup, what random means, and what fixed means.
+// 19.10 intuition: who supplies the concepts, and who checks them (one line per variant family).
+// 19.11 intuition: the ladder as a staircase rising rung by rung; human labour and human checking fall together (schematic).
 import React from 'react';
 import modernSections from '../modernSections.json';
-import { C, F } from '../kit/theme';
-import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, bw, bh, inv, texHTML, type SceneProps } from '../kit/core';
+import { RandomWeightsRecap } from './RandomWeightsRecap';
+import { C } from '../kit/theme';
+import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, bw, bh, inv, type SceneProps } from '../kit/core';
 import { EvTag, MathSvg, Person, rgba } from '../kit/cbm';
 
 type Cell = { tex?: string; text?: string; sub?: string };
@@ -66,7 +67,7 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
   const b = (k: number) => bs(P, k);
   const w = (k: number, word: string, n = 0) => bw(P, k, word, n);
   const at = (x: number, d = 0.45) => inv(x - 0.1, x - 0.1 + d, t);
-  const NB = 9;
+  const NB = P.beats.length;
   /** heading of beat k: in on the beat, out just before the next */
   const ho = (k: number) => inv(b(k) - 0.05, b(k) + 0.25, t) * (k < NB ? 1 - inv(b(k + 1) - 0.35, b(k + 1) - 0.05, t) : 1);
   const tableO = inv(b(1) - 0.05, b(1) + 0.25, t) * (1 - inv(b(7) - 0.35, b(7) - 0.05, t));
@@ -86,21 +87,17 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
   const keyO = at(w(2, 'Here') - 0.1, 0.5);
   const drop = at(w(3, 'drop'), 0.5) * (1 - at(b(4) - 0.3, 0.4)); // concept-labelled rows step back during "drop the concept labels"
 
-  // 19.7 the warning
-  const out7 = 1 - inv(b(8) - 0.35, b(8) - 0.05, t);
-  const f1 = at(b(7) + 0.1) * out7, f2 = at(w(7, 'None')) * out7, f3 = at(w(7, 'phrase'), 0.6) * out7, f4 = at(w(7, 'checked')) * out7;
-  // 19.8 who supplies, who checks
-  const s7 = ho(8), s7h = at(w(8, 'who') - 0.1);
-  const s7r = [w(8, 'CBMs'), w(8, 'post'), w(8, 'classification')].map((x) => at(x - 0.1, 0.5));
-  // 19.9 the staircase
-  const s8 = ho(9), s8step = (i: number) => at(b(9) + 0.15 + i * 0.3, 0.5);
-  const s8lab = E.io(inv(w(9, 'labour') - 0.2, w(9, 'labour') + 0.8, t)), s8chk = E.io(inv(w(9, 'check') - 0.2, w(9, 'check') + 0.8, t));
-  const s8line = at(w(9, 'saved') - 0.3, 0.5);
+  // 19.7-9 explain the random-layer control; the remaining recap follows.
+  const s7 = ho(10), s7h = at(w(10, 'who') - 0.1);
+  const s7r = [w(10, 'CBMs'), w(10, 'post'), w(10, 'classification')].map((x) => at(x - 0.1, 0.5));
+  const s8 = ho(11), s8step = (i: number) => at(b(11) + 0.15 + i * 0.3, 0.5);
+  const s8lab = E.io(inv(w(11, 'labour') - 0.2, w(11, 'labour') + 0.8, t)), s8chk = E.io(inv(w(11, 'check') - 0.2, w(11, 'check') + 0.8, t));
+  const s8line = at(w(11, 'saved') - 0.3, 0.5);
 
   return (
     <Stage>
       <Header t={t} part={modernSections.s19.part} title={P.title} />
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => <SlideHead key={k} text={bh(P, k)} o={ho(k)} />)}
+      {Array.from({length: NB}, (_, i) => i + 1).map((k) => <SlideHead key={k} text={bh(P, k)} o={ho(k)} />)}
 
       {/* ============================================================ 19.1 to 19.6 the table, one column per beat */}
       <Svg o={tableO}>
@@ -141,21 +138,9 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
         </div>
       ) : null}
 
-      {/* ============================================================ 19.7 the grounding warning, alone */}
-      <Rich x={960} y={400} ax="center" size={36} text="Each change: cheaper {c:concepts}, or more accurate {y:predictions}." o={f1} />
-      <Rich x={960} y={480} ax="center" size={40} weight={700} text="None makes grounding automatic." o={f2} />
-      {f3 > 0.001 ? (
-        <div style={{ position: 'absolute', left: 960, top: 640, transform: 'translate(-50%, -50%)', opacity: f3, whiteSpace: 'nowrap',
-          fontFamily: F.sans, fontSize: 34, color: C.chalk2, textAlign: 'center' }}>
-          a <span style={{ color: C.concept }}>phrase</span> from a language model, or a high{' '}
-          <span className="tex" style={{ fontSize: 38, color: C.chalk }} dangerouslySetInnerHTML={{ __html: texHTML(`\\ccon{\\cos}(\\cin{\\phi(x)},\\psi(s))`, false) }} />
-        </div>
-      ) : null}
-      <Rich x={960} y={720} ax="center" size={32} color={C.chalk2} text="does not show that" o={f3} />
-      <Rich x={960} y={790} ax="center" size={34} text="the model sees that property in the {x:image}" o={f3} />
-      <Rich x={960} y={890} ax="center" size={36} weight={700} color={C.bad} text="check it" o={f4} />
+      <RandomWeightsRecap t={t} P={P} />
 
-      {/* ============================================================ 19.8 who supplies the concepts, who checks them */}
+      {/* ============================================================ 19.10 who supplies the concepts, who checks them */}
       {s7 > 0.001 ? (
         <div style={{ position: 'absolute', inset: 0, opacity: s7 < 0.999 ? s7 : undefined }}>
           <Svg>
@@ -188,7 +173,7 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
         </div>
       ) : null}
 
-      {/* ============================================================ 19.9 each rung up removes a cost and a check */}
+      {/* ============================================================ 19.11 each rung up removes a cost and a check */}
       {s8 > 0.001 ? (
         <div style={{ position: 'absolute', inset: 0, opacity: s8 < 0.999 ? s8 : undefined }}>
           <Svg>

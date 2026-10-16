@@ -447,3 +447,19 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     direct transition from s16 to rung three, map count and revised comparison slide. Course PR #16
     is merged and deployed with both PDF labels showing 261 pages and all three course links correct.
     Audio, saved film timelines and beat list remain unchanged.
+79. **Explain random weights and fixed layers (browser old s24.4), 16 October 2026.**
+    Kept the requested random-layer control in the recap (s19.7), followed by two new intuitive slides.
+    s19.8 defines weights as mixing coefficients chosen by chance without learning from labels; its
+    illustrative arithmetic uses features [2,1] and weights [0.4,-0.2] to produce 0.6. s19.9 explains
+    that the encoder and mixing layer stay fixed during training, while only the class head learns.
+    A second feature vector [1,2] produces 0 using the same weights, distinguishing fixed weights
+    from fixed outputs. The two remaining recap slides move to s19.10-11. The full VLG-CBM walkthrough
+    remains archived. Checked the control against Srivastava et al. 2024, Section 4 and Figure 3
+    (https://arxiv.org/html/2408.01432v2). Toy values are explicitly illustrative and computed centrally.
+    Type checking, 26 Python tests and four deck tests passed. Inspected completed slides, progressive
+    reveals and speaker notes. Saved audio, both film timelines and the beat list are unchanged.
+80. **Annotation PDF revision 28.** Saved review/cbm-lecture-review-2026-10-16-r28.pdf with 263 pages:
+    246 content slides and 17 separators, with 40 navigation bookmarks. Exported all 11 recap pages
+    and the references page; all 251 other slide bodies are preserved. Every footer and bookmark
+    destination was verified. Rendered the new examples and neighbouring slides for visual QA.
+    Earlier annotation PDFs remain available.

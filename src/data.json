@@ -5730,6 +5730,37 @@
   ],
   "saliency_max": 2.0
  },
+ "random_layer_toy": {
+  "evidence": "illustrative: hand-chosen features and possible random weights; arithmetic computed",
+  "features": [
+   [
+    2.0,
+    1.0
+   ],
+   [
+    1.0,
+    2.0
+   ]
+  ],
+  "weights": [
+   0.4,
+   -0.2
+  ],
+  "terms": [
+   [
+    0.8,
+    -0.2
+   ],
+   [
+    0.4,
+    -0.4
+   ]
+  ],
+  "outputs": [
+   0.6,
+   0.0
+  ]
+ },
  "saliency_real": {
   "model": "ResNet-50",
   "model_full_name": "Residual Network with 50 layers",

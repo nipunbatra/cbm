@@ -26,7 +26,7 @@ export const End: React.FC<SceneProps> = ({ t, P }) => {
         <br />
         Sources: Koh et al. 2020; Wah et al. 2011; Simonyan et al. 2014; Kim et al. 2018; Adebayo et al. 2018; Zech et al. 2018;
         Rudin 2019; Chen et al. 2019; Zarlenga et al. 2022; Yuksekgonul et al. 2023;
-        Menon and Vondrick 2023; Mahinpei et al. 2021; Havasi et al. 2022; Knab et al. 2026.
+        Menon and Vondrick 2023; Srivastava et al. 2024; Mahinpei et al. 2021; Havasi et al. 2022; Knab et al. 2026.
       </HText>
       {black > 0 ? <div style={{ position: 'absolute', inset: 0, background: '#000', opacity: black }} /> : null}
     </Stage>
