@@ -414,11 +414,6 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 11. **The fix is a richer vocabulary: add shape**  
    More accurate colour and size estimates would not help. The fix is a richer vocabulary: add shape. Now the two vectors differ.
 
-## Concept leakage  (s09)
-
-1. **A concept score can carry more than its name says**  
-   One caution: a concept score can carry more than its name says. Imagine a score called stripes present that also carries extra information about the zebra species. If the task head uses that extra information, we call it concept leakage. The named concept then does not fully explain what the model uses. Different confidence values alone do not prove leakage. The practical takeaway is to test whether correcting a concept has the intended effect on the prediction.
-
 ## Modern concept bottleneck architectures  (s10)
 
 1. **Labelling every concept on every image is the main cost**  
@@ -489,25 +484,10 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 10. **Training uses concept labels and class labels**  
    During training, each image comes with concept labels and a class label. For this zebra, stripes is labelled present and the class is zebra. A concept loss compares the predicted probability with the concept label. A task loss compares the class prediction with the class label. Backpropagation from these losses updates the encoder, the vector-generating layers, the probability scorer and the task head together. We supervise the probability and the final answer, rather than supplying the vector coordinates.
 
-11. **The old problem: the head receives identical values**  
-   Recall the blue circle and blue square from Part 8. The target is class A for the circle and class B for the square. Our vocabulary asks only whether an object is blue and whether it is large. Both objects are blue and small, so both receive exactly the same values: blue 1, large 0. The head sees identical inputs and must make the same prediction. The missing distinction is shape.
-
-12. **Same blue probability, different blue embeddings**  
-   A CEM still sees the full image, including its outline. The same learned network computes the candidate vectors and mixes them for each image. Here we show only the resulting blue embedding; the large embedding is identical for both objects. Suppose both blue probabilities are 0.90. The circle can still have vector 0.72, 0.68, while the square has 0.90, 0.30. These are illustrative values, not trained outputs. The same probability does not force the same vector.
-
-13. **Why would training keep the shape information?**  
-   The concept labels ask the network to recognise that both objects are blue and small. They do not require identical embedding coordinates. The class labels ask for different answers: A for the circle and B for the square. Through the task loss, those labels can encourage the embeddings to retain useful shape information. We still have no shape concept label. This is a possible solution, not a guarantee of what training will learn.
-
-14. **Different vectors let the same head give different answers**  
-   Now apply a tiny illustrative head. Its score for A is the second entry of the blue embedding. Its score for B is one minus that entry. It ignores the other entries. For the circle, the scores are 0.68 and 0.32, so A wins. For the square, the scores are 0.30 and 0.70, so B wins. The same rule gives different answers because different information now reaches the head. This removes the forced tie from Part 8.
-
-15. **The extra detail helps, but it has no named concept**  
-   What did we gain, and what did we lose? The blue probability still has a named meaning. The embedding can carry extra detail, including shape in this example. But its coordinates are not supervised as named concepts such as round or square. A CEM can avoid the information loss of the original bottleneck without adding a shape concept. That extra capacity does not make every detail used by the head interpretable.
-
-16. **Training learns the weights. Testing uses them**  
+11. **Training learns the weights. Testing uses them**  
    Compare the two stages. The input during training is an image with concept and class labels. At test time it is just a new image. The weights are updated during training and kept fixed at test time. The vectors and probabilities are computed from each image in both cases.
 
-17. **Concept embedding models in symbols**  
+12. **Concept embedding models in symbols**  
    In symbols, for concept j out of k: g now outputs a probability and two embeddings, each m numbers long. c hat j is the mixed vector, and f reads all of them. Training still needs images, concept labels and class labels.
 
 ## Post-hoc concept bottleneck models  (s16)

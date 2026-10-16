@@ -1,4 +1,4 @@
-// s15 Part 10 · Concept embedding models (Espinosa Zarlenga et al. 2022). Review revision, 17 beats.
+// s15 Part 10 · Concept embedding models (Espinosa Zarlenga et al. 2022). Review revision, 12 beats.
 // Illustrative numbers from D.worked.cem (hand-chosen 2-D embeddings, three concepts, the worked zebra photo).
 // 15.1 the narrow channel: photo -> encoder -> one number per concept; Part 8 callback (same values, D.incomplete).
 // 15.2 define the embeddings as image-specific numeric vectors, not stored example pictures.
@@ -8,8 +8,7 @@
 // 15.8 to 15.9 one stage: three mixed points -> 6 numbers -> head -> shares (D.worked.cem.probs); amber edit p -> 1:
 //      the point slides to c+, the vector updates, the head pulses, shares move to probs_edit.
 // 15.10 joint training: concept and task losses update the network; no vector-coordinate targets.
-// 15.11 to 15.15: Part 8's collision, image-specific mixed vectors, training signal, a worked head, and the tradeoff.
-// 15.16 training versus test recap. 15.17 the VariantCard and symbol legend.
+// 15.11 training versus test recap. 15.12 the VariantCard and symbol legend.
 import React from 'react';
 import { C, F } from '../kit/theme';
 import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, clamp, inv, type SceneProps } from '../kit/core';
@@ -82,7 +81,7 @@ const Plane: React.FC<{
   );
 };
 
-// ---- 15.16 recap: training inputs and updates versus test-time computation
+// ---- 15.11 recap: training inputs and updates versus test-time computation
 const CMP_ROWS = ['input', 'network weights', 'vectors and probabilities'];
 const CMP_CBM = ['image, concept labels, class label', 'updated using both losses', 'computed from this image'];
 const CMP_CEM = ['new image', 'kept fixed', 'computed from the new image'];
@@ -139,16 +138,6 @@ const VROWS: VariantRows = {
 // ---- 15.2 and 15.3: define vectors, then show the learned generators
 const PA = { x: 160, y: 450, w: 270, h: 180 };
 const TRAIN_PH = { x: 160, y: 390, w: 210, h: 140 };
-const SHC = D.cem_shape;
-const SHAPES: { name: string; shape: string; c: number[]; y: string }[] = INC.objects;
-const SHY = [460, 700];
-
-/** a blue circle or square (the physical object colour of Part 8, not a role colour) */
-const Shape: React.FC<{ kind: string; x: number; y: number; r: number; o?: number }> = ({ kind, x, y, r, o = 1 }) =>
-  o <= 0.001 ? null : kind === 'circle'
-    ? <circle cx={x} cy={y} r={r} fill={SHAPE_BLUE} opacity={o < 0.999 ? o : undefined} />
-    : <rect x={x - r * 0.9} y={y - r * 0.9} width={r * 1.8} height={r * 1.8} rx={4} fill={SHAPE_BLUE} opacity={o < 0.999 ? o : undefined} />;
-
 // ---- geometry
 const PH1 = { x: 160, y: 340, w: 300, h: 200 };
 const ENC1 = { x: 660, y: 440, w: 220, h: 110 };
@@ -193,21 +182,6 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
   const sTrain = so(10);
   const trainFlow = at(w(10, 'image') - 0.1), trainConcept = at(w(10, 'concept', 1) - 0.1);
   const trainTask = at(w(10, 'task') - 0.1), trainGrad = at(w(10, 'Backpropagation') - 0.1);
-
-  // ---------------- 15.11 to 15.15: one reason or operation per slide
-  const shapeOld = so(11), shapeVec = so(12), shapeTrain = so(13), shapeHead = so(14), shapeCost = so(15);
-  const oldPair = at(w(11, 'circle') - 0.1), oldValues = at(w(11, 'Both') - 0.1);
-  const oldHead = at(w(11, 'identical') - 0.1), oldTake = at(w(11, 'missing') - 0.1);
-  const vecImage = at(w(12, 'image') - 0.1), vecNet = at(w(12, 'network') - 0.1);
-  const vecP = at(w(12, 'probabilities') - 0.1), vecCircle = at(w(12, 'circle') - 0.1);
-  const vecSquare = at(w(12, 'square') - 0.1), vecTake = at(w(12, 'force') - 0.1);
-  const trainSame = at(w(13, 'concept') - 0.1), trainDifferent = at(w(13, 'class') - 0.1);
-  const trainWhy = at(w(13, 'encourage') - 0.1), trainNoShape = at(w(13, 'no') - 0.1);
-  const headRule = at(w(14, 'score') - 0.1), headRuleB = at(w(14, 'B') - 0.1);
-  const headCircle = at(w(14, 'circle') - 0.1), headSquare = at(w(14, 'square') - 0.1);
-  const headTake = at(w(14, 'removes') - 0.1);
-  const costP = at(w(15, 'probability') - 0.1), costVec = at(w(15, 'embedding') - 0.1);
-  const costNames = at(w(15, 'coordinates') - 0.1), costTake = at(w(15, 'capacity') - 0.1);
 
   // ---------------- 15.4 to 15.7 the stripes plane
   const sP = span(4, 7);
@@ -259,14 +233,14 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
   const pS = editOn > 0.001 ? lerp(PV[0], 1, editP) : PV[0];
   const vec = EMB.map((v, k) => (k < 2 ? mix(0, pS)[k] : v)); // ends at EMB_E when p = 1
 
-  // ---------------- 15.16 recap, 15.17 the card
-  const sR = so(16);
-  const cmpRow = (i: number) => at(w(16, ['input', 'weights', 'vectors'][i]) - 0.1);
+  // ---------------- 15.11 recap, 15.12 the card
+  const sR = so(11);
+  const cmpRow = (i: number) => at(w(11, ['input', 'weights', 'vectors'][i]) - 0.1);
   const cmpHi = (_i: number) => 0;
-  const cmpSame = at(w(16, 'fixed') - 0.1);
-  const s11 = so(17);
-  const cardP = [w(17, 'g'), w(17, 'hat'), w(17, 'f', 1), w(17, 'Training'), w(17, 'images')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
-  const legO = at(w(17, 'j') - 0.1);
+  const cmpSame = at(w(11, 'fixed') - 0.1);
+  const s11 = so(12);
+  const cardP = [w(12, 'g'), w(12, 'hat'), w(12, 'f', 1), w(12, 'Training'), w(12, 'images')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
+  const legO = at(w(12, 'j') - 0.1);
 
   return (
     <Stage>
@@ -333,78 +307,6 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
           <Block x={1430} y={770} w={380} h={120} kind="loss" title="task loss" sub="compare with class: zebra" subSize={23} o={trainTask} />
           <Flow pts={[[650, 770], [720, 770]]} color={C.concept} o={trainConcept} />
           <Flow pts={[[1690, 690], [1690, 770], [1640, 770]]} color={C.chalk} o={trainTask} />
-        </g> : null}
-
-        {/* ---------------- 15.11: identical semantic values lose shape ---------------- */}
-        {shapeOld > 0.001 ? <g opacity={shapeOld}>
-          {SHAPES.map((obj, i) => <g key={obj.shape}>
-            <Shape kind={obj.shape} x={230} y={SHY[i]} r={58} o={oldPair} />
-            <Txt x={230} y={SHY[i] + 100} size={28} fill={C.chalk} o={oldPair}>{`target: ${obj.y}`}</Txt>
-            <Flow pts={[[310, SHY[i]], [420, SHY[i]]]} color={C.input} p={oldValues} />
-            <Flow pts={[[730, SHY[i]], [810, SHY[i]]]} color={C.concept} p={oldValues} />
-            <g opacity={oldValues}>
-              {INC.vocab.map((v: string, r: number) => <ConceptRow key={v} x={840} y={SHY[i] - 28 + r * 56} label={v} v={obj.c[r]} labelW={110} w={140} size={28} digits={0} />)}
-            </g>
-            <Flow pts={[[1140, SHY[i]], [1180, 580 + (i ? 28 : -28)]]} color={C.concept} p={oldHead} />
-          </g>)}
-          <Block x={575} y={580} w={280} h={380} kind="input" title="concept predictor" sub="blue and large" size={28} subSize={25} o={oldValues} />
-          <Block x={1300} y={580} w={220} h={150} kind="head" title="task head" o={oldHead} />
-          <Flow pts={[[1420, 580], [1510, 580]]} color={C.chalk} p={oldHead} />
-          <Txt x={1650} y={560} size={30} weight={700} o={oldHead}>same prediction</Txt>
-          <Txt x={1650} y={606} size={28} fill={C.chalk2} o={oldHead}>for both images</Txt>
-        </g> : null}
-
-        {/* ---------------- 15.12: same probability need not mean same vector ---------------- */}
-        {shapeVec > 0.001 ? <g opacity={shapeVec}>
-          {SHAPES.map((obj, i) => <g key={obj.shape}>
-            <Shape kind={obj.shape} x={230} y={SHY[i]} r={58} o={vecImage} />
-            <Txt x={230} y={SHY[i] + 100} size={28} o={vecImage}>{obj.name}</Txt>
-            <Flow pts={[[310, SHY[i]], [450, SHY[i]]]} color={C.input} p={vecNet} />
-            <Flow pts={[[810, SHY[i]], [930, SHY[i]]]} color={C.concept} p={vecP} />
-            <rect x={950} y={SHY[i] - 100} width={790} height={200} rx={14} fill={C.bg2} stroke={C.line2} strokeWidth={2} opacity={vecP} />
-            <Txt x={1120} y={SHY[i] - 54} size={26} fill={C.chalk2} o={vecP}>blue probability</Txt>
-            <Txt x={1120} y={SHY[i] + 20} size={42} mono fill={C.concept} o={vecP}>{f2(SHC.blue_probability)}</Txt>
-            <Txt x={1500} y={SHY[i] - 66} size={26} fill={C.chalk2} o={i ? vecSquare : vecCircle}>mixed blue vector</Txt>
-            <VecCol x={1430} y={SHY[i] - 42} vals={SHC.blue_embeddings[i]} rowH={56} w={140} size={34} digits={2} o={i ? vecSquare : vecCircle} />
-          </g>)}
-          <Block x={630} y={580} w={340} h={380} kind="input" title="CEM network" sub="same learned weights" size={32} subSize={24} o={vecNet} />
-        </g> : null}
-
-        {/* ---------------- 15.13: what the two training signals ask for ---------------- */}
-        {shapeTrain > 0.001 ? <g opacity={shapeTrain}>
-          {[trainSame, trainDifferent].map((o, k) => <g key={k} opacity={o}>
-            <rect x={160 + k * 880} y={350} width={720} height={420} rx={16} fill={C.bg2} stroke={k ? C.line2 : C.concept} strokeWidth={2} />
-            <Txt x={520 + k * 880} y={405} size={34} weight={700} fill={k ? C.chalk : C.concept}>{k ? 'Class labels' : 'Concept labels'}</Txt>
-            {SHAPES.map((obj, i) => <g key={obj.shape}>
-              <Shape kind={obj.shape} x={350 + k * 880 + i * 340} y={525} r={50} />
-              <Txt x={350 + k * 880 + i * 340} y={630} size={29} fill={k ? C.chalk : C.concept}>{k ? obj.y : 'blue, small'}</Txt>
-            </g>)}
-            <Txt x={520 + k * 880} y={720} size={30} weight={600} fill={k ? C.chalk : C.concept}>{k ? 'Task loss: answers should differ' : 'Concept loss: both should be blue'}</Txt>
-          </g>)}
-        </g> : null}
-
-        {/* ---------------- 15.14: the same head, with the arithmetic visible ---------------- */}
-        {shapeHead > 0.001 ? <g opacity={shapeHead}>
-          <Block x={920} y={580} w={240} h={150} kind="head" title="task head" sub="same fixed rule" subSize={24} o={headRuleB} />
-          {SHAPES.map((obj, i) => <g key={obj.shape} opacity={i ? headSquare : headCircle}>
-            <Shape kind={obj.shape} x={230} y={SHY[i]} r={54} />
-            <Txt x={230} y={SHY[i] + 94} size={26}>{obj.name}</Txt>
-            <VecCol x={500} y={SHY[i] - 65} vals={SHC.blue_embeddings[i]} rowH={65} w={140} size={34} digits={2} ring={(j) => j === 1 ? 1 : 0} ringColor={C.concept} />
-            <Flow pts={[[670, SHY[i]], [790, 580 + (i ? 30 : -30)]]} color={C.concept} />
-            <Flow pts={[[1050, 580 + (i ? 30 : -30)], [1160, SHY[i]]]} color={C.chalk} />
-            {SHC.scores[i].map((score: number, j: number) => <Txt key={j} x={1290} y={SHY[i] - 25 + j * 56} size={32} mono fill={i === j ? C.chalk : C.chalk2} weight={i === j ? 700 : 500}>{`${j ? 'B' : 'A'}: ${f2(score)}`}</Txt>)}
-            <Flow pts={[[1420, SHY[i]], [1510, SHY[i]]]} color={C.chalk} />
-            <Txt x={1650} y={SHY[i]} size={36} weight={700}>{SHC.predictions[i]}</Txt>
-          </g>)}
-        </g> : null}
-
-        {/* ---------------- 15.15: extra information is not another named concept ---------------- */}
-        {shapeCost > 0.001 ? <g opacity={shapeCost}>
-          <Shape kind="circle" x={230} y={560} r={65} o={costP} />
-          <Flow pts={[[315, 560], [420, 560], [420, 430], [520, 430]]} color={C.input} p={costP} />
-          <Flow pts={[[420, 560], [420, 690], [520, 690]]} color={C.input} p={costVec} />
-          <Block x={770} y={430} w={460} h={160} kind="concept" title="blue probability" sub={f2(SHC.blue_probability)} size={30} subSize={38} o={costP} />
-          <Block x={770} y={690} w={460} h={180} kind="concept" title="blue embedding" sub={`(${SHC.blue_embeddings[0].map(f2).join(', ')})`} size={30} subSize={34} o={costVec} />
         </g> : null}
 
         {/* ---------------- slides 2 to 5: the stripes plane ---------------- */}
@@ -476,7 +378,7 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
           </g>
         ) : null}
 
-        {/* ---------------- slide 16: recap ---------------- */}
+        {/* ---------------- slide 11: recap ---------------- */}
         <CompareSvg o={sR} rowO={cmpRow} hiO={cmpHi} changed={CMP_CHANGED} />
 
       </Svg>
@@ -556,44 +458,13 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
       <Rich x={1690} y={610} w={200} ax="center" size={28} text="class label: {y:zebra}" o={sTrain * trainTask} />
       <Rich x={160} y={920} size={30} text="{l:Backpropagation} updates the encoder, vector layers, scorer and head." o={sTrain * trainGrad} />
 
-      {/* slides 11 to 15: the missing-shape example, step by step */}
-      <SlideHead text={bh(P, 11)} o={shapeOld} />
-      <Rich x={160} y={305} size={30} color={C.chalk2} text="Part 8: same colour and size, but different classes" o={shapeOld * oldPair} />
-      <Rich x={960} y={870} ax="center" size={34} text="{x:Shape} is visible in the image, but absent from the head's input." o={shapeOld * oldTake} />
-      <EvTag x={1760} y={940} ax="right" kind="constructed" text="Part 8's two objects; exact concept values" o={shapeOld * oldValues} />
-
-      <SlideHead text={bh(P, 12)} o={shapeVec} />
-      <Rich x={160} y={305} size={29} color={C.chalk2} text="Only {c:blue} is shown. The {c:large} embedding is identical for both images." o={shapeVec * vecNet} />
-      <Rich x={960} y={870} ax="center" size={34} text="Same answer to ‘is it blue?’ does not mean the same {c:vector}." o={shapeVec * vecTake} />
-      <EvTag x={1760} y={940} ax="right" kind="illustrative" text="hand-chosen vectors; mixing computed; no trained shape CEM" o={shapeVec * vecP} />
-
-      <SlideHead text={bh(P, 13)} o={shapeTrain} />
-      <Rich x={960} y={835} ax="center" size={33} text="The {l:task loss} can encourage the vectors to retain {x:shape}." o={shapeTrain * trainWhy} />
-      <Rich x={960} y={900} ax="center" size={29} color={C.chalk2} text="We still have no named shape concept." o={shapeTrain * trainNoShape} />
-
-      <SlideHead text={bh(P, 14)} o={shapeHead} />
-      <Rich x={160} y={300} size={30} text="Illustrative head: score A = {c:second entry}" o={shapeHead * headRule} />
-      <Rich x={1040} y={300} size={30} text="score B = 1 − {c:second entry}" o={shapeHead * headRuleB} />
-      <HText x={570} y={360} ax="center" size={24} color={C.chalk2} o={shapeHead * headRuleB}>mixed blue vector</HText>
-      <HText x={1290} y={360} ax="center" size={24} color={C.chalk2} o={shapeHead * headRuleB}>class scores</HText>
-      <HText x={1650} y={360} ax="center" size={24} color={C.chalk2} o={shapeHead * headRuleB}>higher score wins</HText>
-      <Rich x={960} y={870} ax="center" size={34} text="Different inputs to the {f:head} remove the forced tie." o={shapeHead * headTake} />
-      <EvTag x={1760} y={940} ax="right" kind="illustrative" text="hand-chosen vectors and head; scores computed" o={shapeHead * headRule} />
-
-      <SlideHead text={bh(P, 15)} o={shapeCost} />
-      <Rich x={1100} y={420} w={650} size={32} text="Named meaning: how likely is {c:blue}?" o={shapeCost * costP} />
-      <Rich x={1100} y={640} w={650} size={32} text="Extra detail can reach the {f:head}." o={shapeCost * costVec} />
-      <Rich x={1100} y={725} w={650} size={30} color={C.chalk2} text="No coordinate is labelled ‘round’ or ‘square’." o={shapeCost * costNames} />
-      <Rich x={960} y={870} ax="center" size={33} text="More capacity does not make every detail {c:interpretable}." o={shapeCost * costTake} />
-      <EvTag x={1760} y={940} ax="right" kind="illustrative" text="same hand-chosen shape example" o={shapeCost * costVec} />
-
-      {/* slide 16: training versus test recap */}
-      <SlideHead text={bh(P, 16)} o={sR} />
+      {/* slide 11: training versus test recap */}
+      <SlideHead text={bh(P, 11)} o={sR} />
       <CompareText o={sR} name="test" cells={CMP_CEM} rowO={cmpRow} hiO={cmpHi} changed={CMP_CHANGED} />
       <Rich x={196} y={850} size={30} color={C.chalk2} text="Test-time vectors are newly computed; the learned weights stay fixed." o={oo(sR, cmpSame)} />
 
-      {/* slide 17 */}
-      <SlideHead text={bh(P, 17)} o={s11} />
+      {/* slide 12 */}
+      <SlideHead text={bh(P, 12)} o={s11} />
       <div style={{ position: 'absolute', inset: 0, transform: 'scale(0.86)', transformOrigin: '960px 290px' }}>
         <VariantCard name="Concept embedding models (Espinosa Zarlenga et al., NeurIPS 2022)" rows={VROWS} o={s11} p={cardP} y0={290} />
       </div>

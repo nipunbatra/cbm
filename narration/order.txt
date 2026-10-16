@@ -17,8 +17,8 @@ s23
 s06
 s07
 s08
-s09
-# s20 is omitted during review: Part 9 is now one high-level slide.
+# Part 9 (s09 and s20) was removed during review on 16 October 2026.
+# Keep the recorded scene sources for the later film rebuild; the live lecture skips both.
 s10
 s15
 s16

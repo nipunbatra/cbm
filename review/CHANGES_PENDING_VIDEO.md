@@ -309,3 +309,14 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     JavaScript, CSS, notes and PDF match the local files. Verified the published controls, map and revised
     slide in the browser. Existing course links and the 309-page label remain correct. No audio or film
     work was performed.
+52. **Remove Part 9 (browser s09.1), 16 October 2026.** Removed s09 from the active lecture order;
+    s20 was already excluded. Navigation now goes directly from Part 8 to Part 10. Old s09 and s20
+    deck links continue at s10.1. Recorded scene sources remain for the later film rebuild.
+53. **Remove the extended CEM shape example (browser s15.11).** Removed former s15.11-15, including
+    narration and drawings. Training now leads directly to the training/test recap and summary card,
+    renumbered s15.11-12. The existing zebra worked example remains. Together with Part 9, this removes
+    six slides. Content, type checking, 25 Python tests and three deck tests passed; checked the transition.
+54. **Annotation PDF revision 19.** Saved review/cbm-lecture-review-2026-10-16-r19.pdf with 303 pages
+    and 26 bookmarks. Removed r18 page 130 and pages 153-157. Verified all retained slide bodies,
+    new footers and bookmark destinations, and visually inspected the CEM recap, summary, Part 10
+    transition and final page. Earlier PDFs, audio, saved timelines and the beat list remain unchanged.

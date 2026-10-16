@@ -71,8 +71,12 @@ const lastStopOfBeat = (s: number, k: number) => STOPS[s].reduce((a, st, i) => (
 const parseHash = (): Pos => {
   const m = /^#(\w+?)(?:\.(\d+))?$/.exec(location.hash);
   if (!m) return { s: 0, k: 0 };
-  const s = Math.max(0, TL.scenes.findIndex((x) => x.id === m[1]));
-  const beat = Math.max(0, Math.min(TL.scenes[s].beats.length - 1, (Number(m[2]) || 1) - 1));
+  // Existing review links to the removed Part 9 continue at the next section.
+  const removed = m[1] === 's09' || m[1] === 's20';
+  const id = removed ? 's10' : m[1];
+  if (removed) history.replaceState(null, '', '#s10.1');
+  const s = Math.max(0, TL.scenes.findIndex((x) => x.id === id));
+  const beat = removed ? 0 : Math.max(0, Math.min(TL.scenes[s].beats.length - 1, (Number(m[2]) || 1) - 1));
   return { s, k: lastStopOfBeat(s, beat) };
 };
 

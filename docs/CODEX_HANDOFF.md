@@ -239,3 +239,13 @@ The dated entries below preserve the review history. The film remains on its ear
 - Published `cbfa536` on `gh-pages`; deployment succeeded. Live HTML, JS, CSS, notes and PDF match the
   release bytes, and the existing deep learning course links are valid. Browser verification includes the
   new controls, map and revised slide. See `publishing/README.md` for the evidence and source commits.
+
+## 16 October 2026: shorter lecture (revision 19, prepared)
+
+- Removed Part 9 from the active order; old s09 and s20 links lead to s10.1. Keep visible part numbers
+  and remaining section IDs stable for existing annotations.
+- Removed the five-slide CEM shape example (former s15.11-15). The recap and summary are now s15.11-12.
+  CEM has 12 slides. The lecture has 303 slides across 26 sections.
+- Saved review/cbm-lecture-review-2026-10-16-r19.pdf; all retained bodies, footers and bookmarks verified.
+  Content and code checks passed, and the affected transitions were inspected in the browser.
+- Audio, saved timelines and the beat list remain unchanged. Publication is pending the next review update.
