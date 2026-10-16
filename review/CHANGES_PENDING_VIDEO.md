@@ -331,3 +331,8 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     303 content slides plus 17 separators. All 303 retained slide bodies match revision 19, and every
     footer and all 43 navigation bookmarks are checked. Inspected all new separators and the transitions.
     The earlier review PDFs remain available for annotations.
+57. **Publish review revision 20 and course count.** Source changes `46033e3` and `3b47d6d` are pushed.
+    Pages release `34cf249` and DL 2026 PR 12 (merge `751a0e0`) deployed successfully. Live HTML, JS,
+    CSS, notes and PDF match the local files. The course links remain correct and its visible/accessibility
+    PDF labels show 320 pages. Verified the live separator and course row. Audio, saved timelines,
+    the beat list and film remain unchanged; the review narration still awaits the later film rebuild.

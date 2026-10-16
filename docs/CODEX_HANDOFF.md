@@ -1,4 +1,4 @@
-# Handoff: state of the CBM lecture (15 October 2026)
+# Handoff: state of the CBM lecture (16 October 2026)
 
 Read `AGENTS.md` first (how the repository works). This file says what is finished, what is pending, and how Nipun
 wants the next round to go.
@@ -11,7 +11,8 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 17 is live at https://nipunbatra.github.io/cbm/: 309 slides in 27 sections, matching notes and PDF.
+Revision 20 is live at https://nipunbatra.github.io/cbm/: 303 content slides plus 17 separators, matching notes
+and a 320-page PDF with 43 navigation bookmarks.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
 
@@ -206,7 +207,7 @@ The dated entries below preserve the review history. The film remains on its ear
 2. **Remake the film after the review** (not now): regenerate the voice for changed lines, real timeline, music,
    captions, render, upload unlisted. Claude Code runs this pipeline (`tools/build.sh`, see CLAUDE.md); Codex should
    not run TTS, the timeline or renders.
-3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r18 are already live.
+3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r20 are already live.
    Later edits will need another deck/notes/PDF release on `nipunbatra/cbm` (`gh-pages`) and,
    if the page count changes, the course page through a pull request. The film remains a separate pending rebuild.
 4. Open checks, low priority:
@@ -250,7 +251,7 @@ The dated entries below preserve the review history. The film remains on its ear
   Content and code checks passed, and the affected transitions were inspected in the browser.
 - Audio, saved timelines and the beat list remain unchanged. Publication is pending the next review update.
 
-## 16 October 2026: section separators (revision 20, prepared)
+## 16 October 2026: section separators (revision 20, published)
 
 - Added 17 separator scenes, s30-s46, before the main parts, recap, appendix and the three supervision
   rungs within Part 10. Existing content slide IDs are unchanged. Drawings share src/scenes/SectionBreak.tsx;
@@ -263,4 +264,8 @@ The dated entries below preserve the review history. The film remains on its ear
 - Matching PDF: review/cbm-lecture-review-2026-10-16-r20.pdf, 320 pages and 43 bookmarks. This is
   303 retained content slides plus 17 separators. All retained bodies, footers and bookmarks are verified.
 - Content, type checking, 25 Python tests and four deck tests pass. All new separators were inspected.
-  Source, deck, notes and course publication are being completed together. Audio and film remain unchanged.
+  Source, deck, notes and course publication are complete. Audio and film remain unchanged.
+
+- Published `34cf249` to CBM Pages and updated the course through DL 2026 PR 12 (merge `751a0e0`).
+  Both deployments succeeded. Live release bytes match the local files, the course shows 320 pages,
+  and the published separator and course row were inspected in the browser. See publishing/README.md.
