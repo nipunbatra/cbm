@@ -11,7 +11,7 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 24 is prepared for https://nipunbatra.github.io/cbm/: 296 content slides plus 17 separators, matching notes
+Revision 24 is live at https://nipunbatra.github.io/cbm/: 296 content slides plus 17 separators, matching notes
 and a 313-page PDF with 43 navigation bookmarks.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
@@ -320,3 +320,5 @@ The dated entries below preserve the review history. The film remains on its ear
   PCBM now has 19 slides; the full deck and matching revision 24 PDF have 313 pages and 43 bookmarks.
   The saved experiment is unchanged and is not attributed to the illustrative LLM exchange. All checks
   passed and all 19 revised PCBM PDF pages were inspected. Audio and saved film timing are unchanged.
+- Revision 24 is published: source b9b6565, Pages release 340e05d. Live deck, notes and PDF match the local
+  release bytes. Course PR #13 is merged and deployed with both 313-page labels and current CBM links.

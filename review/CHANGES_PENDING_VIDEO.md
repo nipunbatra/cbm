@@ -387,3 +387,7 @@ Audio note: the voice for these lines was already generated and checked (asrchec
 68. **Annotation PDF revision 24.** Updated PCBM pages 165-183, retaining 43 bookmarks. All 294 slide bodies
     outside s16 are preserved. Every slide footer and bookmark destination was checked. Pages after the
     old PCBM section move up seven. Earlier PDFs remain available for existing annotation references.
+69. **Publish review revision 24.** Source commit b9b6565 and Pages release 340e05d are pushed; deployment
+    succeeded. The live HTML, JavaScript, CSS, notes and PDF match the local release byte for byte. The
+    published cosine slide was inspected. Course PR #13 is merged and deployed, with matching visible and
+    accessible 313-page labels; all three course links point to the standalone CBM site.
