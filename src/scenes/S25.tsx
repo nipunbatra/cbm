@@ -82,7 +82,7 @@ const RECAP: { lab: string; labo: string; cbd: string }[] = [
 // the ladder strip
 const RUNGS: { tex: string; who: string; x: number; w: number; mx: number }[] = [
   { tex: '\\{\\cin{x},\\ \\ccon{c},\\ y\\}', who: 'CBM, CEM', x: 200, w: 340, mx: 80 },
-  { tex: '\\{\\cin{x},\\ y\\}', who: 'PCBM, LF-CBM, LaBo, VLG-CBM', x: 610, w: 560, mx: 66 },
+  { tex: '\\{\\cin{x},\\ y\\}', who: 'PCBM, LaBo, VLG-CBM', x: 610, w: 560, mx: 66 },
   { tex: '\\varnothing', who: 'by description', x: 1240, w: 480, mx: 50 },
 ];
 

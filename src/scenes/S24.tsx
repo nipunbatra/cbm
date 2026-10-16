@@ -10,7 +10,7 @@
 // 24.10 intuition: a dense row (every weight non-zero) can fit anything; random concepts suffice (Theorem 4.1, reported).
 // 24.11 intuition: a fair comparison at the same budget; the dense row is cut to the same count, then accuracy bars.
 // 24.12 NEC formula, words over symbols, with the Herring Gull row of 24.9 counted.  24.13 held at 5: five named concepts.
-// 24.14 recap: what changed compared with label-free models.  24.15 VariantCard.
+// 24.14 recap: what changed compared with direct CLIP scoring.  24.15 VariantCard.
 import React from 'react';
 import modernSections from '../modernSections.json';
 import { C } from '../kit/theme';
@@ -66,10 +66,10 @@ const BCE_ROWS = [
   { chip: 'black wingtips', box: true, c: 1, p: 0.8, tex: '-\\log 0.8', v: -Math.log(0.8) },
   { chip: 'loud laughing call', box: false, c: 0, p: 0.2, tex: '-\\log(1 - 0.2)', v: -Math.log(1 - 0.2) },
 ];
-// 24.14 recap rows: label-free models vs VLG-CBM
+// 24.14 recap rows: direct CLIP scoring vs VLG-CBM
 const RECAP: { lab: string; lf: string; vlg: string }[] = [
-  { lab: 'the concept layer learns from', lf: 'copying {x:CLIP} scores', vlg: '{c:detector boxes}' },
-  { lab: 'the head is judged at', lf: 'its own sparsity level', vlg: 'a fixed number per class' },
+  { lab: 'where concept values come from', lf: '{x:CLIP} similarities', vlg: 'layer trained on {c:boxes}' },
+  { lab: 'what trains the class head', lf: '{y:class labels}', vlg: '{y:class labels}' },
 ];
 
 const VROWS: VariantRows = {
@@ -152,8 +152,8 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
   const s8eq = at(b(13) + 0.1, 0.5), s8five = at(w(13, 'five') - 0.2), s8row = at(w(13, 'head') - 0.2, 0.5);
   const s8read = (i: number) => at(w(13, 'read') - 0.4 + i * 0.15, 0.3), s8cmp = at(w(13, 'handful') - 0.2);
   // ---------------- 24.14 recap
-  const s14h = at(b(14) + 0.1, 0.5), s14r = [at(w(14, 'concept') - 0.2, 0.5), at(w(14, 'judged') - 0.2, 0.5)];
-  const s14vlg = [at(w(14, 'boxes') - 0.3, 0.5), at(w(14, 'fixed') - 0.2, 0.5)];
+  const s14h = at(b(14) + 0.1, 0.5), s14r = [at(w(14, 'concept') - 0.2, 0.5), at(w(14, 'head') - 0.2, 0.5)];
+  const s14vlg = [at(w(14, 'boxes') - 0.3, 0.5), at(w(14, 'labels', 1) - 0.2, 0.5)];
   // ---------------- 24.15
   const cardP = [w(15, 'g'), w(15, 'f'), w(15, 'f') + 0.5, w(15, 'held'), w(15, 'data')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
 
@@ -579,10 +579,10 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="illustrative" text="weights drawn for teaching" o={s8row} />
       </Slide>
 
-      {/* ============================================================ 24.14 recap: what changed compared with label-free models */}
+      {/* ============================================================ 24.14 recap: what changed compared with direct CLIP scoring */}
       <Slide o={sl(14)}>
         <SlideHead text={bh(P, 14)} />
-        <Rich x={980} y={360} ax="center" size={30} weight={700} color={C.chalk2} text="label-free models" o={s14h} />
+        <Rich x={980} y={360} ax="center" size={30} weight={700} color={C.chalk2} text="direct CLIP scoring" o={s14h} />
         <Rich x={1460} y={360} ax="center" size={30} weight={700} text="VLG-CBM" o={s14h} />
         <Svg o={s14h}>
           <line x1={200} x2={1720} y1={400} y2={400} stroke={C.line2} strokeWidth={2} />
@@ -594,7 +594,7 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
               <Rich x={200} y={y} ay="middle" w={500} size={30} color={C.chalk2} text={r.lab} o={s14r[i]} />
               <Rich x={980} y={y} ax="center" ay="middle" size={32} color={C.chalk2} text={r.lf} o={s14r[i]} />
               <Rich x={1210} y={y} ax="center" ay="middle" size={36} color={C.mute} text="→" o={s14vlg[i]} />
-              <Rich x={1460} y={y} ax="center" ay="middle" size={34} weight={700} text={r.vlg} o={s14vlg[i]} />
+              <Rich x={1460} y={y} ax="center" ay="middle" size={34} weight={700} text={r.vlg} w={470} o={s14vlg[i]} />
             </React.Fragment>
           );
         })}

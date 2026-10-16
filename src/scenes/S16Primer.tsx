@@ -35,10 +35,12 @@ export const S16Primer: React.FC<SceneProps> = ({t,P}) => {
     <HText x={960} y={820} ax="center" size={32} o={s1*cue(1,'vocabulary')}>The LLM proposes words. CLIP will score the photos.</HText>
     <EvTag x={180} y={965} kind="illustrative" text="example prompt and possible suggestions; not a recorded LLM response" o={s1} />
 
-    <Rich x={180} y={315} size={32} text="Keep visible, clear phrases. Remove duplicates and vague wording." o={s2} />
-    {PC.bank.map((p: string,i: number)=><Rich key={p} x={i<4?230:1090} y={460+(i%4)*90} size={34} text={`{c:${p}}`} o={s2*cue(2,'eight')} />)}
+    <Rich x={180} y={315} size={32} text="Keep visible properties; reject class names, duplicates and weak matches." o={s2} />
+    <Rich x={180} y={385} w={650} size={27} text="“zebra” → reject: class name" o={s2*cue(2,'Reject')} />
+    <Rich x={900} y={385} w={850} size={27} text="“striped coat” → merge with “black and white stripes”" o={s2*cue(2,'Merge')} />
+    {PC.bank.map((p: string,i: number)=><Rich key={p} x={i<4?230:1090} y={500+(i%4)*90} size={34} text={`{c:${p}}`} o={s2*cue(2,'eight')} />)}
     <Rich x={960} y={875} ax="center" size={34} text="Every {x:image} is scored against this same {c:list}." o={s2*cue(2,'Every')} />
-    <EvTag x={180} y={965} kind="data" text="saved animal experiment: eight hand-chosen phrases, not LLM-generated" o={s2} />
+    <EvTag x={180} y={965} kind="data" text="saved bank: hand-chosen, not LLM-generated; review examples illustrative" o={s2} />
 
     <PhotoR R={{x:180,y:350,w:310,h:210}} src={`worked/${WK.example}`} frac={crop(WK.example,210/310)} o={s3} />
     <Svg o={s3}>

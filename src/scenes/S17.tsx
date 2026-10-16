@@ -13,7 +13,6 @@
 // 17.16 why sparse: a dense 3 x 34 grid vs the six readable weights   17.17 the risk: setting concepts
 // 17.18 what changed compared with the plain CBM (three rows) and three sources of supervision   17.19 VariantCard.
 import React from 'react';
-import modernSections from '../modernSections.json';
 import { C, F } from '../kit/theme';
 import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, clamp, inv, type SceneProps } from '../kit/core';
 import { TexSteps } from '../kit/slots';
@@ -369,7 +368,7 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
 
   return (
     <Stage>
-      <Header t={t} part={modernSections.s17.part} title={P.title} />
+      <Header t={t} part={10} title={P.title} />
       <Svg><StepTrack cur={STEP[beatNow] ?? 0} o={trackO} /></Svg>
 
       {/* ============================================================ 17.1 motivation */}

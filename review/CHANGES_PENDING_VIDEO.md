@@ -411,3 +411,17 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     Live HTML, JavaScript, CSS, notes and PDF match the local release bytes. Inspected the published
     rung-two map and LF-CBM handover. Course PR #14 is merged and deployed; the visible and accessible
     labels show 316 pages and all three links point to the standalone CBM site. Audio and film timing remain unchanged.
+73. **Remove the paper-specific LF-CBM walkthrough (browser s17.19), 16 October 2026.**
+    Removed s17's 19 slides and its s48 separator from the active lecture. Archived source remains for
+    older reviews and the film. Rung two now has two groups: A uses direct CLIP scores (the PCBM phrase
+    example and LaBo), and B learns concepts from grounded region targets (VLG-CBM). Updated the map,
+    separators, persistent headers, navigation, ladder, comparisons, recap and references accordingly.
+    The preceding shared phrase-bank slide now explains rejecting class names, merging duplicates and
+    checking weak matches, with concrete illustrative review examples. The saved hand-chosen phrase bank
+    and measured scores are unchanged. Content, type checking, 25 Python tests and four deck tests pass.
+    Inspected revised layouts and the direct LaBo-to-grounded-section transition. Saved film timing is unchanged.
+74. **Annotation PDF revision 26.** Saved review/cbm-lecture-review-2026-10-16-r26.pdf with 296 pages:
+    277 content slides and 19 separators, with 44 navigation bookmarks. Exported 41 revised pages;
+    all 255 other slide bodies are preserved. Every footer and bookmark destination was verified.
+    No LF-CBM or Oikarinen text remains in the PDF. Rendered and inspected the revised map, phrase review,
+    ladder, grounded-method comparison, recap and references. Earlier annotation PDFs remain available.

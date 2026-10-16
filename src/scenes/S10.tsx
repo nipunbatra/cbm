@@ -3,7 +3,7 @@
 // 10.2 one supervised record: the worked photo (D.worked.example) and its JSON card; then CUB's 112 labels per
 //      photograph, drawn as Herring Gull's real class-level row (D.cub.herring_gull, 112 cells).
 // 10.3 to 10.5 the supervision ladder, one rung per slide, as a descending staircase of cards joined by labelled
-//      arrows: {x, c, y} CBM, CEM; {x, y} PCBM, LF-CBM, LaBo, VLG-CBM; no task training: CBD.
+//      arrows: {x, c, y} CBM, CEM; {x, y} PCBM, LaBo, VLG-CBM; no task training: CBD.
 // 10.6 to 10.7 matching workflows: LaBo learns a task head from class-labelled images; classification by
 //      description averages scores with a fixed rule. Both retain pretrained CLIP and text descriptions.
 // 10.8 the trade-off: concept labels written by people (12 boxes, none, none) and who checks each concept against the
@@ -86,7 +86,7 @@ const JsonCard: React.FC<{ o: number; lineO: (i: number) => number; hi: (i: numb
 type Rung = { tex: string; desc: string; who: string };
 const RUNGS: Rung[] = [
   { tex: '\\{\\cin{x},\\ \\ccon{c},\\ y\\}', desc: '{x:images}, {c:concept labels}, {y:class labels}', who: 'CBM, concept embedding model (CEM)' },
-  { tex: '\\{\\cin{x},\\ y\\}', desc: '{x:images} and {y:class labels}', who: 'post-hoc CBM, label-free CBM, LaBo, VLG-CBM' },
+  { tex: '\\{\\cin{x},\\ y\\}', desc: '{x:images} and {y:class labels}', who: 'post-hoc CBM, LaBo, VLG-CBM' },
   { tex: '\\varnothing', desc: 'no training for this task', who: 'classification by description' },
 ];
 // a staircase of three wide cards, each step a little lower, connected by labelled arrows

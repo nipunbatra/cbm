@@ -78,7 +78,6 @@ export const SCENES: Record<string, React.FC<SceneProps>> = {
   s45: SectionBreak,
   s46: SectionBreak,
   s47: ApproachBreak,
-  s48: ApproachBreak,
   s49: ApproachBreak,
   end: End,
 };
