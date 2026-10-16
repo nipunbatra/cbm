@@ -251,7 +251,9 @@ D['lit'] = {
   'koh_oai_rmse': {'independent': 0.435, 'sequential': 0.418, 'joint': 0.418, 'standard': 0.441},
   'oai': {'concepts': 10, 'grades': 4},
   'menon_b32': {'cbd': 52.57, 'classname': 51.95},
-  'zech': {'auc_internal': 0.931, 'auc_external': 0.815, 'hospital_id_nih': 99.95},
+  'zech': {'auc_internal': 0.931, 'auc_external': 0.815, 'hospital_id_nih': 99.95,
+           # Zech et al., PLOS Medicine 2018, Table 1: positive labels in the collected datasets.
+           'positive_label_pct_msh': 34.2, 'positive_label_pct_nih': 1.2},
   'cebab': {'concepts': ['food', 'service', 'ambiance', 'noise'], 'texts': 15089},
   'wu_icu_patients': 15552,
   'labo_cub_1shot': {'labo': 54.19, 'linear_probe': 47.69},  # Yang et al. 2023, App. Table 10, ViT-L/14

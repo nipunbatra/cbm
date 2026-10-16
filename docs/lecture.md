@@ -63,8 +63,8 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 7. **Does the heatmap depend on what the model learned?**  
    Now keep the photo, the herring gull class and the explanation method fixed. Compare the heatmap from the trained model with one made after replacing its learned weights with random values. For some methods, such as guided backpropagation, Adebayo and colleagues found the maps barely changed. That is a warning: the picture can survive even after learning is removed. Before trusting a heatmap, check that it depends on the learned weights. Plain gradients did change in their test, but passing this check alone does not prove an explanation is correct.
 
-8. **Limit 2: a model can learn a shortcut**  
-   The second limit is about shortcuts. Zech and colleagues trained a pneumonia detector on chest X-rays from two hospital systems. At one hospital about a third of the patients had pneumonia, and at the other about one in a hundred.
+8. **The setup: learn pneumonia from two hospital datasets**  
+   Zech and colleagues studied a chest X-ray classifier. Focus on the model trained using data from both Mount Sinai and the National Institutes of Health Clinical Center, or NIH. Each training example pairs an X-ray with a pneumonia label derived from its radiology report. The label says whether pneumonia is reported. In the collected datasets, about a third of Mount Sinai X-rays have a positive label, compared with about one in a hundred at NIH. These are dataset label rates, not rates for all hospital patients. At test time, a new X-ray goes into the trained model, without its label, and a pneumonia score comes out. The intended clue is disease in the lungs, but the hospital already gives a clue to the label. That is the shortcut we will examine next.
 
 9. **The network could tell which hospital an X-ray came from**  
    A network could tell which hospital an X-ray came from almost perfectly, from markers and scanner details rather than from the lungs. Since the hospital predicts pneumonia, the detector could use the hospital as a shortcut.

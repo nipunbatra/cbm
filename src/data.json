@@ -5502,7 +5502,9 @@
   "zech": {
    "auc_internal": 0.931,
    "auc_external": 0.815,
-   "hospital_id_nih": 99.95
+   "hospital_id_nih": 99.95,
+   "positive_label_pct_msh": 34.2,
+   "positive_label_pct_nih": 1.2
   },
   "cebab": {
    "concepts": [

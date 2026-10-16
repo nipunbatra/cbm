@@ -429,7 +429,8 @@ ImageNet for comparison: ViT-B/32 62.97 vs 58.46 (+4.51). The text calls the CUB
   - Mount Sinai (MSH): 42,396
   - Indiana (IU): 3,807
 - **Detecting the hospital:** a CNN identified the hospital system for 99.95% of NIH images (22,050/22,062), 99.98% of MSH (8,386/8,388) and 95.59% of IU (737/771). It could also tell which department within a hospital an image came from.
-- **Prevalence alone:** pneumonia prevalence was 34.2% at MSH vs 1.2% at NIH, so sorting by hospital alone gives an AUC of 0.861 on joint MSH+NIH data.
+- **Dataset label rates:** 34.2% at MSH vs 1.2% at NIH were labelled positive for pneumonia. These are collected-dataset rates, not population-wide hospital rates; sorting by hospital alone gives an AUC of 0.861 on joint MSH+NIH data.
+- **Setup reminder (s21.8):** the jointly trained model uses X-rays and report-derived labels from both sites. Patients were separated across training, tuning and testing. At prediction time the input is an image; the pneumonia output is a score, and the true label is withheld. Other diagnoses were auxiliary training targets; the slide focuses on pneumonia. Source: [paper methods and Table 1](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002683).
 - **Generalisation:** the best internal model (MSH+NIH) had AUC 0.931 (95% CI 0.927–0.936). On external IU data it dropped to AUC 0.815 (0.745–0.885), P = 0.001.
 
 ### (c) Rudin 2019

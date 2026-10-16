@@ -295,3 +295,13 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     Verified desktop/phone layouts, map search, Escape and focus restoration, native button activation,
     keyboard navigation, notes, animation, full screen, idle hiding and first/last boundaries. Type checking,
     25 Python tests and three deck tests passed. This is browser UI only; it requires no film changes.
+49. **Explain the hospital shortcut setup (browser s21.8), 16 October 2026.** Separate training on X-rays
+    and report-derived labels from testing on a new X-ray with its label hidden. Define a positive label,
+    expand NIH, show the two dataset label rates and state why hospital identity can be a shortcut. Removed
+    sample counts and decorative scans to make space for these reminders. Rates now come from math/data.py
+    and src/data.json; verified the setup against Zech et al.'s methods and Table 1. Expanded the narration.
+    Content compilation, type checking, 25 Python tests and three deck tests passed. Inspected the slide and
+    narration in the deck. Saved timelines and the beat list are unchanged; this narration awaits the film rebuild.
+50. **Annotation PDF revision 18.** Saved `review/cbm-lecture-review-2026-10-16-r18.pdf`: 309 pages and
+    27 section bookmarks. Replaced page 19 (s21.8); verified every footer and bookmark and identical content
+    streams and text on the other 308 pages. Rendered and visually checked the revised page. Prior PDFs remain.

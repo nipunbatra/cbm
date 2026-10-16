@@ -135,9 +135,9 @@
     },
     {
      "id": "21.8",
-     "gap": 0.8,
-     "text": "The second limit is about shortcuts. Zech and colleagues trained a pneumonia detector on chest X-rays from two hospital systems. At one hospital about a third of the patients had pneumonia, and at the other about one in a hundred.",
-     "head": "Limit 2: a model can learn a {k:shortcut}"
+     "gap": 1.0,
+     "text": "Zech and colleagues studied a chest X-ray classifier. Focus on the model trained using data from both Mount Sinai and the National Institutes of Health Clinical Center, or NIH. Each training example pairs an X-ray with a pneumonia label derived from its radiology report. The label says whether pneumonia is reported. In the collected datasets, about a third of Mount Sinai X-rays have a positive label, compared with about one in a hundred at NIH. These are dataset label rates, not rates for all hospital patients. At test time, a new X-ray goes into the trained model, without its label, and a pneumonia score comes out. The intended clue is disease in the lungs, but the hospital already gives a clue to the label. That is the shortcut we will examine next.",
+     "head": "The setup: learn {y:pneumonia} from two {x:hospital datasets}"
     },
     {
      "id": "21.9",

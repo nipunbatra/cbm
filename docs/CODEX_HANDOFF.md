@@ -222,3 +222,16 @@ The dated entries below preserve the review history. The film remains on its ear
 - For each newer architecture, define unfamiliar terms, show how its representations are obtained, explain the
   training inputs and what is learned, and distinguish test-time computation from training.
 - Ask before publishing anything. Review images rather than PDFs when sending to him remotely.
+
+## 16 October 2026 review update
+
+- Added an Attention-style auto-hiding controls tray. C toggles it; M or O opens a searchable slide map grouped
+  by section. Buttons cover previous/next build, notes, animation and full screen. Three-second idle hiding
+  respects pointer hover and keyboard focus. The deck canvas is unchanged by the tray; notes reserve their
+  own space. Desktop/phone and keyboard checks are recorded in `review/controls-qa-2026-10-16.md`.
+- Clarified s21.8: training examples, report-derived pneumonia labels, dataset label rates, test input/output
+  and the hospital shortcut takeaway. The two rates now live in math/data.py and src/data.json.
+- Matching PDF: `review/cbm-lecture-review-2026-10-16-r18.pdf`, still 309 pages and 27 bookmarks. Only page 19
+  changed; all other page contents and all destinations were verified. The course's page count stays correct.
+- No audio generation, saved timeline rebuild or film rendering was performed. The s21.8 narration change
+  remains pending for the later film rebuild; the controls are browser-only.

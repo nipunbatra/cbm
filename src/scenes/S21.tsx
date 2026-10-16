@@ -151,12 +151,8 @@ const Knob: React.FC<{ x: number; y: number; r?: number; v?: number; o?: number 
   );
 };
 
-// Zech et al. 2018 (PLOS Medicine), reported values that are shown but not spoken (D.lit.zech holds the spoken ones)
-const ZR = { prevMSH: 34.2, prevNIH: 1.2, nMSH: 42396, nNIH: 112120 };
 const ZE = D.lit.zech;
 const TOKEN = [0.857, 0.062, 0.085, 0.13]; // the corner marker on the X-ray (normalized cx, cy, w, h)
-// 21.8 rows (hospital A = Mount Sinai, B = NIH), bar scale in px per percentage point
-const R12 = [440, 700], BAR12 = { x: 640, k: 13 };
 // 21.9 / 21.10 X-ray frames
 const XR13: Rect = fit('chest.jpg', 180, 330, 500);
 const XR14: Rect = fit('chest.jpg', 180, 330, 520);
@@ -238,10 +234,11 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
   const checkSimilar = at(w(7, 'barely') - 0.1);
   const checkTakeaway = at(w(7, 'Before') - 0.1);
 
-  // ---------------- 21.8 limit 2 setup
-  const s12det = at(w(8, 'pneumonia') - 0.1), s12hA = at(w(8, 'chest') - 0.1), s12hB = at(w(8, 'two') - 0.1);
-  const s12br = E.io(inv(w(8, 'systems') - 0.1, w(8, 'systems') + 0.6, t));
-  const s12bA = E.out(inv(w(8, 'third') - 0.1, w(8, 'third') + 0.9, t)), s12bB = E.out(inv(w(8, 'other') - 0.1, w(8, 'other') + 0.9, t));
+  // ---------------- 21.8 training examples, then prediction on a new image
+  const setupLabels = at(w(8, 'Each') - 0.1);
+  const setupRates = at(w(8, 'collected') - 0.1);
+  const setupTest = at(w(8, 'test') - 0.1);
+  const setupRisk = at(w(8, 'intended') - 0.1);
 
   // ---------------- 21.9 the shortcut
   const s13x = at(b(9) - 0.05, 0.3), s13q = at(w(9, 'which') - 0.1), s13pc = at(w(9, 'almost') - 0.1);
@@ -485,45 +482,45 @@ export const S21: React.FC<SceneProps> = ({ t, P }) => {
         <Credit x={150} y={955} text={CREDIT['gull.jpg']} />
       </Slide>
 
-      {/* ============================================================ 21.8 limit 2 setup: two hospitals */}
+      {/* ============================================================ 21.8 training and test setup */}
       <Slide o={sl(8)}>
         <SlideHead text={bh(P, 8)} />
-        {R12.map((ry, i) => {
-          const o = i === 0 ? s12hA : s12hB;
-          return [16, 8, 0].map((d) => (
-            <PhotoR key={`${i}-${d}`} R={{ x: 400 + d, y: ry - 49 + d, w: 120, h: 97 }} src="chest.jpg" o={o} dim={d ? 0.55 : 0} radius={5} shadow={false} />
-          ));
-        })}
+        <Rich x={130} y={300} size={29} weight={650} text="TRAIN: use examples from both hospitals" />
         <Svg>
-          {R12.map((ry, i) => {
-            const o = i === 0 ? s12hA : s12hB, p = i === 0 ? s12bA : s12bB, v = i === 0 ? ZR.prevMSH : ZR.prevNIH;
-            return (
-              <g key={i}>
-                <Hospital x={290} y={ry - 8} o={o} />
-                <Txt x={290} y={ry + 78} size={26} weight={600} o={o}>{i === 0 ? 'A: Mount Sinai' : 'B: NIH'}</Txt>
-                <Txt x={290} y={ry + 110} size={22} fill={C.mute} mono o={o}>{`${(i === 0 ? ZR.nMSH : ZR.nNIH).toLocaleString('en-GB')} X-rays`}</Txt>
-                <g opacity={inv(0, 0.3, p) < 0.999 ? inv(0, 0.3, p) : undefined}>
-                  <rect x={BAR12.x} y={ry - 22} width={Math.max(4, BAR12.k * v * p)} height={44} rx={5} fill={C.chalk} opacity={0.85} />
-                  <Txt x={BAR12.x + BAR12.k * v * p + 22} y={ry} size={34} weight={700} anchor="start" mono o={inv(0.5, 1, p)}>{`${v.toFixed(1)}%`}</Txt>
-                </g>
-              </g>
-            );
-          })}
-          <line x1={BAR12.x} x2={BAR12.x} y1={385} y2={755} stroke={C.line2} strokeWidth={2.5} opacity={s12bA} />
-          {/* one detector trained on both */}
-          <path d="M 1262 375 Q 1292 375 1292 400 L 1292 545 Q 1292 570 1318 570 Q 1292 570 1292 595 L 1292 740 Q 1292 765 1262 765" fill="none"
-            stroke={C.chalk2} strokeWidth={3} pathLength={1} strokeDasharray={s12br < 0.999 ? `${s12br} 1` : undefined} opacity={s12br > 0.001 ? 1 : 0} />
-          <Arr x1={1328} y1={570} x2={1398} y2={570} p={inv(0.6, 1, s12br)} />
-          <g opacity={s12det < 0.999 ? s12det : undefined}>
-            <Block x={1560} y={570} w={300} h={130} kind="head">
-              <Txt x={0} y={-18} size={30} weight={600}>pneumonia</Txt>
-              <Txt x={0} y={20} size={30} weight={600}>detector</Txt>
+          <rect x={130} y={365} width={850} height={270} rx={12} fill={C.bg2} stroke={C.line2} strokeWidth={2} />
+          {['Mount Sinai', 'NIH'].map((name, i) => <g key={name}>
+            <Txt x={170} y={425 + i * 130} anchor="start" size={30} weight={650}>{name}</Txt>
+            <Txt x={170} y={468 + i * 130} anchor="start" size={25} fill={C.input} o={setupLabels}>X-rays + pneumonia labels</Txt>
+            <Txt x={935} y={425 + i * 130} anchor="end" size={36} mono weight={650} o={setupRates}>
+              {(i === 0 ? ZE.positive_label_pct_msh : ZE.positive_label_pct_nih).toFixed(1) + '%'}
+            </Txt>
+            <Txt x={935} y={468 + i * 130} anchor="end" size={24} fill={C.chalk2} o={setupRates}>positive labels</Txt>
+          </g>)}
+          <Arr x1={1015} y1={500} x2={1190} y2={500} color={C.input} p={setupLabels} />
+          <g opacity={setupLabels}>
+            <Block x={1455} y={500} w={440} h={150} kind="head">
+              <Txt x={0} y={-22} size={32} weight={650}>learn a pneumonia</Txt>
+              <Txt x={0} y={23} size={32} weight={650}>predictor</Txt>
             </Block>
           </g>
+          <g opacity={setupTest}>
+            <Arr x1={640} y1={785} x2={760} y2={785} color={C.input} />
+            <Arr x1={1280} y1={785} x2={1410} y2={785} />
+          </g>
         </Svg>
-        <Rich x={BAR12.x} y={330} ay="middle" size={30} color={C.chalk2} text="patients with pneumonia" o={s12bA} />
-        <Rich x={1560} y={672} ax="center" ay="middle" size={30} text="trained on both" o={s12br} />
-        <EvTag x={BAR12.x} y={872} kind="reported" text="Zech et al., PLOS Medicine 2018" o={s12hA} />
+        <Rich x={1455} y={600} ax="center" w={510} size={27} color={C.chalk2}
+          text="Labels come from radiology reports" o={setupLabels} />
+        <Rich x={1455} y={645} ax="center" size={25} color={C.chalk2}
+          text="positive = pneumonia reported" o={setupLabels} />
+        <Rich x={130} y={655} size={23} color={C.mute} text="NIH: National Institutes of Health Clinical Center" />
+        <Rich x={130} y={715} size={29} weight={650} text="TEST: predict for a new image" o={setupTest} />
+        <Rich x={420} y={785} ax="center" ay="middle" size={33} text="one new {x:X-ray}" o={setupTest} />
+        <Rich x={420} y={835} ax="center" size={25} color={C.chalk2} text="label hidden" o={setupTest} />
+        <Rich x={1020} y={785} ax="center" ay="middle" size={33} text="the {f:trained predictor}" o={setupTest} />
+        <Rich x={1635} y={785} ax="center" ay="middle" size={33} text="{y:pneumonia score}" o={setupTest} />
+        <Rich x={960} y={925} ax="center" size={34} weight={650}
+          text="Risk: the {k:hospital} is already a clue to the {y:label}" o={setupRisk} />
+        <EvTag x={130} y={995} kind="reported" text="dataset label rates; Zech et al., PLOS Medicine 2018, Table 1" />
       </Slide>
 
       {/* ============================================================ 21.9 the shortcut */}
