@@ -11,7 +11,7 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 22 is live at https://nipunbatra.github.io/cbm/: 303 content slides plus 17 separators, matching notes
+Revision 23 is live at https://nipunbatra.github.io/cbm/: 303 content slides plus 17 separators, matching notes
 and a 320-page PDF with 43 navigation bookmarks.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
@@ -207,7 +207,7 @@ The dated entries below preserve the review history. The film remains on its ear
 2. **Remake the film after the review** (not now): regenerate the voice for changed lines, real timeline, music,
    captions, render, upload unlisted. Claude Code runs this pipeline (`tools/build.sh`, see CLAUDE.md); Codex should
    not run TTS, the timeline or renders.
-3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r22 are already live.
+3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r23 are already live.
    Later edits will need another deck/notes/PDF release on `nipunbatra/cbm` (`gh-pages`) and,
    if the page count changes, the course page through a pull request. The film remains a separate pending rebuild.
 4. Open checks, low priority:
@@ -292,15 +292,13 @@ The dated entries below preserve the review history. The film remains on its ear
 - Verified against the original PCBM paper, Figure 1 and Section 2. Content, type checking, 25 Python
   tests and four deck tests pass. The completed slide, progressive builds and narration were inspected.
 - Audio, saved film timelines and the beat list remain unchanged. Revised narration awaits the film rebuild.
-- Matching PDF: review/cbm-lecture-review-2026-10-16-r23.pdf, 320 pages and 43 bookmarks. Only page 174
-  changed; other page streams/text, all footers and bookmark destinations are verified. The page was inspected.
 - Matching PDF: review/cbm-lecture-review-2026-10-16-r22.pdf, 320 pages and 43 bookmarks. Only page 173
   changed. Other page streams/text, all footers and bookmark destinations are verified; the page was inspected.
 - Source commit d5919d2 and Pages release 56964cb are pushed. Deployment succeeded. Live HTML, JS,
   CSS, notes and PDF match the local release. The live slide is visually checked, and course links and
   320-page labels remain correct. See publishing/README.md for evidence.
 
-## 16 October 2026: image and phrase vector meanings (revision 23, prepared)
+## 16 October 2026: image and phrase vector meanings (revision 23, published)
 
 - s16.10 now shows where the vectors come from before using them: a new photo through CLIP's image
   encoder gives image features e, and the stripes phrase through its text encoder gives direction v.
@@ -309,3 +307,8 @@ The dated entries below preserve the review history. The film remains on its ear
 - Existing numbers come from D.pcbm_toy.clip. Content, type checking, 25 Python tests and four deck
   tests passed. The completed slide, definitions build, narration and preceding transition were inspected.
 - Audio, saved film timelines and the beat list remain unchanged. Revised narration awaits the film rebuild.
+- Matching PDF: review/cbm-lecture-review-2026-10-16-r23.pdf, 320 pages and 43 bookmarks. Only page 174
+  changed; other page streams/text, all footers and bookmark destinations are verified. The page was inspected.
+- Source commit 18f1057 and Pages release 02f39ae are pushed. Deployment succeeded. Live HTML, JS,
+  CSS, notes and PDF match the local release. The live slide was inspected, and course links and
+  320-page labels remain correct. See publishing/README.md for evidence.
