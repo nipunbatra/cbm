@@ -22,7 +22,9 @@ sh tools/setup_worktree.sh
 npm run deck
 ```
 
-Open http://localhost:8766. Arrow keys step through builds, N shows narration and O opens the overview.
+Open http://localhost:8766. Arrow keys step through builds, N shows narration and M (or O) opens the searchable slide map.
+Press C or use the bottom-right Controls button for previous/next, map, notes, animation and full screen.
+The bar hides after three idle seconds. Move to the bottom-right corner, tap the screen or press C to recover it.
 The setup script links shared dependencies and external media. A fresh machine needs the Node dependencies in
 `package-lock.json` and the Python packages in `requirements.txt`; the current build scripts expect the Python
 interpreter at `~/base/bin/python`. PDF export also uses local Chrome and Puppeteer.

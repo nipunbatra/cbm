@@ -288,3 +288,10 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     release `381c30f` on CBM Pages and updated the course count through DL 2026 PR 11. Deployments succeeded;
     live deck, notes, PDF and saliency images match the release bytes. Previous PDFs are preserved. All review
     changes still await the film rebuild; audio and saved timelines were not changed.
+48. **Auto-hiding deck controls and slide map, 16 October 2026.** Added an Attention-style corner toggle and
+    toolbar with previous/next build, slide/build counts, searchable map, narration, animation and full screen.
+    The controls hide after three idle seconds, recover at the bottom-right corner or with C, and stay visible
+    for pointer hover or keyboard focus. The map groups all slides by section and jumps to completed builds.
+    Verified desktop/phone layouts, map search, Escape and focus restoration, native button activation,
+    keyboard navigation, notes, animation, full screen, idle hiding and first/last boundaries. Type checking,
+    25 Python tests and three deck tests passed. This is browser UI only; it requires no film changes.

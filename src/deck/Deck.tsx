@@ -3,7 +3,7 @@
 // it is when that sentence finishes. Next plays a short (< 0.7 s) transition to the next stop and then waits: nothing
 // moves on its own. Keys: right / space / page-down / click = next build, left / page-up = back, shift+right = jump
 // without transition, up / down = previous / next section, n = notes (current sentence highlighted), o = overview,
-// a = transitions on/off, f = full screen. URL hash #s03.4 opens scene s03 at the end of beat 4.
+// c = controls, m / o = slide map, a = transitions on/off, f = full screen. URL hash #s03.4 opens scene s03 at the end of beat 4.
 // ?print renders every beat's end state as its own page (for the PDF).
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Player, type PlayerRef } from '@remotion/player';
@@ -16,6 +16,7 @@ import timeline from '../timeline.json';
 import script from '../../narration/script.json';
 import { reviewScene } from './reviewContent';
 import { SCENES } from '../scenes';
+import { Controls } from './Controls';
 
 const recorded = timeline as unknown as Timeline;
 const TL: Timeline = { ...recorded, scenes: script.scenes.map((sc) => {
@@ -78,7 +79,6 @@ const parseHash = (): Pos => {
 export const Deck: React.FC = () => {
   const [pos, setPos] = useState<Pos>(parseHash);
   const [notes, setNotes] = useState(false);
-  const [overview, setOverview] = useState(false);
   const [animate, setAnimate] = useState(true);
   const player = useRef<PlayerRef>(null);
   const anim = useRef<number | null>(null);
@@ -121,38 +121,39 @@ export const Deck: React.FC = () => {
   // a new section: show its stop immediately (the Player remounts with this frame)
   useEffect(() => { player.current?.seekTo(shown.current); }, [pos.s]);
 
+  const next = useCallback((transition = animate) => {
+    if (pos.k + 1 < STOPS[pos.s].length) go({ s: pos.s, k: pos.k + 1 }, transition);
+    else if (pos.s + 1 < TL.scenes.length) go({ s: pos.s + 1, k: 0 }, false);
+  }, [pos, go, animate]);
+  const prev = useCallback(() => {
+    if (pos.k > 0) go({ s: pos.s, k: pos.k - 1 }, false);
+    else if (pos.s > 0) go({ s: pos.s - 1, k: STOPS[pos.s - 1].length - 1 }, false);
+  }, [pos, go]);
+  const toggleNotes = useCallback(() => setNotes((v) => !v), []);
+  const toggleAnimate = useCallback(() => setAnimate((v) => !v), []);
   useEffect(() => {
-    const next = (transition: boolean) => {
-      if (pos.k + 1 < STOPS[pos.s].length) go({ s: pos.s, k: pos.k + 1 }, transition);
-      else if (pos.s + 1 < TL.scenes.length) go({ s: pos.s + 1, k: 0 }, false);
-    };
-    const prev = () => {
-      if (pos.k > 0) go({ s: pos.s, k: pos.k - 1 }, false);
-      else if (pos.s > 0) go({ s: pos.s - 1, k: STOPS[pos.s - 1].length - 1 }, false);
-    };
     const onKey = (e: KeyboardEvent) => {
-      if (overview && e.key === 'Escape') { setOverview(false); return; }
+      if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || document.querySelector('dialog[open]') ||
+          (e.target as HTMLElement).closest('input,textarea,select,summary,[contenteditable="true"]') ||
+          ((e.target as HTMLElement).closest('button') && [' ', 'Enter'].includes(e.key))) return;
       if (['ArrowRight', ' ', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); next(animate && !e.shiftKey); }
       else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
-      else if (e.key === 'ArrowDown') go({ s: Math.min(TL.scenes.length - 1, pos.s + 1), k: 0 }, false);
-      else if (e.key === 'ArrowUp') go({ s: Math.max(0, pos.s - 1), k: 0 }, false);
-      else if (e.key === 'n') setNotes((v) => !v);
-      else if (e.key === 'o') setOverview((v) => !v);
-      else if (e.key === 'a') setAnimate((v) => !v);
-      else if (e.key === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
-      else if (e.key === 'Home') go({ s: 0, k: 0 }, false);
+      else if (e.key === 'ArrowDown') { e.preventDefault(); go({ s: Math.min(TL.scenes.length - 1, pos.s + 1), k: 0 }, false); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); go({ s: Math.max(0, pos.s - 1), k: 0 }, false); }
+      else if (e.key === 'Home') { e.preventDefault(); go({ s: 0, k: 0 }, false); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [pos, go, animate, overview]);
+  }, [pos, go, animate, next, prev]);
+  useEffect(() => () => stopAnim(), []);
 
   const stop = STOPS[pos.s][pos.k];
   const nb = sc.beats.length;
   const words = (sc.beats[stop.beat].words ?? []).map((w) => w.w);
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#000', display: 'flex', flexDirection: 'column', fontFamily: F.sans }}>
-      <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        onClick={(e) => { if (!overview && e.clientX > window.innerWidth / 3) dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' })); else if (!overview) dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' })); }}>
+      <div id="deck-stage" tabIndex={-1} aria-label="Lecture slide" style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', outline: 'none' }}
+        onClick={(e) => { e.currentTarget.focus({ preventScroll: true }); e.clientX > window.innerWidth / 3 ? next() : prev(); }}>
         <div style={{ width: `min(100vw, calc((100vh - ${notes ? 190 : 0}px) * 16 / 9))`, aspectRatio: '16 / 9' }}>
           <Player key={sc.id} ref={player} component={SceneOnly} inputProps={{ id: sc.id }} durationInFrames={Math.max(1, Math.round(sc.dur * FPS))}
             fps={FPS} compositionWidth={W} compositionHeight={H} style={{ width: '100%', height: '100%' }} controls={false}
@@ -163,7 +164,7 @@ export const Deck: React.FC = () => {
         <div style={{ height: 3, width: `${((pos.s + (pos.k + 1) / STOPS[pos.s].length) / TL.scenes.length) * 100}%`, background: C.concept }} />
       </div>
       {notes ? (
-        <div style={{ height: 187, overflow: 'auto', padding: '14px 28px', background: '#0b0d10', color: '#cfd6dd', fontSize: 19, lineHeight: 1.45 }}>
+        <div style={{ height: 187, flexShrink: 0, boxSizing: 'border-box', overflow: 'auto', padding: '14px 28px', background: '#0b0d10', color: '#cfd6dd', fontSize: 19, lineHeight: 1.45 }}>
           <div style={{ color: '#7d8894', fontSize: 14, marginBottom: 6 }}>{`${sc.id} · ${sc.title} · slide ${stop.beat + 1} of ${nb} · build ${pos.k + 1} of ${STOPS[pos.s].length}`}</div>
           {words.length ? (<span><span style={{ color: '#7d8894' }}>{words.slice(0, stop.from).join(' ')} </span>
             <span style={{ color: '#ffffff' }}>{words.slice(stop.from, stop.to).join(' ')}</span>
@@ -171,18 +172,15 @@ export const Deck: React.FC = () => {
           {stop.beat + 1 < nb && stop.to >= words.length ? <div style={{ color: '#6b7680', marginTop: 8, fontSize: 16 }}>Next slide: {sc.beats[stop.beat + 1].text.slice(0, 140)}…</div> : null}
         </div>
       ) : null}
-      {overview ? (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(5,7,9,0.96)', overflow: 'auto', padding: 32, display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
-          {TL.scenes.map((x, i) => (
-            <button key={x.id} onClick={() => { setOverview(false); go({ s: i, k: 0 }, false); }}
-              style={{ textAlign: 'left', padding: '14px 16px', background: i === pos.s ? '#123b37' : '#14181d', color: '#e8edf2',
-                border: '1px solid #262c33', borderRadius: 8, fontSize: 17, cursor: 'pointer', fontFamily: F.sans }}>
-              <div style={{ color: '#7d8894', fontSize: 13 }}>{`${i}  ·  ${x.beats.length} steps`}</div>{x.title}
-            </button>
-          ))}
-        </div>
-      ) : null}
+      <Controls sections={script.scenes.map((s) => ({ id: s.id, title: s.title, slides: s.beats.map((b) =>
+        ('head' in b && !String(b.head).includes('$') ? String(b.head).replace(/\{[xcfelkym]:([^{}]*)\}/g, '$1').trim() : '') || b.text.split(/(?<=[.!?])\s/)[0]
+      ) }))} section={pos.s} slide={stop.beat}
+        build={STOPS[pos.s].slice(0, pos.k + 1).filter((s) => s.beat === stop.beat).length}
+        builds={STOPS[pos.s].filter((s) => s.beat === stop.beat).length}
+        notes={notes} animate={animate} canPrev={pos.s > 0 || pos.k > 0}
+        canNext={pos.s < TL.scenes.length - 1 || pos.k < STOPS[pos.s].length - 1}
+        onPrev={prev} onNext={() => next()} onJump={(s, beat) => go({ s, k: lastStopOfBeat(s, beat) }, false)}
+        onNotes={toggleNotes} onAnimate={toggleAnimate} />
     </div>
   );
 };

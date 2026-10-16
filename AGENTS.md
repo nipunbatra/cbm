@@ -14,7 +14,9 @@ sh tools/setup_worktree.sh     # links node_modules and the SSD media (audio, re
 npm run deck                    # builds deck/ and serves it at http://localhost:8766
 ```
 Keys in the deck: right arrow, space or click = next build; left = back; up/down = previous/next section; N = notes
-(the narration, current sentence highlighted); O = overview; A = transitions on/off; F = full screen.
+(the narration, current sentence highlighted); M or O = searchable slide map; A = transitions on/off; F = full screen.
+C opens the controls bar. It hides after three idle seconds; move to the bottom-right corner or tap to recover it.
+Controls stay visible while hovered or used with keyboard focus. The map groups all slides by section.
 `#s04.6` opens section s04 at slide 6. Builds stop at the end of each narration sentence and wait for a click.
 
 ## Where things live
