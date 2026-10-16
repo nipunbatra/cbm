@@ -305,3 +305,7 @@ Audio note: the voice for these lines was already generated and checked (asrchec
 50. **Annotation PDF revision 18.** Saved `review/cbm-lecture-review-2026-10-16-r18.pdf`: 309 pages and
     27 section bookmarks. Replaced page 19 (s21.8); verified every footer and bookmark and identical content
     streams and text on the other 308 pages. Rendered and visually checked the revised page. Prior PDFs remain.
+51. **Publish controls and review revision 18.** Pages release `cbfa536` deployed successfully. Live HTML,
+    JavaScript, CSS, notes and PDF match the local files. Verified the published controls, map and revised
+    slide in the browser. Existing course links and the 309-page label remain correct. No audio or film
+    work was performed.

@@ -206,7 +206,7 @@ The dated entries below preserve the review history. The film remains on its ear
 2. **Remake the film after the review** (not now): regenerate the voice for changed lines, real timeline, music,
    captions, render, upload unlisted. Claude Code runs this pipeline (`tools/build.sh`, see CLAUDE.md); Codex should
    not run TTS, the timeline or renders.
-3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r17 are already live.
+3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r18 are already live.
    Later edits will need another deck/notes/PDF release on `nipunbatra/cbm` (`gh-pages`) and,
    if the page count changes, the course page through a pull request. The film remains a separate pending rebuild.
 4. Open checks, low priority:
@@ -235,3 +235,7 @@ The dated entries below preserve the review history. The film remains on its ear
   changed; all other page contents and all destinations were verified. The course's page count stays correct.
 - No audio generation, saved timeline rebuild or film rendering was performed. The s21.8 narration change
   remains pending for the later film rebuild; the controls are browser-only.
+
+- Published `cbfa536` on `gh-pages`; deployment succeeded. Live HTML, JS, CSS, notes and PDF match the
+  release bytes, and the existing deep learning course links are valid. Browser verification includes the
+  new controls, map and revised slide. See `publishing/README.md` for the evidence and source commits.
