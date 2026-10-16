@@ -46,7 +46,7 @@ export const S16Primer: React.FC<SceneProps> = ({t,P}) => {
   };
   const cue = (k: number, word: string) => inv(bw(P,current(k),word)-.1,bw(P,current(k),word)+.3,t);
   const s5=so(5),s6=so(6),s7=so(7),s8=so(8),s9=so(9),s11=so(11),s15=so(15),s18=so(18);
-  const c5=cue(5,'Pass'), c7=cue(7,'Across'), c8=cue(8,'second'), c9=cue(9,'Both');
+  const c5=cue(5,'Pass'), c7=cue(7,'Across'), c8=cue(8,'second'), c9=cue(9,'Instead');
   const c11=cue(11,'Repeat'), c15=cue(15,'Compare'), c18=cue(18,'softmax');
   const a=TOY.new_features[0], v=TOY.direction;
   return <>
@@ -108,17 +108,25 @@ export const S16Primer: React.FC<SceneProps> = ({t,P}) => {
     <HText x={1080} y={825} w={650} size={28} color={C.chalk2} o={s8*cue(8,'probabilities')}>A concept score is not a probability.</HText>
     <EvTag x={210} y={960} kind="constructed" text="chosen features and unit CAV; dot products calculated" o={s8} />
 
-    <Rich x={190} y={330} text="Alternative to labelled concept examples" size={32} o={s9} />
+    <Rich x={190} y={315} text="{c:CAV route}: completed in the previous slides" size={32} o={s9} />
     <Svg o={s9}>
-      <Block x={440} y={525} w={500} h={130} title='“black and white stripes”' size={32} kind="concept" />
-      <Flow pts={[[710,525],[840,525]]} color={C.concept} o={cue(9,'text')} />
-      <Block x={1000} y={525} w={300} h={130} title="CLIP text encoder" sub="pretrained, frozen" size={28} kind="head" o={cue(9,'text')} />
-      <Flow pts={[[1170,525],[1320,525]]} color={C.concept} o={cue(9,'vector')} />
-      <Block x={1510} y={525} w={360} h={130} title="concept direction" sub="save in the bank" kind="concept" o={cue(9,'vector')} />
+      <Block x={430} y={425} w={480} h={120} title="striped / not striped" sub="labelled image features" size={32} subSize={25} kind="input" />
+      <Flow pts={[[690,425],[820,425]]} color={C.input} />
+      <Block x={1010} y={425} w={360} h={120} title="fit a classifier" sub="learn from the labels" size={30} subSize={24} kind="head" />
+      <Flow pts={[[1210,425],[1340,425]]} color={C.concept} />
+      <Block x={1540} y={425} w={380} h={120} title="CAV" sub="learned direction" size={32} subSize={25} kind="concept" />
+      <g opacity={c9}>
+        <Block x={430} y={690} w={480} h={120} title='“black and white stripes”' size={30} kind="concept" />
+        <Flow pts={[[690,690],[820,690]]} color={C.concept} />
+        <Block x={1010} y={690} w={360} h={120} title="CLIP text encoder" sub="pretrained, frozen" size={30} subSize={25} kind="input" />
+      </g>
+      <Flow pts={[[1210,690],[1340,690]]} color={C.concept} o={cue(9,'Its')} />
+      <Block x={1540} y={690} w={380} h={120} title="phrase vector" sub="in CLIP image space" size={32} subSize={24} kind="concept" o={cue(9,'Its')} />
     </Svg>
-    <Rich x={960} y={710} ax="center" w={1500} size={36} text="Text and image vectors share the same {x:CLIP feature space}." o={s9*cue(9,'same')} />
-    <HText x={960} y={815} ax="center" size={32} weight={700} o={s9*c9}>Our animal example uses this route. Both encoders stay frozen.</HText>
-    <EvTag x={190} y={950} kind="schematic" text="CLIP text route; no concept classifier is fitted" o={s9} />
+    <Rich x={190} y={580} text="{c:Phrase route}: use a frozen CLIP text encoder" size={32} o={s9*c9} />
+    <HText x={960} y={810} ax="center" size={32} weight={700} o={s9*cue(9,'Our')}>We continue with the phrase route in the animal example.</HText>
+    <Rich x={960} y={875} ax="center" w={1550} size={30} text="Either route supplies {c:directions} for scoring images, then fitting the {f:task head}." o={s9*cue(9,'either')} />
+    <EvTag x={190} y={960} kind="schematic" text="alternative ways to build the bank; PCBM, Fig. 1 and Section 2" o={s9} />
 
     <PhotoR R={{x:180,y:350,w:310,h:210}} src={`worked/${WK.example}`} frac={crop(WK.example,210/310)} o={s11} />
     <Svg o={s11}>

@@ -1245,8 +1245,8 @@
     {
      "id": "16.9",
      "gap": 0.8,
-     "text": "There is another way to build the concept bank. With CLIP, write a phrase such as black and white stripes and pass it through the pretrained text encoder. It produces a vector in the same space as CLIP image features. Use that vector as the concept direction. This replaces the labelled-example route; it is not another step after fitting a CAV. Both CLIP encoders stay frozen. Our animal example uses this text route.",
-     "head": "An alternative: CLIP turns the {c:phrase} into a direction"
+     "text": "The CAV example is complete: we fitted a concept direction from labelled image features and used it to score a new image. We now change only how we obtain that direction. Instead of fitting a classifier, send the phrase black and white stripes through CLIP's frozen text encoder. Its phrase vector is a concept direction in the same space as CLIP image features. These are separate routes for building the concept bank, not consecutive steps. Our animal example follows the phrase route from here, with both CLIP encoders frozen. With either route, we score images along the saved directions and train the task head on those scores.",
+     "head": "Two ways to obtain a {c:concept direction}"
     },
     {
      "id": "16.10",

@@ -282,3 +282,15 @@ The dated entries below preserve the review history. The film remains on its ear
 - Source commit 9b7773d and Pages release 2d7dc63 are pushed. Deployment succeeded; live HTML, JS, CSS,
   notes and PDF match the local release. The live slide was visually inspected, and existing course links
   and 320-page labels remain correct. See publishing/README.md for evidence.
+
+## 16 October 2026: CAV and phrase routes (revision 22, prepared)
+
+- s16.9 explicitly closes the fitted-CAV example and compares two routes to a concept direction.
+  The upper row recaps labelled image features and a fitted classifier. The lower row uses a phrase
+  and CLIP's frozen text encoder. The following animal example uses the phrase route, with concept
+  scoring and task-head fitting downstream. Narration distinguishes alternatives from sequential steps.
+- Verified against the original PCBM paper, Figure 1 and Section 2. Content, type checking, 25 Python
+  tests and four deck tests pass. The completed slide, progressive builds and narration were inspected.
+- Audio, saved film timelines and the beat list remain unchanged. Revised narration awaits the film rebuild.
+- Matching PDF: review/cbm-lecture-review-2026-10-16-r22.pdf, 320 pages and 43 bookmarks. Only page 173
+  changed. Other page streams/text, all footers and bookmark destinations are verified; the page was inspected.

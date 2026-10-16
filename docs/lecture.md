@@ -571,8 +571,8 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 8. **Score a new image along the striped direction**  
    Now take a new image. In our toy space its features are 1.5 and 2. The teal unit CAV arrow points one step to the right and none upwards: its entries are 1, 0. Only the horizontal coordinate contributes: 1.5 times 1 plus 2 times 0 gives 1.5. A second image at minus 0.5, 2 scores minus 0.5. A higher score means further towards the striped side. These are concept scores, not probabilities or animal classes.
 
-9. **An alternative: CLIP turns the phrase into a direction**  
-   There is another way to build the concept bank. With CLIP, write a phrase such as black and white stripes and pass it through the pretrained text encoder. It produces a vector in the same space as CLIP image features. Use that vector as the concept direction. This replaces the labelled-example route; it is not another step after fitting a CAV. Both CLIP encoders stay frozen. Our animal example uses this text route.
+9. **Two ways to obtain a concept direction**  
+   The CAV example is complete: we fitted a concept direction from labelled image features and used it to score a new image. We now change only how we obtain that direction. Instead of fitting a classifier, send the phrase black and white stripes through CLIP's frozen text encoder. Its phrase vector is a concept direction in the same space as CLIP image features. These are separate routes for building the concept bank, not consecutive steps. Our animal example follows the phrase route from here, with both CLIP encoders frozen. With either route, we score images along the saved directions and train the task head on those scores.
 
 10. **A projection: multiply matching entries, then add**  
    How far along a direction does a photo lie? Multiply the features and the direction entry by entry, then add up the products: this is the dot product. With just two entries, it is the first entry times the first, plus the second times the second.

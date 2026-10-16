@@ -347,3 +347,14 @@ Audio note: the voice for these lines was already generated and checked (asrchec
 60. **Publish review revision 21.** Source commit 9b7773d and Pages release 2d7dc63 are pushed.
     Deployment succeeded. Live HTML, JS, CSS, notes and PDF match the release bytes; the revised slide
     was inspected in the browser. Existing course links and 320-page labels remain correct.
+61. **Clarify the alternative to fitting a CAV (browser s16.9), 16 October 2026.** Replaced the ambiguous
+    handover with two aligned routes to a concept direction: labelled image features through a fitted
+    classifier, or a phrase through CLIP's frozen text encoder. Marked the CAV example as complete and
+    identified the phrase route used in the following animal example. Both routes lead to concept scores
+    and a task head. The narration explicitly says they are alternatives, not consecutive steps.
+    Checked the distinction against PCBM Figure 1 and Section 2 (https://arxiv.org/abs/2205.15480).
+    Content, type checking, 25 Python tests and four deck tests passed. Inspected the full slide, first
+    and phrase-route builds, narration and transition from s16.8. Saved film timing remains unchanged.
+62. **Annotation PDF revision 22.** Updated page 173 (s16.9), retaining 320 pages and 43 bookmarks.
+    All other 319 page streams and text match revision 21. Every footer and bookmark was checked,
+    and the revised page was rendered and visually inspected. Earlier PDFs remain available.
