@@ -1251,8 +1251,8 @@
     {
      "id": "16.10",
      "gap": 0.8,
-     "text": "How far along a direction does a photo lie? Multiply the features and the direction entry by entry, then add up the products: this is the dot product. With just two entries, it is the first entry times the first, plus the second times the second.",
-     "head": "A projection: multiply matching entries, then add"
+     "text": "We continue with the CLIP phrase route from the previous slide. The image encoder turns a new photo into its image feature vector, called e. The text encoder turns black and white stripes into a concept direction, called v. For simple arithmetic, use illustrative unit vectors with two entries instead of 512: e is 0.6, 0.8, and v is 0.8, 0.6. First multiply matching entries: 0.6 times 0.8 and 0.8 times 0.6. Then add the products, 0.48 plus 0.48, to get 0.96. As with the CAV example, this dot product is a concept score, not a probability.",
+     "head": "Score the {x:image features} along the {c:phrase direction}"
     },
     {
      "id": "16.11",

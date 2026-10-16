@@ -361,3 +361,14 @@ Audio note: the voice for these lines was already generated and checked (asrchec
 63. **Publish review revision 22.** Source commit d5919d2 and Pages release 56964cb are pushed.
     Deployment succeeded. Live HTML, JS, CSS, notes and PDF match the local release bytes. Inspected
     the published slide; existing course links and visible/accessibility 320-page labels remain correct.
+64. **Define e and v before the dot product (browser s16.10), 16 October 2026.** Replaced the abstract
+    vector plot with two labelled paths: photo through the frozen image encoder to image features e,
+    and the stripes phrase through the frozen text encoder to concept direction v. Explicitly continues
+    s16.9's phrase route. Words and symbols appear before the illustrative values and worked calculation.
+    Existing vectors, products and score come from D.pcbm_toy.clip. Narration links this scoring step
+    to the earlier CAV example and distinguishes the score from a probability. Content, type checking,
+    25 Python tests and four deck tests passed. Inspected final layout, definitions build and narration.
+    Audio, saved film timelines and the beat list are unchanged.
+65. **Annotation PDF revision 23.** Updated page 174 (s16.10), retaining 320 pages and 43 bookmarks.
+    All other 319 page streams and text match revision 22. Every footer and bookmark was checked,
+    and the revised page was rendered and visually inspected. Earlier PDFs remain available.

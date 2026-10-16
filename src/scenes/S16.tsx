@@ -89,10 +89,10 @@ const EXD = 1120, EXE = -170; // the worked photo: how far along stripes, and it
 const EXP = at2(U_ST, EXD, EXE);
 const TW = 112, THH = 75; // thumbnail size
 
-// ---- 16.8 the dot product on two entries (illustrative unit vectors)
+// ---- 16.10 the CLIP image/phrase dot product (illustrative unit vectors)
 const DE: [number, number] = D.pcbm_toy.clip.image, DV: [number, number] = D.pcbm_toy.clip.phrase;
 const DOT: number = D.pcbm_toy.clip.score;
-const DP = { ox: 260, oy: 820, s: 440 }; // plot origin and scale (1 unit = s px)
+const PRODUCTS: number[] = D.pcbm_toy.clip.products;
 // ---- 16.10 the stripes score on a number line (real mean, spread and score)
 const NL = { x0: 300, x1: 1620, v0: 0.17, v1: 0.3, y: 470 };
 const nlx = (v: number) => NL.x0 + ((v - NL.v0) / (NL.v1 - NL.v0)) * (NL.x1 - NL.x0);
@@ -208,18 +208,14 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
   const s5 = so(11);
   const z5 = (i: number) => E.out(inv(b(11) + 0.1 + i * 0.08, b(11) + 0.6 + i * 0.08, t));
   const hi5 = at(w(11, 'black') - 0.1);
-  // ---------------- 16.8 the dot product (two entries)
+  // ---------------- 16.10 (legacy beat 8): where e and v come from, then their dot product
   const d8 = so(8);
-  const d8p = at(b(8) + 0.1, 0.5), d8e = at(w(8, 'features') - 0.1, 0.5), d8v = at(w(8, 'direction', 1) - 0.1, 0.5);
-  const d8w = at(w(8, 'Multiply') - 0.1), d8f = at(w(8, 'dot') - 0.1);
-  const d8proj = E.io(inv(w(8, 'products') - 0.1, w(8, 'products') + 0.8, t));
+  const d8e = at(w(8, 'image') - 0.1), d8v = at(w(8, 'text') - 0.1);
+  const d8vals = at(w(8, 'illustrative') - 0.1), d8w = at(w(8, 'First') - 0.1);
   const d8n: [string, number][] = [
-    [`\\cin{${DE[0]}} \\times \\ccon{${DV[0]}}`, w(8, 'first') - 0.1],
-    [`{} + \\cin{${DE[1]}} \\times \\ccon{${DV[1]}}`, w(8, 'plus') - 0.1],
-  ];
-  const d8r: [string, number][] = [
-    [`{} = ${(DE[0] * DV[0]).toFixed(2)} + ${(DE[1] * DV[1]).toFixed(2)}`, w(8, 'second') + 0.2],
-    [`{} = ${DOT.toFixed(2)}`, w(8, 'second', 1) - 0.1],
+    ['\\cin{e} \\cdot \\ccon{v} = ', w(8, 'First') - 0.1],
+    [`\\cin{${DE[0]}} \\times \\ccon{${DV[0]}} + \\cin{${DE[1]}} \\times \\ccon{${DV[1]}}`, w(8, 'First') - 0.1],
+    [`{} = ${PRODUCTS[0].toFixed(2)} + ${PRODUCTS[1].toFixed(2)} = \\ccon{${DOT.toFixed(2)}}`, w(8, 'Then') - 0.1],
   ];
   // ---------------- 16.10 standardising, on a number line
   const n10 = so(10);
@@ -420,31 +416,21 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
           </g>
         ) : null}
 
-        {/* ---------------- slide 8: the dot product on two entries ---------------- */}
-        {d8 > 0.001 ? (() => {
-          const X = (u: number) => DP.ox + u * DP.s, Y = (v: number) => DP.oy - v * DP.s;
-          const foot = DOT; // v has length 1: the foot of e on v is DOT * v
-          const fx = X(DV[0] * foot), fy = Y(DV[1] * foot);
-          return (
-            <g opacity={d8 < 0.999 ? d8 : undefined}>
-              <g opacity={d8p}>
-                <line x1={DP.ox} y1={DP.oy} x2={DP.ox + DP.s + 30} y2={DP.oy} stroke={C.line2} strokeWidth={2} />
-                <line x1={DP.ox} y1={DP.oy} x2={DP.ox} y2={DP.oy - DP.s - 30} stroke={C.line2} strokeWidth={2} />
-                <Txt x={X(1)} y={DP.oy + 26} size={22} mono fill={C.mute}>1</Txt>
-                <Txt x={DP.ox - 20} y={Y(1)} size={22} mono fill={C.mute}>1</Txt>
-                <Txt x={DP.ox - 20} y={DP.oy + 22} size={22} mono fill={C.mute}>0</Txt>
-              </g>
-              {d8e > 0.001 ? <Flow pts={[[DP.ox, DP.oy], [lerp(DP.ox, X(DE[0]), d8e), lerp(DP.oy, Y(DE[1]), d8e)]]} color={C.input} sw={5} head={18} /> : null}
-              {d8v > 0.001 ? <Flow pts={[[DP.ox, DP.oy], [lerp(DP.ox, X(DV[0]), d8v), lerp(DP.oy, Y(DV[1]), d8v)]]} color={C.concept} sw={5} head={18} /> : null}
-              {d8proj > 0.001 ? (
-                <g>
-                  <line x1={X(DE[0])} y1={Y(DE[1])} x2={lerp(X(DE[0]), fx, d8proj)} y2={lerp(Y(DE[1]), fy, d8proj)} stroke={C.chalk2} strokeWidth={2.5} strokeDasharray="6 6" />
-                  <line x1={DP.ox} y1={DP.oy} x2={lerp(DP.ox, fx, d8proj)} y2={lerp(DP.oy, fy, d8proj)} stroke={C.concept} strokeWidth={11} strokeLinecap="round" opacity={0.45} />
-                </g>
-              ) : null}
-            </g>
-          );
-        })() : null}
+        {/* ---------------- slide 10: image and phrase routes produce the two vectors ---------------- */}
+        <g opacity={d8}>
+          <g opacity={d8e}>
+            <Block x={430} y={440} w={480} h={120} title="new animal photo" size={32} kind="input" />
+            <Flow pts={[[690,440],[820,440]]} color={C.input} />
+            <Block x={1010} y={440} w={360} h={120} title="CLIP image encoder" sub="pretrained, frozen" size={30} subSize={24} kind="input" />
+            <Flow pts={[[1210,440],[1320,440]]} color={C.input} />
+          </g>
+          <g opacity={d8v}>
+            <Block x={430} y={650} w={480} h={120} title='“black and white stripes”' size={30} kind="concept" />
+            <Flow pts={[[690,650],[820,650]]} color={C.concept} />
+            <Block x={1010} y={650} w={360} h={120} title="CLIP text encoder" sub="pretrained, frozen" size={30} subSize={24} kind="input" />
+            <Flow pts={[[1210,650],[1320,650]]} color={C.concept} />
+          </g>
+        </g>
 
         {/* ---------------- slide 10: standardising on a number line ---------------- */}
         {n10 > 0.001 ? (() => {
@@ -531,16 +517,19 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <Rich x={ENC2.x} y={600} ax="center" size={26} color={C.chalk2} text="{x:frozen}" o={oo(s2, clip2)} />
       <EvTag x={1760} y={890} ax="right" kind="computed" text={`CLIP ViT-B/32 image feature of this photo (normalised); 4 of ${FEAT_DIM} entries shown`} o={oo(s2, vec2)} />
 
-      {/* new slide 8: the dot product on two entries */}
+      {/* slide 10 (legacy beat 8): words and origins before symbols and arithmetic */}
       <SlideHead text={bh(P, current(8))} o={d8} />
-      <Tex x={DP.ox + DE[0] * DP.s + 14} y={DP.oy - DE[1] * DP.s - 24} size={34} tex={`\\cin{e} = (${DE[0]},\\ ${DE[1]})`} o={oo(d8, d8e)} />
-      <Tex x={DP.ox + DV[0] * DP.s + 18} y={DP.oy - DV[1] * DP.s + 6} size={34} tex={`\\ccon{v} = (${DV[0]},\\ ${DV[1]})`} o={oo(d8, d8v)} />
-      <Rich x={900} y={330} w={860} size={32} text="{x:features} · {c:direction} = first × first + second × second" o={oo(d8, d8w)} />
-      <Tex x={900} y={430} size={52} tex="\langle \cin{e},\ \ccon{v} \rangle = \cin{e_1}\ccon{v_1} + \cin{e_2}\ccon{v_2}" o={oo(d8, d8f)} />
-      <TexSteps x={900} y={560} t={t} size={44} o={d8} parts={d8n} />
-      <TexSteps x={900} y={650} t={t} size={44} o={d8} parts={d8r} />
-      <Rich x={900} y={740} w={860} size={28} color={C.chalk2} text={`the dot product; CLIP does the same over ${FEAT_DIM} entries`} o={oo(d8, at(w(8, 'second', 1) - 0.1))} />
-      <EvTag x={1760} y={890} ax="right" kind="illustrative" text={`two entries instead of ${FEAT_DIM}`} o={oo(d8, d8e)} />
+      <Rich x={190} y={305} size={30} text="Continuing the {c:CLIP phrase route} from the previous slide" o={d8} />
+      <Rich x={1350} y={380} size={30} text="{x:image feature vector}" o={oo(d8,d8e)} />
+      <Tex x={1350} y={435} size={42} tex="\cin{e}" o={oo(d8,d8e)} />
+      <Tex x={1398} y={435} size={42} tex={`= (\\cin{${DE[0]}},\\ \\cin{${DE[1]}})`} o={oo(d8,d8vals)} />
+      <Rich x={1350} y={590} size={30} text="{c:concept direction}" o={oo(d8,d8v)} />
+      <Tex x={1350} y={645} size={42} tex="\ccon{v}" o={oo(d8,d8v)} />
+      <Tex x={1398} y={645} size={42} tex={`= (\\ccon{${DV[0]}},\\ \\ccon{${DV[1]}})`} o={oo(d8,d8vals)} />
+      <Rich x={190} y={790} size={32} text="{c:Concept score}: multiply matching entries, then add" o={oo(d8,d8w)} />
+      <TexSteps x={190} y={850} t={t} size={42} o={d8} parts={d8n} />
+      <EvTag x={190} y={950} kind="illustrative" text={`${DE.length} entries instead of ${FEAT_DIM}; unit vectors, not actual CLIP outputs`} o={oo(d8,d8vals)} />
+      <HText x={1760} y={945} ax="right" size={26} color={C.chalk2} o={oo(d8,at(w(8,'probability')-.1))}>A score, not a probability.</HText>
 
       {/* new slide 10: standardising */}
       <SlideHead text={bh(P, current(10))} o={n10} />

@@ -292,8 +292,20 @@ The dated entries below preserve the review history. The film remains on its ear
 - Verified against the original PCBM paper, Figure 1 and Section 2. Content, type checking, 25 Python
   tests and four deck tests pass. The completed slide, progressive builds and narration were inspected.
 - Audio, saved film timelines and the beat list remain unchanged. Revised narration awaits the film rebuild.
+- Matching PDF: review/cbm-lecture-review-2026-10-16-r23.pdf, 320 pages and 43 bookmarks. Only page 174
+  changed; other page streams/text, all footers and bookmark destinations are verified. The page was inspected.
 - Matching PDF: review/cbm-lecture-review-2026-10-16-r22.pdf, 320 pages and 43 bookmarks. Only page 173
   changed. Other page streams/text, all footers and bookmark destinations are verified; the page was inspected.
 - Source commit d5919d2 and Pages release 56964cb are pushed. Deployment succeeded. Live HTML, JS,
   CSS, notes and PDF match the local release. The live slide is visually checked, and course links and
   320-page labels remain correct. See publishing/README.md for evidence.
+
+## 16 October 2026: image and phrase vector meanings (revision 23, prepared)
+
+- s16.10 now shows where the vectors come from before using them: a new photo through CLIP's image
+  encoder gives image features e, and the stripes phrase through its text encoder gives direction v.
+  The slide explicitly continues the phrase route from s16.9, then reveals the existing illustrative
+  vectors and their dot product. Narration connects this score to the earlier CAV example.
+- Existing numbers come from D.pcbm_toy.clip. Content, type checking, 25 Python tests and four deck
+  tests passed. The completed slide, definitions build, narration and preceding transition were inspected.
+- Audio, saved film timelines and the beat list remain unchanged. Revised narration awaits the film rebuild.
