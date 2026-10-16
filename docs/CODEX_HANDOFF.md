@@ -11,8 +11,8 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 28 is live at https://nipunbatra.github.io/cbm/: 246 content slides plus 17 separators, matching notes
-and a 263-page PDF with 40 navigation bookmarks.
+Revision 29 is live at https://nipunbatra.github.io/cbm/: 260 content slides plus 18 separators, matching notes
+and a 278-page PDF with 42 navigation bookmarks. Grounding is the final optional appendix, after TCAV.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
 
@@ -371,3 +371,6 @@ The dated entries below preserve the review history. The film remains on its ear
   follows. LaBo and LF-CBM remain archived. The checked PDF has 278 pages and 42 bookmarks, with
   grounding on pages 261-277 after its separator. All 252 unchanged slide bodies are preserved.
   All checks passed; restored slides and the TCAV-to-appendix transition were inspected. Film timing is unchanged.
+  Source 753ed5d and Pages release 5b6f25b are pushed and deployed. Live files match local hashes;
+  course PR #18 is merged and deployed with both labels showing 278 pages. The final optional appendix
+  separator and opening were verified live. Evidence: qa/review-2026-10-16/r29-live-verification.json.

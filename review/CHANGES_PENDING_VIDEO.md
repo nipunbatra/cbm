@@ -482,3 +482,8 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     pages and preserved all 252 other slide bodies. Verified every footer and bookmark destination.
     The final appendix separator is page 260; grounding occupies pages 261-277, before the end card.
     Earlier annotation PDFs remain available.
+84. **Publish review revision 29.** Source 753ed5d and Pages release 5b6f25b are pushed and deployed.
+    Live HTML, JavaScript, CSS, notes and PDF match local bytes. Verified the optional final appendix
+    separator, grounding opening and last-section navigation on the published site. Course PR #18 is
+    merged and deployed; both PDF labels show 278 pages and all three standalone CBM links are correct.
+    Audio and saved film timing remain unchanged.
