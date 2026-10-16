@@ -27,7 +27,7 @@
 | Mahinpei et al., *Promises and Pitfalls of Black-Box Concept Learning Models*, 2021. https://arxiv.org/abs/2106.13314 | information beyond the concepts in soft representations (Part 9) |
 | Havasi et al., *Addressing Leakage in Concept Bottleneck Models*, NeurIPS 2022 | leakage through soft concepts and side channels (Part 9, background) |
 | Margeloiu et al., *Do Concept Bottleneck Models Learn as Intended?*, 2021. https://arxiv.org/abs/2105.04289 | concepts may not be grounded in the intended input evidence (Parts 3, 13) |
-| Shin et al., *A Closer Look at the Intervention Procedure of CBMs*, ICML 2023. https://proceedings.mlr.press/v202/shin23a.html | intervention gains depend on which concepts are corrected and in what order (Part 11) |
+| Shin et al., *A Closer Look at the Intervention Procedure of CBMs*, ICML 2023. https://proceedings.mlr.press/v202/shin23a.html | intervention gains depend on correction policy; Part 11 identifies its oracle policy (the detailed order comparison is archived) |
 | Radford et al., *CLIP*, ICML 2021. https://proceedings.mlr.press/v139/radford21a.html | the Part 1 black box (zero-shot image–text similarity) |
 | Berry et al., *The AASM Manual for the Scoring of Sleep and Associated Events* (AASM); Lucey et al. 2016, https://pmc.ncbi.nlm.nih.gov/articles/PMC5135638/ | 30 s epochs; spindles (11 to 16 Hz) and K-complexes in N2 (Parts 6, 12; domain context only) |
 | SentinelKilnDB (Sustainability Lab, IIT Gandhinagar) | the Sentinel-2 kiln crop (Part 12) |

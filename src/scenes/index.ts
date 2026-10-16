@@ -18,7 +18,7 @@ import { S16 } from './S16';
 import { S17 } from './S17';
 import { S18 } from './S18';
 import { S19 } from './S19';
-import { S11 } from './S11';
+import { EvaluationBrief } from './EvaluationBrief';
 import { S12 } from './S12';
 import { S13 } from './S13';
 import { S14 } from './S14';
@@ -50,7 +50,7 @@ export const SCENES: Record<string, React.FC<SceneProps>> = {
   s17: S17,
   s18: S18,
   s19: S19,
-  s11: S11,
+  s11: EvaluationBrief,
   s12: S12,
   s13: S13,
   s14: S14,

@@ -36,6 +36,8 @@ Controls stay visible while hovered or used with keyboard focus. The map groups 
   Grounding (s24) is optional further reading at the very end, after TCAV and separator s49.
   Its random-layer control and two intuitive explanations are s24.4-6; they are outside the main recap.
   New review scenes receive preview timing without changing the saved film timeline.
+- **Evaluation:** active Part 11 uses `src/scenes/EvaluationBrief.tsx` and three narration beats.
+  The detailed 19-slide version is preserved in `src/scenes/S11.tsx` and `narration/archive/s11-r29.txt`.
 - **Numbers:** `math/data.py` writes `src/data.json` (scenes read it as `D`). Never type a number on a slide that
   exists in data.json; spoken numbers must trace to it (`math/test_narration.py` checks).
 - **Readable lecture:** `docs/lecture.md` (generated: every heading and its narration). Style rules for slides:

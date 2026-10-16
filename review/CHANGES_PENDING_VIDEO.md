@@ -487,3 +487,16 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     separator, grounding opening and last-section navigation on the published site. Course PR #18 is
     merged and deployed; both PDF labels show 278 pages and all three standalone CBM links are correct.
     Audio and saved film timing remain unchanged.
+85. **Shorten Part 11 from 19 slides to three (browser s11.19), 16 October 2026.**
+    Replaced the detailed evaluation walkthrough with four evaluation questions, one measured concept
+    correction, and a multi-task versus strict-CBM comparison. Removed metric arithmetic, per-concept
+    breakdowns, the separate dataset/training setup, correction-order curves and repeated summaries.
+    The remaining comparison defines its oracle policy and states the experiment's limitations beside
+    the result. All values still come from D.measured and the saved checkpoint. The 19-slide scene and
+    narration remain archived, outside the active lecture. Type checking, 26 Python tests and four deck
+    tests passed; checked all three rendered layouts, notes and the transition directly to Part 12.
+    Audio, both saved film timelines and docs/beats.txt are unchanged.
+86. **Annotation PDF revision 30.** Saved review/cbm-lecture-review-2026-10-16-r30.pdf with 262 pages:
+    244 content slides and 18 separators, with 42 navigation bookmarks. Exported the three evaluation
+    slides, preserving all 259 other slide bodies. Verified every footer and bookmark destination.
+    Earlier annotation PDFs remain available.

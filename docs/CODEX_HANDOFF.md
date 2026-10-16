@@ -374,3 +374,8 @@ The dated entries below preserve the review history. The film remains on its ear
   Source 753ed5d and Pages release 5b6f25b are pushed and deployed. Live files match local hashes;
   course PR #18 is merged and deployed with both labels showing 278 pages. The final optional appendix
   separator and opening were verified live. Evidence: qa/review-2026-10-16/r29-live-verification.json.
+- 16 Oct, shorten evaluation (r30): Part 11 now contains three slides: four evaluation questions, one
+  measured before/after correction, and multi-task versus strict CBM intervention utility. Detailed
+  S11.tsx and narration/archive/s11-r29.txt are retained outside the active deck. The current drawing
+  is EvaluationBrief.tsx. Matching PDF: 262 pages, 42 bookmarks. All 259 other bodies are preserved;
+  saved film timing remains unchanged. Rendered layouts, notes and the Part 12 transition checked.

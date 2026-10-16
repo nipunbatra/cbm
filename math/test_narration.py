@@ -60,8 +60,9 @@ def test_every_spoken_number_is_traceable():
 def test_key_spoken_values_present():
     text = ' '.join(b['text'] for sc in S['scenes'] for b in sc['beats'])
     # The detailed leakage example (0.72, 0.96, 0.84) was removed in slide review.
-    # Its underlying data still has independent numerical validation.
+    # The condensed Part 11 also omits the black-box, concept-accuracy and random-order rates.
+    # Their underlying data still has independent numerical validation.
     for v in ['0.54', '0.21', '0.71', '0.29', '0.91', '1.2', '1.6', '0.2', '3.9', '0.7', '0.52', '0.95', '2.7', '0.12',
-              '0.62', '0.38', '0.86', '1.4', '0.80', '0.45', '78.7', '82.0', '81.6', '92.4',
-              '0.78', '97.3', '87.3']:
+              '0.62', '0.38', '0.86', '1.4', '0.80', '0.45', '82.0', '81.6',
+              '0.78', '97.3']:
         assert v in text, v

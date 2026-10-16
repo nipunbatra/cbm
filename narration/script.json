@@ -1488,118 +1488,21 @@
    "beats": [
     {
      "id": "11.1",
-     "gap": 0.6,
-     "text": "How should we judge such a model? Accuracy alone hides most of what matters, so we ask four separate questions, each about a different part of the model.",
-     "head": "Accuracy alone hides most of what a {c:concept bottleneck} promises"
+     "gap": 0.8,
+     "text": "Keep four questions in mind. Task accuracy: is the final answer right on held-out images? Concept quality: are the named values correct, and based on the intended image evidence? Faithfulness: does the prediction actually use those concepts? Intervention utility: do corrections improve decisions, and at what cost in human time and mistakes?",
+     "head": "Four checks, beyond the final {y:answer}"
     },
     {
      "id": "11.2",
-     "gap": 0.4,
-     "text": "First, task accuracy: are the predictions correct? In everyday terms, is the final answer right? Measure it on held-out test images, images the model never saw during training.",
-     "head": "Task accuracy: are the {y:predictions} correct?"
+     "gap": 0.8,
+     "text": "Here is one measured example from a synthetic-shape experiment. Colour, shape and size determine the class. This image is a small red square. Before correction, large scores 0.78, and the head predicts large red square. Set only large to 0. The same trained head now predicts small red square. No retraining is needed.",
+     "head": "One {e:correction}, the same trained {f:head}"
     },
     {
      "id": "11.3",
-     "gap": 0.6,
-     "text": "The formula only counts. The bracket is 1 when the prediction matches the true label, and 0 when it does not. Add up the ones and divide by the number of images. Three predictions with two right give an accuracy of two thirds.",
-     "head": "Task accuracy counts the right {y:answers}"
-    },
-    {
-     "id": "11.4",
-     "gap": 0.4,
-     "text": "Second, concept accuracy: are the concept estimates correct? In everyday terms, did the model read the evidence correctly? Take one test image, a small red square. Round each concept score to 0 or 1, and compare it with the label. Large scores 0.78, which rounds to 1, but the square is small, so its label is 0. Four of the five match. Concept accuracy averages these matches over all images and all concepts.",
-     "head": "Concept accuracy: are the {c:concept values} right?",
-     "tags": "[calm]"
-    },
-    {
-     "id": "11.5",
-     "gap": 0.4,
-     "text": "The second question has a second half, grounding: does each estimate rest on the intended evidence? A score for wingtip black should come from the wingtip, not from the water. So we also check where the detector looks.",
-     "head": "Grounding: does each {c:concept} rest on the right evidence?"
-    },
-    {
-     "id": "11.6",
-     "gap": 0.4,
-     "text": "Third, faithfulness: does the output actually depend on the concepts, in the way the model claims? An explanation is faithful when it tells the truth about how the answer was made. To test it, change a concept and check that the output moves as the head says. In the gull head from Part 2, setting wingtip black to 1 lifts herring gull from 0.29 to 0.91.",
-     "head": "Faithfulness: does the {y:output} really depend on the {c:concepts}?"
-    },
-    {
-     "id": "11.7",
      "gap": 1.0,
-     "text": "Fourth, intervention utility: when a person corrects a concept, do decisions improve, and at what human cost? Correct concepts one at a time, and plot accuracy against the number of corrections. Each correction costs a person's time, so a curve that rises early is better.",
-     "head": "Intervention utility: do {e:corrections} help, and at what cost?"
-    },
-    {
-     "id": "11.8",
-     "gap": 0.6,
-     "text": "Here is a real experiment where we know every true concept. The images are synthetic, 64 by 64 pixels: each shape is red or blue, a circle or a square, small or large. Two colours, two shapes and two sizes give eight classes. Five yes-or-no concepts describe each image: red, blue, circle, square and large. Together they fully determine the class.",
-     "head": "A controlled test: synthetic shapes with known {c:concepts}"
-    },
-    {
-     "id": "11.9",
-     "gap": 0.6,
-     "text": "Three models share the same small CNN, the same data, and the same training budget of 60 epochs, that is, 60 passes through the 768 training images. The black box predicts the class directly. The multi-task model also predicts the concepts, with a concept head beside its class head. The strict CBM predicts the concepts first, and its head reads only those five values.",
-     "head": "Three models share one small {x:CNN}"
-    },
-    {
-     "id": "11.10",
-     "gap": 0.8,
-     "text": "Each bar is the share of the 512 test images classified correctly: 78.7 percent for the black box, 82.0 for multi-task, and 81.6 for the strict CBM. On this question alone, the three look about the same.",
-     "head": "Task accuracy: the three models are close"
-    },
-    {
-     "id": "11.11",
-     "gap": 0.8,
-     "text": "Over all images and all five concepts, the strict CBM gets 92.4 percent of its concept values right. The bars on the left split this by concept. Colour is always right, and shape is hardest, at about 84 percent for circle and 83 for square.",
-     "head": "Concept accuracy: most {c:concept values} are right"
-    },
-    {
-     "id": "11.12",
-     "gap": 1.0,
-     "text": "Back to our test image, the small red square. Its concept large reads 0.78, so the model believes the square is large, and the head predicts large red square. A person sets large to 0, and the same head now predicts small red square, the true class.",
-     "head": "One {e:edit} to one {c:concept} changes the {y:prediction}"
-    },
-    {
-     "id": "11.13",
-     "gap": 0.6,
-     "text": "Now do this for every test image. The true labels play a perfect expert, which we call an oracle. It fixes the concept with the largest error first. For our square, that is large, which is 0.78 away from its label of 0.",
-     "head": "{e:Oracle corrections}: fix the worst {c:concept} first"
-    },
-    {
-     "id": "11.14",
-     "gap": 1.0,
-     "text": "On this chart, the horizontal axis counts corrections per image, from 0 to 5, and the vertical axis shows task accuracy, starting at 80 percent. One oracle correction lifts accuracy from 81.6 to 97.3 percent. With all five corrected, it reaches 100.",
-     "head": "Each step right is one more {e:correction} per image"
-    },
-    {
-     "id": "11.15",
-     "gap": 0.8,
-     "text": "Now pick the concept to correct at random instead. The dashed line rises more slowly: 87.3 percent after one correction, averaged over 32 random orders. A random pick often fixes a concept that was already right, as four of the five were for our square. The shaded band spans the lowest and highest of the 32 runs.",
-     "head": "{e:Random corrections} help more slowly"
-    },
-    {
-     "id": "11.16",
-     "gap": 1.0,
-     "text": "Now the multi-task model. Edit its concept head, and its class scores stay exactly the same, because its class head never reads the concepts.",
-     "head": "In the multi-task model, a {e:concept edit} changes nothing"
-    },
-    {
-     "id": "11.17",
-     "gap": 1.0,
-     "text": "Read these numbers with care: one training seed, meaning a single training run, 512 synthetic test images, and corrections taken from the true labels, standing in for a perfect, effortless expert. Real experts make mistakes, and their time is costly.",
-     "head": "Read these numbers with care"
-    },
-    {
-     "id": "11.18",
-     "gap": 0.8,
-     "text": "The three models have similar accuracy, yet they differ completely in intervention utility. Each metric measures a different property.",
-     "head": "Similar accuracy, very different intervention utility"
-    },
-    {
-     "id": "11.19",
-     "gap": 1.2,
-     "text": "Why can similar accuracy hide such different behaviour? Accuracy marks only the final answer, not the route to it. The multi-task model's class head never reads its concept estimates, so fixing one is like correcting a note that nobody reads. In the strict CBM, the concepts are the only road to the answer, so a fix reaches the prediction.",
-     "head": "Why similar accuracy can hide very different {e:intervention utility}"
+     "text": "Compare two models on the same test images. The multi-task model predicts concepts on a separate branch. Its class head never reads them, so a concept correction leaves accuracy at 82.0 percent. In the strict CBM, the head reads only concepts. One correction per image raises accuracy from 81.6 to 97.3 percent. Here, an oracle uses the true labels to correct the largest concept error first. These results use one training seed and 512 synthetic test images, with perfect corrections. They do not measure human effort or mistakes. Similar accuracy can hide very different intervention utility.",
+     "head": "{e:Corrections} help only if the head reads the {c:concepts}"
     }
    ]
   },

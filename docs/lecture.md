@@ -683,62 +683,14 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 ## How should we evaluate a CBM?  (s11)
 
-1. **Accuracy alone hides most of what a concept bottleneck promises**  
-   How should we judge such a model? Accuracy alone hides most of what matters, so we ask four separate questions, each about a different part of the model.
+1. **Four checks, beyond the final answer**  
+   Keep four questions in mind. Task accuracy: is the final answer right on held-out images? Concept quality: are the named values correct, and based on the intended image evidence? Faithfulness: does the prediction actually use those concepts? Intervention utility: do corrections improve decisions, and at what cost in human time and mistakes?
 
-2. **Task accuracy: are the predictions correct?**  
-   First, task accuracy: are the predictions correct? In everyday terms, is the final answer right? Measure it on held-out test images, images the model never saw during training.
+2. **One correction, the same trained head**  
+   Here is one measured example from a synthetic-shape experiment. Colour, shape and size determine the class. This image is a small red square. Before correction, large scores 0.78, and the head predicts large red square. Set only large to 0. The same trained head now predicts small red square. No retraining is needed.
 
-3. **Task accuracy counts the right answers**  
-   The formula only counts. The bracket is 1 when the prediction matches the true label, and 0 when it does not. Add up the ones and divide by the number of images. Three predictions with two right give an accuracy of two thirds.
-
-4. **Concept accuracy: are the concept values right?**  
-   Second, concept accuracy: are the concept estimates correct? In everyday terms, did the model read the evidence correctly? Take one test image, a small red square. Round each concept score to 0 or 1, and compare it with the label. Large scores 0.78, which rounds to 1, but the square is small, so its label is 0. Four of the five match. Concept accuracy averages these matches over all images and all concepts.
-
-5. **Grounding: does each concept rest on the right evidence?**  
-   The second question has a second half, grounding: does each estimate rest on the intended evidence? A score for wingtip black should come from the wingtip, not from the water. So we also check where the detector looks.
-
-6. **Faithfulness: does the output really depend on the concepts?**  
-   Third, faithfulness: does the output actually depend on the concepts, in the way the model claims? An explanation is faithful when it tells the truth about how the answer was made. To test it, change a concept and check that the output moves as the head says. In the gull head from Part 2, setting wingtip black to 1 lifts herring gull from 0.29 to 0.91.
-
-7. **Intervention utility: do corrections help, and at what cost?**  
-   Fourth, intervention utility: when a person corrects a concept, do decisions improve, and at what human cost? Correct concepts one at a time, and plot accuracy against the number of corrections. Each correction costs a person's time, so a curve that rises early is better.
-
-8. **A controlled test: synthetic shapes with known concepts**  
-   Here is a real experiment where we know every true concept. The images are synthetic, 64 by 64 pixels: each shape is red or blue, a circle or a square, small or large. Two colours, two shapes and two sizes give eight classes. Five yes-or-no concepts describe each image: red, blue, circle, square and large. Together they fully determine the class.
-
-9. **Three models share one small CNN**  
-   Three models share the same small CNN, the same data, and the same training budget of 60 epochs, that is, 60 passes through the 768 training images. The black box predicts the class directly. The multi-task model also predicts the concepts, with a concept head beside its class head. The strict CBM predicts the concepts first, and its head reads only those five values.
-
-10. **Task accuracy: the three models are close**  
-   Each bar is the share of the 512 test images classified correctly: 78.7 percent for the black box, 82.0 for multi-task, and 81.6 for the strict CBM. On this question alone, the three look about the same.
-
-11. **Concept accuracy: most concept values are right**  
-   Over all images and all five concepts, the strict CBM gets 92.4 percent of its concept values right. The bars on the left split this by concept. Colour is always right, and shape is hardest, at about 84 percent for circle and 83 for square.
-
-12. **One edit to one concept changes the prediction**  
-   Back to our test image, the small red square. Its concept large reads 0.78, so the model believes the square is large, and the head predicts large red square. A person sets large to 0, and the same head now predicts small red square, the true class.
-
-13. **Oracle corrections: fix the worst concept first**  
-   Now do this for every test image. The true labels play a perfect expert, which we call an oracle. It fixes the concept with the largest error first. For our square, that is large, which is 0.78 away from its label of 0.
-
-14. **Each step right is one more correction per image**  
-   On this chart, the horizontal axis counts corrections per image, from 0 to 5, and the vertical axis shows task accuracy, starting at 80 percent. One oracle correction lifts accuracy from 81.6 to 97.3 percent. With all five corrected, it reaches 100.
-
-15. **Random corrections help more slowly**  
-   Now pick the concept to correct at random instead. The dashed line rises more slowly: 87.3 percent after one correction, averaged over 32 random orders. A random pick often fixes a concept that was already right, as four of the five were for our square. The shaded band spans the lowest and highest of the 32 runs.
-
-16. **In the multi-task model, a concept edit changes nothing**  
-   Now the multi-task model. Edit its concept head, and its class scores stay exactly the same, because its class head never reads the concepts.
-
-17. **Read these numbers with care**  
-   Read these numbers with care: one training seed, meaning a single training run, 512 synthetic test images, and corrections taken from the true labels, standing in for a perfect, effortless expert. Real experts make mistakes, and their time is costly.
-
-18. **Similar accuracy, very different intervention utility**  
-   The three models have similar accuracy, yet they differ completely in intervention utility. Each metric measures a different property.
-
-19. **Why similar accuracy can hide very different intervention utility**  
-   Why can similar accuracy hide such different behaviour? Accuracy marks only the final answer, not the route to it. The multi-task model's class head never reads its concept estimates, so fixing one is like correcting a note that nobody reads. In the strict CBM, the concepts are the only road to the answer, so a fix reaches the prediction.
+3. **Corrections help only if the head reads the concepts**  
+   Compare two models on the same test images. The multi-task model predicts concepts on a separate branch. Its class head never reads them, so a concept correction leaves accuracy at 82.0 percent. In the strict CBM, the head reads only concepts. One correction per image raises accuracy from 81.6 to 97.3 percent. Here, an oracle uses the true labels to correct the largest concept error first. These results use one training seed and 512 synthetic test images, with perfect corrections. They do not measure human effort or mistakes. Similar accuracy can hide very different intervention utility.
 
 ## Part 12: Beyond images  (s43)
 
