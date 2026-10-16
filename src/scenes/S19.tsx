@@ -23,10 +23,6 @@ const ROWS: Row[] = [
     head: { tex: '\\ch_j \\in \\mathbb{R}^m', sub: 'a vector per concept' }, train: { tex: '\\gth,\\ \\fph', sub: 'predictor + head' } },
   { name: 'PCBM', cite: 'Yuksekgonul et al. 2023', data: { tex: `\\{(${X},\\ y)\\}`, sub: '+ a concept bank' }, from: { text: 'a concept bank' },
     head: { text: 'scaled cosine scores', sub: 'phrase example' }, train: { tex: '\\fph', sub: 'head only' } },
-  { name: 'LaBo', cite: 'Yang et al. 2023', data: { tex: `\\{(${X},\\ y)\\}` }, from: { text: 'a language model, CLIP' },
-    head: { tex: `\\cos(\\phi(${X}),\\, \\psi(s_j))`, sub: 'raw CLIP scores' }, train: { tex: '\\fph', sub: 'head only' } },
-  { name: 'VLG-CBM', cite: 'Srivastava et al. 2024', data: { tex: `\\{(${X},\\ y)\\}`, sub: '+ a detector' }, from: { text: 'a language model, a detector' },
-    head: { tex: `\\ch = W_c\\, e(${X})`, sub: 'a learned concept layer' }, train: { tex: 'W_c,\\ \\fph', sub: 'concept layer + head' } },
   { name: 'CBD', cite: 'Menon and Vondrick 2023', data: { text: 'none for new task' }, from: { text: 'a language model' },
     head: { tex: `\\cos(\\phi(${X}),\\, \\psi(d))`, sub: 'raw CLIP scores' }, train: { text: 'no task fitting' } },
 ];
@@ -35,21 +31,19 @@ const ROWS: Row[] = [
 const WHO: { v: string; sup: string; chk: string; human?: boolean; none?: boolean }[] = [
   { v: 'CBM, CEM', sup: 'people label them', chk: 'people', human: true },
   { v: 'PCBM', sup: 'a concept bank', chk: 'whoever built the bank' },
-  { v: 'LaBo', sup: 'a language model', chk: 'a CLIP similarity only' },
-  { v: 'VLG-CBM', sup: 'a language model', chk: 'a detector' },
-  { v: 'CBD', sup: 'a language model', chk: 'nobody', none: true },
+  { v: 'CBD', sup: 'a language model', chk: 'review needed', none: true },
 ];
-const WY = 400, WH = 92, WX = [200, 640, 1160, 1720]; // first row centre, row pitch, column edges
+const WY = 420, WH = 140, WX = [200, 640, 1160, 1720]; // first row centre, row pitch, column edges
 // 19.8 the staircase (schematic levels of human labour and human checking per rung)
 const STEPS = [
   { tex: '\\{\\cin{x},\\ \\ccon{c},\\ y\\}', who: 'CBM, CEM', labour: 1, check: 1, people: 2 },
-  { tex: '\\{\\cin{x},\\ y\\}', who: 'PCBM, LaBo, VLG-CBM', labour: 0.4, check: 0.3, people: 1 },
+  { tex: '\\{\\cin{x},\\ y\\}', who: 'PCBM', labour: 0.4, check: 0.3, people: 1 },
   { tex: '\\varnothing', who: 'by description', labour: 0, check: 0, people: 0 },
 ];
 const COLS = ['variant', 'data needed', 'concepts from', 'what the head reads', 'trained'];
 const CX = [160, 454, 726, 1044, 1474, 1760]; // column edges
 const cmid = (j: number) => (CX[j] + CX[j + 1]) / 2;
-const HY = 342, R0 = 380, RH = 87;
+const HY = 342, R0 = 390, RH = 116;
 const ry = (i: number) => R0 + i * RH;
 const RB = ry(ROWS.length);
 
@@ -82,8 +76,6 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
     [w(2, 'Supervised'), w(4, 'people'), w(5, 'number'), w(6, 'predictor')],
     [w(2, 'embedding'), w(4, 'people') + 0.15, w(5, 'vector'), w(6, 'predictor') + 0.15],
     [w(3, 'Post'), w(4, 'bank'), w(5, 'scaled'), w(6, 'only')],
-    [w(3, 'LaBo'), w(4, 'CLIP'), w(5, 'raw'), w(6, 'only') + 0.2],
-    [w(3, 'VLG'), w(4, 'detector'), w(5, 'VLG'), w(6, 'layer') + 0.2],
     [w(3, 'no'), w(4, 'language') + 0.3, w(5, 'raw') + 0.3, w(6, 'nothing')],
   ];
   // column headers: previewed dim on "one column at a time", full on their beat
@@ -99,7 +91,7 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
   const f1 = at(b(7) + 0.1) * out7, f2 = at(w(7, 'None')) * out7, f3 = at(w(7, 'phrase'), 0.6) * out7, f4 = at(w(7, 'checked')) * out7;
   // 19.8 who supplies, who checks
   const s7 = ho(8), s7h = at(w(8, 'who') - 0.1);
-  const s7r = [w(8, 'CBMs'), w(8, 'post'), w(8, 'LaBo'), w(8, 'VLG'), w(8, 'classification')].map((x) => at(x - 0.1, 0.5));
+  const s7r = [w(8, 'CBMs'), w(8, 'post'), w(8, 'classification')].map((x) => at(x - 0.1, 0.5));
   // 19.9 the staircase
   const s8 = ho(9), s8step = (i: number) => at(b(9) + 0.15 + i * 0.3, 0.5);
   const s8lab = E.io(inv(w(9, 'labour') - 0.2, w(9, 'labour') + 0.8, t)), s8chk = E.io(inv(w(9, 'check') - 0.2, w(9, 'check') + 0.8, t));

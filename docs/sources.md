@@ -22,8 +22,8 @@
 | Zarlenga et al., *Concept Embedding Models*, NeurIPS 2022. https://arxiv.org/abs/2209.09056 | positive / negative concept embeddings mixed by a probability (Part 10) |
 | Yuksekgonul et al., *Post-hoc Concept Bottleneck Models*, ICLR 2023. https://arxiv.org/abs/2205.15480 | frozen features projected onto concept vectors, sparse head, PCBM-h residual (Part 10) |
 | Oikarinen et al., *Label-Free Concept Bottleneck Models*, ICLR 2023. https://arxiv.org/abs/2304.06129 | archived background; the paper-specific walkthrough was removed in review r26 |
-| Yang et al., *Language in a Bottle (LaBo)*, CVPR 2023. https://arxiv.org/abs/2211.11158 | LLM-proposed concepts, selection, CLIP scores, classifier (Part 10) |
-| Srivastava et al., *VLG-CBM: Training Concept Bottleneck Models with Vision-Language Guidance*, NeurIPS 2024. https://arxiv.org/abs/2408.01432 | detected regions provide concept training targets; a learned concept layer and sparse class head (Part 10) |
+| Yang et al., *Language in a Bottle (LaBo)*, CVPR 2023. https://arxiv.org/abs/2211.11158 | Archived background; LaBo walkthrough removed from the current lecture in review r27 |
+| Srivastava et al., *VLG-CBM: Training Concept Bottleneck Models with Vision-Language Guidance*, NeurIPS 2024. https://arxiv.org/abs/2408.01432 | Archived background; grounded-model walkthrough removed from the current lecture in review r27 |
 | Mahinpei et al., *Promises and Pitfalls of Black-Box Concept Learning Models*, 2021. https://arxiv.org/abs/2106.13314 | information beyond the concepts in soft representations (Part 9) |
 | Havasi et al., *Addressing Leakage in Concept Bottleneck Models*, NeurIPS 2022 | leakage through soft concepts and side channels (Part 9, background) |
 | Margeloiu et al., *Do Concept Bottleneck Models Learn as Intended?*, 2021. https://arxiv.org/abs/2105.04289 | concepts may not be grounded in the intended input evidence (Parts 3, 13) |

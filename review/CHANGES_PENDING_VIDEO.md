@@ -429,3 +429,16 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     Live HTML, JavaScript, CSS, notes and PDF match the local release bytes. Inspected the published
     two-group map. Course PR #15 is merged and deployed; both visible and accessible labels show
     296 pages, and all three course links remain correct. Audio and film timing remain unchanged.
+76. **Remove LaBo and move directly to rung three (browser s18.1), 16 October 2026.**
+    Removed LaBo's 18 slides from the active lecture. Interpreted the requested direct move to rung three
+    as also skipping the remaining 15-slide VLG-CBM walkthrough and its separator. Removed the redundant
+    two-group map; one rung-two separator now introduces the existing CLIP phrase example, which leads
+    directly to s41 and classification by description. Archived all removed narration, scenes and data.
+    Updated the ladder, headers, notes, references and four-row recap. Rung three now compares its fixed
+    average with the preceding learned head, without referring to LaBo. Concept-checking principles
+    remain in the recap and evaluation. Content, type checking, 25 Python tests and four deck tests passed.
+    Inspected revised PDF layouts and verified the s16-to-s41 browser transition. Film timing is unchanged.
+77. **Annotation PDF revision 27.** Saved review/cbm-lecture-review-2026-10-16-r27.pdf with 261 pages:
+    244 content slides and 17 separators, with 40 navigation bookmarks. Exported 44 revised pages and
+    preserved all 217 other slide bodies. Every footer and bookmark destination was verified, along with
+    the absence of LaBo, LF-CBM and VLG-CBM text. Earlier PDFs remain available for annotation references.

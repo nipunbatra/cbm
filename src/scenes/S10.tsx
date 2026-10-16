@@ -3,8 +3,8 @@
 // 10.2 one supervised record: the worked photo (D.worked.example) and its JSON card; then CUB's 112 labels per
 //      photograph, drawn as Herring Gull's real class-level row (D.cub.herring_gull, 112 cells).
 // 10.3 to 10.5 the supervision ladder, one rung per slide, as a descending staircase of cards joined by labelled
-//      arrows: {x, c, y} CBM, CEM; {x, y} PCBM, LaBo, VLG-CBM; no task training: CBD.
-// 10.6 to 10.7 matching workflows: LaBo learns a task head from class-labelled images; classification by
+//      arrows: {x, c, y} CBM, CEM; {x, y} PCBM; no task training: CBD.
+// 10.6 to 10.7 matching workflows: the CLIP phrase example learns a task head from class-labelled images; classification by
 //      description averages scores with a fixed rule. Both retain pretrained CLIP and text descriptions.
 // 10.8 the trade-off: concept labels written by people (12 boxes, none, none) and who checks each concept against the
 //      photo (a person, ?, ?).   10.9 the question to carry: is the named concept really visible in the image?
@@ -86,7 +86,7 @@ const JsonCard: React.FC<{ o: number; lineO: (i: number) => number; hi: (i: numb
 type Rung = { tex: string; desc: string; who: string };
 const RUNGS: Rung[] = [
   { tex: '\\{\\cin{x},\\ \\ccon{c},\\ y\\}', desc: '{x:images}, {c:concept labels}, {y:class labels}', who: 'CBM, concept embedding model (CEM)' },
-  { tex: '\\{\\cin{x},\\ y\\}', desc: '{x:images} and {y:class labels}', who: 'post-hoc CBM, LaBo, VLG-CBM' },
+  { tex: '\\{\\cin{x},\\ y\\}', desc: '{x:images} and {y:class labels}', who: 'post-hoc CBM' },
   { tex: '\\varnothing', desc: 'no training for this task', who: 'classification by description' },
 ];
 // a staircase of three wide cards, each step a little lower, connected by labelled arrows
@@ -175,7 +175,7 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
   // the current rung is highlighted; earlier rungs stay readable (0.6)
   const hl = [1 - at(b(4) - 0.05), at(b(4) - 0.05) * (1 - at(b(5) - 0.05)), at(b(5) - 0.05)];
   const rungDim = hl.map((h) => 0.6 + 0.4 * h);
-  const dropO = [0, at(w(4, 'drop') - 0.15), at(w(5, 'drops') - 0.15)];
+  const dropO = [0, at(w(4, 'drops') - 0.15), at(w(5, 'drops') - 0.15)];
   const lessO = at(w(3, 'ladder') - 0.1);
   // the steps still to come, as dashed outlines, from "ladder" until each rung arrives
   const ghostO = (k: number) => lessO * (1 - rungO[k]);
@@ -469,15 +469,13 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
       ))}
       <Rich x={1760} y={AXY + 16} ax="right" size={28} color={C.chalk2} text="less supervision" o={oo(sL, lessO)} />
 
-      <Rich x={160} y={936} size={28} text="Language in a Bottle (LaBo)" o={oo(sL, rungO[1])} />
-      <Rich x={160} y={978} size={28} text="Vision-Language-Guided Concept Bottleneck Model (VLG-CBM)" o={oo(sL, rungO[1])} />
 
       {/* slides 6 and 7: keep the common pipeline in place, change the combination */}
       {workflow.map(({ k, o, input, scores, head, result, takeaway }) => (
         <React.Fragment key={k}>
           <SlideHead text={bh(P, k)} o={o} />
           <HText x={160} y={302} size={28} weight={600} color={C.chalk2} o={o}>
-            {k === 6 ? 'Example: Language in a Bottle (LaBo)' : 'Classification by description'}
+            {k === 6 ? 'Example: CLIP phrases + a learned head' : 'Classification by description'}
           </HText>
           <HText x={160} y={610} size={28} color={C.input} o={o * input}>image to classify</HText>
           <HText x={160} y={670} size={26} color={C.concept} o={o * input}>descriptions from a language model</HText>
@@ -523,7 +521,7 @@ export const S10: React.FC<SceneProps> = ({ t, P }) => {
       <SlideHead text={bh(P, 9)} o={s9q} />
       <Credit x={QPH.x} y={QPH.y + QPH.h + 10} text={`Photo: ${EXC.artist}, Wikimedia Commons, ${EXC.license}`} o={oo(s9q, q9ph)} />
       <Rich x={820} y={380} w={900} size={36} lh={1.4} text="who checks that a named {c:concept} is really visible in the {x:image}?" o={oo(s9q, q9txt)} />
-      <Rich x={820} y={540} w={900} size={30} color={C.chalk2} text="we come back to it later in this part: grounding the concepts" o={oo(s9q, q9back)} />
+      <Rich x={820} y={540} w={900} size={30} color={C.chalk2} text="we return to this question in the recap and evaluation" o={oo(s9q, q9back)} />
 
       {/* slide 10 */}
       <SlideHead text={bh(P, 10)} o={s6} />

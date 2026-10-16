@@ -25,8 +25,8 @@ export const End: React.FC<SceneProps> = ({ t, P }) => {
         Satellite imagery: Sentinel-2, SentinelKilnDB. Data: CUB-200-2011. Models: CLIP ViT-B/32, ResNet-50; concept lists: Gemini.
         <br />
         Sources: Koh et al. 2020; Wah et al. 2011; Simonyan et al. 2014; Kim et al. 2018; Adebayo et al. 2018; Zech et al. 2018;
-        Rudin 2019; Chen et al. 2019; Zarlenga et al. 2022; Yuksekgonul et al. 2023; Yang et al. 2023;
-        Srivastava et al. 2024; Menon and Vondrick 2023; Mahinpei et al. 2021; Havasi et al. 2022; Knab et al. 2026.
+        Rudin 2019; Chen et al. 2019; Zarlenga et al. 2022; Yuksekgonul et al. 2023;
+        Menon and Vondrick 2023; Mahinpei et al. 2021; Havasi et al. 2022; Knab et al. 2026.
       </HText>
       {black > 0 ? <div style={{ position: 'absolute', inset: 0, background: '#000', opacity: black }} /> : null}
     </Stage>

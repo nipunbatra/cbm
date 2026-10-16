@@ -471,13 +471,13 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
    The newer methods form a ladder of shrinking supervision. On the first rung, CBMs and concept embedding models need the image, the concept labels and the class.
 
 4. **Rung two: keep class labels, drop per-image concept labels**  
-   Post-hoc models, Language in a Bottle, or LaBo, and vision-language-guided concept bottleneck models, or VLG-CBMs, drop the concept labels on the task images. They still learn from images with class labels. A pretrained model supplies visual knowledge, and concept names can come from people or a language model.
+   Our post-hoc phrase example drops the concept labels on the task images. It still learns from images with class labels. A pretrained model supplies visual knowledge, and concept names can come from people or a language model.
 
 5. **Rung three: no training for this task**  
    Classification by description drops training on the new task. It still uses a pretrained model. We supply class descriptions and a new image, without fitting a model to labelled examples of these classes.
 
 6. **Rung two: class labels teach the task head**  
-   Take Language in a Bottle, or LaBo, as an example of rung two. A language model supplies descriptions, such as black and white stripes. Pretrained CLIP compares each image with these descriptions and produces match scores. During training, class labels teach a task head how to combine those scores. For a new photo, the learned head predicts the class. We need class-labelled images, but no person has to label every concept in every image. The diagram illustrates the path, without showing measured scores.
+   Use our CLIP phrase example for rung two. A language model can suggest descriptions, such as black and white stripes, which we review. Pretrained CLIP compares each image with these descriptions and produces match scores. During training, class labels teach a task head how to combine those scores. For a new photo, the learned head predicts the class. We need class-labelled images, but no person has to label every concept in every image. The diagram illustrates the path, without showing measured scores.
 
 7. **Rung three: combine the match scores with a fixed rule**  
    Now keep the pretrained CLIP model, but replace the learned head with a fixed rule. A language model supplies descriptions for each class. CLIP compares a new photo with each description. We average the match scores within each class and choose the class with the highest average. No class-labelled examples or fitting are needed for this task. The difference is the combination: rung two learns it from class labels; rung three uses a fixed average.
@@ -486,7 +486,7 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
    Dropping per-image concept labels saves labelling, but removes a direct check. A person who supplies a concept label has checked it against the image. On the higher rungs, a match score alone does not establish that the named concept is visible. We need to check this another way.
 
 9. **For each variant, ask: is the concept really in the image?**  
-   So for each variant, watch for one question: who checks that a named concept is really visible in the image? We come back to it when we discuss grounding.
+   So for each variant, watch for one question: who checks that a named concept is really visible in the image? We come back to this question in the recap and evaluation.
 
 10. **A variant can change four things**  
    Newer variants change four things: where the concepts come from, how each concept is detected, how it is represented, and what reaches the task head.
@@ -540,15 +540,10 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 12. **Concept embedding models in symbols**  
    In symbols, for concept j out of k: g now outputs a probability and two embeddings, each m numbers long. c hat j is the mixed vector, and f reads all of them. Training still needs images, concept labels and class labels.
 
-## Part 10 · Rung two: a map of the approaches  (s40)
+## Part 10 · Rung Two: CLIP scores and a learned head  (s47)
 
-1. **Rung two: where do the concept values come from?**  
-   Both approaches on rung two still train a class head from class-labelled images. They avoid human concept labels on every task image. We will organise them by one design choice: where do the concept values come from? In group A, keep CLIP similarities as the concepts: our phrase-based PCBM example and Language in a Bottle. In group B, train concepts from targets grounded in image regions: vision-language-guided concept bottleneck models. These are alternatives within one rung, not successive training steps.
-
-## Rung two A · Use CLIP scores directly  (s47)
-
-1. **A · Use CLIP scores directly**  
-   Begin with group A on rung two. At prediction time, the image and the saved concept phrases go through frozen CLIP encoders. Their cosine similarities become the concept scores, with any saved scaling applied, and a learned class head combines them. The class labels train the head, while the CLIP encoders remain fixed. Our post-hoc example shows the basic path. Language in a Bottle then builds on this same path by selecting descriptions and choosing a starting point for the head.
+1. **Use CLIP scores with a learned head**  
+   On rung two, the image and the saved concept phrases go through frozen CLIP encoders. Their cosine similarities become the concept scores, with any saved scaling applied, and a learned class head combines them. Class labels train the head, while the CLIP encoders remain fixed. We will follow one post-hoc example from the phrase bank to a prediction.
 
 ## Post-hoc concept bottleneck models  (s16)
 
@@ -609,114 +604,6 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 19. **Post-hoc concept bottleneck models in symbols**  
    In symbols, for concept j out of k, compare the image vector e with the saved phrase vector v j using cosine similarity. Standardise each score using its saved training mean and spread to obtain the concept value. The encoders and phrases are frozen. The task head f is sparse and linear. Only f is trained from images and class labels, with an additional residual r in the hybrid.
 
-## Language in a Bottle  (s18)
-
-1. **Same direct-scoring path; choose better descriptions**  
-   We are still in group A of rung two: use CLIP scores directly. Our PCBM example used a small hand-chosen bank of phrases. Language in a Bottle, or LaBo, asks a language model for candidate descriptions, then selects a useful and varied set. It also starts the class head from a language prior before learning from class labels. The prediction path stays the same: frozen CLIP, description scores, a trained head, and a class. This is a refinement of the direct-scoring approach, rather than a new supervision rung.
-
-2. **The intuition: let CLIP read short sentences about each class**  
-   The intuition is simple. Describe each class in a few short sentences, let CLIP read them, and use its similarity scores directly as the concepts, written as 100 times CLIP's cosine. For our zebra photo, the stripes sentence scores higher than the mane sentence and the neck sentence.
-
-3. **Four steps, from sentences to a head that starts from a guess**  
-   The method has four steps. A language model writes sentences, a selection rule keeps the most useful ones, CLIP scores each image against them, and a linear head, started from a guess, turns the scores into a class.
-
-4. **Step 1: a language model describes each class in sentences**  
-   In step one, the language model writes eight short sentences for each class, as JSON. Here they are for zebra.
-
-5. **A good set of sentences separates the classes**  
-   Which sentences should we keep? First, each one should separate its class from the others. Take a sentence's average CLIP score on the zebra training photos, and subtract its average on the best other class. Bold black and white stripes has the widest margin of the eight. Stocky horse-like body matches another class better than zebras, so it separates nothing.
-
-6. **A good set of sentences does not repeat itself**  
-   Second, the set should not say the same thing three times. Once one stripes sentence is in, a second stripes sentence adds much less that is new.
-
-7. **Step 2: score each sentence's discriminability**  
-   Step two puts numbers on both ideas. Discriminability is the margin from two slides back, rescaled within the class so that the best sentence gets 1 and the worst gets 0. Large striped ears lands at 0.66.
-
-8. **A greedy rule balances discriminability and coverage**  
-   Coverage gain measures what a sentence adds beyond the sentences already chosen. A greedy rule builds the set one sentence at a time: each round it takes the best mix, 0.7 times discriminability plus 0.3 times coverage gain, and keeps that choice.
-
-9. **The greedy picks for zebra, in order**  
-   In round one, bold black and white stripes scores 0.7 times 1, plus 0.3 times 0.69, which is 0.91, the best of the eight. Unique facial stripe patterns comes second, then large striped ears.
-
-10. **Three sentences per class, nine in all**  
-   For horse, a long flowing mane leads. For giraffe, an extremely long vertical neck.
-
-11. **Step 3: CLIP scores the image against each chosen sentence**  
-   Step three: CLIP scores the image against the nine chosen sentences. Those nine numbers are the bottleneck. Score j compares CLIP's encoding of the image, phi of x, with its encoding of sentence j, psi of s j.
-
-12. **Step 4: a language prior links each class to its sentences**  
-   Step four: a linear layer from sentences to classes, started from a language prior, a starting guess taken from the sentences. Each class gives one third to each of its own three sentences, and nothing to the others.
-
-13. **With the prior, a class score is the average of its own sentence scores**  
-   So each class score is the average of its own three sentence scores. For this zebra, zebra gets 28.1, horse 22.9 and giraffe 23.7. As shares, zebra gets 0.98, and 11 of the 12 test photos are right.
-
-14. **Why a prior helps when labels are few**  
-   Why start from a prior? A head that starts from zero must learn from the labels which sentence belongs to which class, and that is hard with few labelled photos. The prior already encodes it. A linear probe is a linear layer on CLIP's image features, with no concepts. The LaBo paper reports its clearest advantage over a linear probe with one labelled photo per class.
-
-15. **Training with the class labels adjusts the weights**  
-   After that, training with the class labels moves the weights a little, and then all 12 are right.
-
-16. **Do the zebra sentences detect the ears, or stripes anywhere?**  
-   Notice the zebra sentences: all three are about stripes. Is CLIP detecting striped ears, or stripes anywhere in the picture? The scores alone cannot tell.
-
-17. **What changed compared with the plain CBM**  
-   Compared with the plain concept bottleneck, a language model writes the concepts as sentences, and CLIP scores them directly, so nothing is trained to detect concepts. Only the head learns, and it starts from the language prior instead of from scratch.
-
-18. **LaBo in symbols**  
-   In symbols: g is CLIP itself, so c hat j is 100 times the cosine between the image and sentence j. f is a linear layer that starts from the language prior. The data: images and class labels.
-
-## Rung two B · Learn from grounded concept targets  (s49)
-
-1. **B · Ground concepts in image regions**  
-   Group A used CLIP similarities directly as concept values. Group B stays on rung two but learns a concept predictor. Use a pretrained detector to locate concepts in image regions and provide concept targets. Train the concept layer from these targets, then train the class head from class labels. At test time, the learned concept predictor and head process the new image; the detector supplies training supervision. Vision-language-guided concept bottleneck models are our example. Grounding adds a spatial check, although detector errors can still be learned.
-
-## Grounding the concepts  (s24)
-
-1. **Why ground the concept targets in image regions?**  
-   We are in group B of rung two: learn concepts from grounded targets. Recall the weakness of using CLIP similarities as concept values: a phrase gets a score, but nothing locates the named concept in the image. We need a check that the concept is actually visible. The following slides show how a detector can supply this spatial check during training.
-
-2. **Naming a concept is not the same as pointing at it**  
-   The fix rests on a simple intuition. Naming a concept is not the same as pointing at it. So ask a detector to point at each concept in the image, and count only the concepts it can find.
-
-3. **Three ways a concept can fail**  
-   There are three ways a concept can fail. Some are not visual, such as a gull's call. Some describe the setting, not the bird. And some score highly on images that do not contain them, such as a black head on a gull whose head is white.
-
-4. **High accuracy does not prove meaningful concepts**  
-   Here is why accuracy alone is not enough. Start with a photo and a pretrained image encoder. In this baseline, the concept layer has randomly chosen weights that stay fixed: it was never taught concepts such as yellow bill. Its outputs still depend on the image. Train only the final head using images and their class labels, then test on new images. When the head can use many of these outputs, the paper finds that accuracy can approach that of concept-based models. Useful image information has survived, even though the layer was never trained to detect named concepts. So check whether a high yellow-bill score really corresponds to a yellow bill, as well as checking the predicted class.
-
-5. **VLG-CBM asks a detector to find each concept**  
-   Their method is the Vision-Language-Guided Concept Bottleneck Model, or VLG-CBM. It grounds the concepts first. It uses an open-vocabulary object detector: a detector that can search for any phrase you give it, not only a fixed list of objects. It looks for each concept in each training image, and draws a box where it finds it.
-
-6. **A box means 1, no box means 0**  
-   A concept counts as present only where a box was found. For our gull, the bill, head and wingtips each get a one, and the call gets a zero. We call this vector c det: the concept labels from the detector.
-
-7. **The grounded labels train the concept layer with a loss**  
-   These grounded labels train the concept layer: a linear layer that turns the backbone's features into one score per concept. The loss is a binary cross-entropy, as in the original CBM, but no person draws the labels.
-
-8. **One term of the loss, worked out**  
-   One term, as in Part 5. The wingtips have a box, so their label is one; if the layer predicts 0.8, the term is minus log 0.8, about 0.22. The call has no box, so its label is zero; a prediction of 0.2 costs the same, minus log of one minus 0.2.
-
-9. **Count the non-zero weights in each class's row**  
-   They also report the number of effective concepts, NEC for short. Each row of the head holds one class's weights, one per concept. Count the non-zero weights in each row, here three, two and four, and average over the classes: the NEC is three.
-
-10. **A head that uses every concept explains nothing**  
-   Why does this count matter? A head that puts weight on every concept can fit almost anything. The paper proves that even a random, untrained concept layer can approximate any linear classifier once there are enough concepts. So a dense head can be accurate and still explain nothing.
-
-11. **A fair comparison: the same number of concepts per class**  
-   So the fair comparison gives every model the same budget: the same number of concepts per class. Only then does higher accuracy say something about the concepts themselves.
-
-12. **The same count in symbols**  
-   In symbols, the count for class k is the zero norm of its row of weights: the number of entries that are not zero. The NEC averages that count over the K classes.
-
-13. **Five concepts per class can actually be read**  
-   The paper reports accuracy with the NEC held at five. A head like that can actually be read: each class rests on a handful of named concepts.
-
-14. **From direct CLIP scores to grounded concept learning**  
-   Compared with direct CLIP scoring, the concept values now come from a learned layer. Detector boxes supply its training labels. At prediction time, this layer produces the concept values instead of comparing the image with text. The class head is still learned from class labels. We also judge it at a fixed number of concepts per class, so the explanation stays short.
-
-15. **VLG-CBM in symbols**  
-   In symbols: g is a backbone with a concept layer, W c, trained on the detector labels c det. f is sparse and linear, with the number of effective concepts held fixed. The data: images and class labels, plus a detector.
-
 ## Part 10 · Rung Three: No fitting on the new task  (s41)
 
 1. **No fitting on the new task**  
@@ -725,7 +612,7 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 ## Classification by description  (s25)
 
 1. **Rung three: no fitting on the new task**  
-   The last step on the ladder removes fitting on the new task. The pretrained CLIP encoders remain. Menon and Vondrick call this classification by description, or CBD in our comparison table. Instead of learning a head from class labels, use a fixed average of description scores for each class.
+   We just used class labels to learn a head on CLIP scores. The last step on the ladder removes that fitting on the new task. The pretrained CLIP encoders remain. Menon and Vondrick call this classification by description, or CBD in our comparison table. Use a fixed average of description scores for each class instead of learning how to combine them.
 
 2. **Each class gets a checklist, and CLIP ticks it softly**  
    The intuition is a checklist. A language model writes a short checklist for every class. CLIP ticks each item softly, with a score for how well the photo matches it. The class with the best average tick wins.
@@ -757,8 +644,8 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 11. **A match score is not a fact check**  
    Look at our herring gull photo: its head is white and its bill is yellow. The California gull checklist says black head and bill, yet CLIP gives that phrase a positive similarity score. That number compares the photo with the whole phrase; it is not a probability that each detail is true. The fixed average still includes it, so a misleading description can affect the class score. Other descriptions may be impossible to verify from a photo, or describe its background. The takeaway: check that the words are correct and visible, then test whether changing that feature changes its score.
 
-12. **What changed compared with LaBo: the head is no longer learned**  
-   Compared with LaBo, the head is no longer learned. LaBo trained a linear layer on CLIP's sentence scores; here the class score is a fixed average, so nothing is trained and no labelled image is needed.
+12. **From rung two to rung three: the head is no longer learned**  
+   In our rung-two phrase example, the head was a linear layer trained from class labels. Here the class score is a fixed average of description scores, so nothing is trained and no labelled image is needed. The main change is how we combine the CLIP scores.
 
 13. **Classification by description in symbols**  
    In symbols: g is CLIP, c hat d is the similarity to descriptor d, and f is a fixed average over each class's descriptors. The data: none. The cost: nothing guarantees that the descriptors are correct, or grounded.
@@ -766,28 +653,28 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 ## Comparing the variants  (s19)
 
 1. **One table: one row per variant, one column at a time**  
-   Use our supervision rungs and groups to organise the variants. This table puts them beside the original CBM, one row per method, and we fill it one column at a time.
+   Use our supervision rungs to organise the examples. This table puts them beside the original CBM, one row per method, and we fill it one column at a time.
 
 2. **Column one: the supervision each variant needs**  
    The first column is the data needed for training. Here x is an image, c its concept labels, and y its class label. Supervised CBMs and concept embedding models need all three.
 
-3. **Most variants drop the concept labels**  
-   Post-hoc models, LaBo and VLG-CBM drop the concept labels. Classification by description, CBD in the table, needs no training data for the new task.
+3. **Higher rungs drop the concept labels**  
+   Post-hoc models drop the concept labels on the task images. Classification by description, CBD in the table, needs no training data for the new task.
 
 4. **Column two: where the concepts come from**  
-   The second column says who supplies the concepts. For CBMs and concept embedding models, people do, through their labels. The others take them from a concept bank, a language model, CLIP, or a detector.
+   The second column says who supplies the concepts. For CBMs and concept embedding models, people do, through their labels. Our post-hoc phrase example uses a reviewed concept bank. Classification by description uses descriptions from a language model.
 
 5. **Column three: what the task head reads**  
-   The third column is what the task head actually reads. A CBM passes one number per concept, a concept embedding model a vector per concept, and our post-hoc phrase example its scaled cosine scores. The optional hybrid version adds a residual to the class scores. VLG-CBM passes the outputs of a learned concept layer, and LaBo and classification by description pass raw CLIP scores.
+   The third column is what the task head actually reads. A CBM passes one number per concept, a concept embedding model a vector per concept, and our post-hoc phrase example its scaled cosine scores. The optional hybrid version adds a residual to the class scores. Classification by description averages raw CLIP scores.
 
 6. **Column four: what is trained**  
-   The last column is what gets trained. CBMs and concept embedding models train the concept predictor and the head. Post-hoc models and LaBo train only the head. VLG-CBM trains a concept layer and the head. Classification by description trains nothing on the new task.
+   The last column is what gets trained. CBMs and concept embedding models train the concept predictor and the head. Post-hoc models train only the head. Classification by description trains nothing on the new task.
 
 7. **Naming a concept does not ground it**  
    Each change makes concepts cheaper or predictions more accurate. None makes grounding automatic. A phrase from a language model, or a CLIP similarity, does not show that the model sees that property in the image. That has to be checked.
 
 8. **Who supplies the concepts, and who checks them?**  
-   One question sums up the table: who supplies the concepts, and who checks them? In CBMs and concept embedding models, people label the concepts, so people check them. In post-hoc models, a concept bank supplies them, checked only by whoever built it. LaBo takes them from a language model, and only a CLIP similarity checks them. VLG-CBM keeps the language model, and adds a detector as the check. In classification by description, nobody checks.
+   One question sums up the table: who supplies the concepts, and who checks them? In CBMs and concept embedding models, people label the concepts, so people check them. In post-hoc models, a concept bank supplies them, checked only by whoever built it. In classification by description, a language model supplies the descriptions and there is no automatic factual check. We must review them.
 
 9. **Each rung up the ladder removes a cost and a check**  
    This is the general trade-off. Each rung up the ladder removes a human labour cost, and with it a human check. The labour saved on labelling has to be spent later, on checking that the concepts are really in the image.

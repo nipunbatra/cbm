@@ -346,3 +346,10 @@ The dated entries below preserve the review history. The film remains on its ear
   The checked r26 PDF has 296 pages and 44 bookmarks; 41 revised pages were exported and all 255 other
   slide bodies preserved. Earlier PDFs and archived s17/s48 sources remain. Source c2aa678 and Pages release 0ed3f85 are pushed and deployed. Live deck assets, notes and PDF
   match local bytes; course PR #15 is merged and deployed with both PDF labels showing 296 pages.
+
+- 16 Oct, browser s18.1: revision 27 removes LaBo and, to move directly to rung three, the VLG-CBM
+  walkthrough. One separator introduces the CLIP phrase example; s16 now leads directly to s41/s25.
+  The redundant group map is gone. Ladder, headers, references and four-row recap match this simpler flow.
+  Rung three contrasts the learned head with a fixed average. The checked PDF has 261 pages and 40 bookmarks;
+  44 pages were exported and all 217 other slide bodies preserved. Removed sources/data and old PDFs remain.
+  Publication verification pending.

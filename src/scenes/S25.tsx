@@ -11,7 +11,7 @@
 // 25.9 when it is attractive: no labelled images; a new class needs only a new checklist (Ivory Gull, real descriptors).
 // 25.10 the wrong California Gull descriptor.
 // 25.11 a match score is not a fact check: our photo + a mismatched phrase still feed the class average.
-// 25.12 recap: what changed compared with LaBo.  25.13 VariantCard + the cost line.
+// 25.12 recap: what changed compared with the rung-two phrase example.  25.13 VariantCard + the cost line.
 import React from 'react';
 import modernSections from '../modernSections.json';
 import { C, F } from '../kit/theme';
@@ -72,17 +72,17 @@ const VROWS: VariantRows = {
   data: '\\text{none: a language model writes the descriptors } D_k',
 };
 
-// 25.12 recap rows: LaBo vs classification by description
-const RECAP: { lab: string; labo: string; cbd: string }[] = [
-  { lab: 'the {f:task head}', labo: 'a linear layer', cbd: 'a fixed average' },
-  { lab: 'what is trained', labo: 'the {f:head}', cbd: 'nothing' },
-  { lab: 'data needed', labo: 'images and {y:class labels}', cbd: 'none' },
+// 25.12 recap rows: rung two vs classification by description
+const RECAP: { lab: string; rungTwo: string; cbd: string }[] = [
+  { lab: 'the {f:task head}', rungTwo: 'a linear layer', cbd: 'a fixed average' },
+  { lab: 'what is trained', rungTwo: 'the {f:head}', cbd: 'nothing' },
+  { lab: 'data needed', rungTwo: 'images and {y:class labels}', cbd: 'none' },
 ];
 
 // the ladder strip
 const RUNGS: { tex: string; who: string; x: number; w: number; mx: number }[] = [
   { tex: '\\{\\cin{x},\\ \\ccon{c},\\ y\\}', who: 'CBM, CEM', x: 200, w: 340, mx: 80 },
-  { tex: '\\{\\cin{x},\\ y\\}', who: 'PCBM, LaBo, VLG-CBM', x: 610, w: 560, mx: 66 },
+  { tex: '\\{\\cin{x},\\ y\\}', who: 'PCBM', x: 610, w: 560, mx: 66 },
   { tex: '\\varnothing', who: 'by description', x: 1240, w: 480, mx: 50 },
 ];
 
@@ -161,7 +161,7 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
   const s11photo = at(b(11) + 0.1, 0.5), s11phrase = at(w(11, 'California') - 0.2, 0.5);
   const s11score = at(w(11, 'CLIP') - 0.2, 0.5), s11meaning = at(w(11, 'probability') - 0.2, 0.5);
   const s11average = at(w(11, 'fixed') - 0.2, 0.5), s11checks = at(w(11, 'takeaway') - 0.2, 0.5);
-  // ---------------- 25.12 recap: compared with LaBo
+  // ---------------- 25.12 recap: compared with the rung-two phrase example
   const s13h = at(b(12) + 0.1, 0.5);
   const s13r = [at(w(12, 'head') - 0.2, 0.5), at(w(12, 'nothing') - 0.2, 0.5), at(w(12, 'labelled') - 0.2, 0.5)];
   const s13cbd = [at(w(12, 'fixed') - 0.2, 0.5), at(w(12, 'nothing') + 0.2, 0.5), at(w(12, 'needed') - 0.2, 0.5)];
@@ -461,10 +461,10 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={995} ax="right" kind="computed" text="CLIP ViT-B/32 on this photo; released CUB descriptor" o={s11score} />
       </Slide>
 
-      {/* ============================================================ 25.12 recap: what changed compared with LaBo */}
+      {/* ============================================================ 25.12 recap: what changed compared with the rung-two phrase example */}
       <Slide o={sl(12)}>
         <SlideHead text={bh(P, 12)} />
-        <Rich x={980} y={360} ax="center" size={30} weight={700} color={C.chalk2} text="LaBo" o={s13h} />
+        <Rich x={980} y={360} ax="center" size={30} weight={700} color={C.chalk2} text="rung two: learned head" o={s13h} />
         <Rich x={1460} y={360} ax="center" size={30} weight={700} text="by description" o={s13h} />
         <Svg o={s13h}>
           <line x1={200} x2={1720} y1={400} y2={400} stroke={C.line2} strokeWidth={2} />
@@ -474,7 +474,7 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
           return (
             <React.Fragment key={r.lab}>
               <Rich x={200} y={y} ay="middle" w={460} size={30} color={C.chalk2} text={r.lab} o={s13r[i]} />
-              <Rich x={980} y={y} ax="center" ay="middle" size={32} color={C.chalk2} text={r.labo} o={s13r[i]} />
+              <Rich x={980} y={y} ax="center" ay="middle" size={32} color={C.chalk2} text={r.rungTwo} o={s13r[i]} />
               <Rich x={1210} y={y} ax="center" ay="middle" size={36} color={C.mute} text="→" o={s13cbd[i]} />
               <Rich x={1460} y={y} ax="center" ay="middle" size={34} weight={700} text={r.cbd} o={s13cbd[i]} />
             </React.Fragment>

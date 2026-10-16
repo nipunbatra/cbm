@@ -13,7 +13,6 @@
 // 18.15 the 18.12 grid after training (W_trained), 12 / 12   18.16 stripes: ears, or stripes anywhere?
 // 18.17 what changed compared with the plain CBM   18.18 VariantCard.
 import React from 'react';
-import modernSections from '../modernSections.json';
 import { C, F } from '../kit/theme';
 import { E, Header, HText, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, inv, type SceneProps } from '../kit/core';
 import { Block, Credit, EvTag, Flow, MathSvg, PhotoR, ShareBars, rgba, ux, vy, type Rect, VariantCard, type VariantRows } from '../kit/cbm';
@@ -256,7 +255,7 @@ export const S18: React.FC<SceneProps> = ({ t, P }) => {
 
   return (
     <Stage>
-      <Header t={t} part={modernSections.s18.part} title={P.title} />
+      <Header t={t} part={10} title={P.title} />
       <Svg><StepTrack cur={STEP[beatNow] ?? 0} o={trackO} /></Svg>
 
       {/* ============================================================ 18.1 direct scoring: PCBM to LaBo */}
