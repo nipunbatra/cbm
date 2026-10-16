@@ -407,3 +407,7 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     layouts or hierarchy labels. All 299 other slide bodies match r24 after allowing the new headers
     and PDF text spacing; 207 pages outside the modern sections retain their body text exactly.
     Every footer and bookmark destination was verified. Earlier annotation PDFs remain available.
+72. **Publish review revision 25.** Source 42a14d5 and Pages release 3a9eec8 are pushed and deployed.
+    Live HTML, JavaScript, CSS, notes and PDF match the local release bytes. Inspected the published
+    rung-two map and LF-CBM handover. Course PR #14 is merged and deployed; the visible and accessible
+    labels show 316 pages and all three links point to the standalone CBM site. Audio and film timing remain unchanged.

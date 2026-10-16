@@ -11,8 +11,8 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 24 is live at https://nipunbatra.github.io/cbm/: 296 content slides plus 17 separators, matching notes
-and a 313-page PDF with 43 navigation bookmarks.
+Revision 25 is live at https://nipunbatra.github.io/cbm/: 296 content slides plus 20 separators, matching notes
+and a 316-page PDF with 46 navigation bookmarks.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
 
@@ -323,7 +323,7 @@ The dated entries below preserve the review history. The film remains on its ear
 - Revision 24 is published: source b9b6565, Pages release 340e05d. Live deck, notes and PDF match the local
   release bytes. Course PR #13 is merged and deployed with both 313-page labels and current CBM links.
 
-## 16 October 2026: supervision rungs and approach groups (revision 25, prepared)
+## 16 October 2026: supervision rungs and approach groups (revision 25, published)
 
 - Rung two now has three explicit alternatives: A direct CLIP scores (PCBM phrase example, followed
   by LaBo), B a concept layer taught by CLIP (LF-CBM), C a concept layer trained with grounded targets
@@ -335,3 +335,6 @@ The dated entries below preserve the review history. The film remains on its ear
   from hierarchy headers and PDF spacing. Every footer and bookmark is verified. Visual QA covered
   all new separators, revised openings, representative headers, the recap, notes and slide-map navigation.
 - Audio, saved film timelines and the beat list are unchanged. Revised narration awaits the later film rebuild.
+- Source commit 42a14d5 and Pages release 3a9eec8 are pushed and deployed. Live HTML, JavaScript,
+  CSS, notes and PDF match the local files byte for byte. Course PR #14 is merged and deployed with
+  both 316-page labels and all three standalone CBM links. Inspected the live map and LF-CBM opening.
