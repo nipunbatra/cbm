@@ -12,6 +12,7 @@
 // 24.12 NEC formula, words over symbols, with the Herring Gull row of 24.9 counted.  24.13 held at 5: five named concepts.
 // 24.14 recap: what changed compared with label-free models.  24.15 VariantCard.
 import React from 'react';
+import modernSections from '../modernSections.json';
 import { C } from '../kit/theme';
 import { E, Header, HText, Rich, SlideHead, Stage, Svg, Tex, Txt, ROLE, bs, bw, bh, inv, type SceneProps } from '../kit/core';
 import { ArchMap, Block, Credit, CREDIT, Cross, EvTag, Flow, MathSvg, PhotoR, Pill, Region, VariantCard, VecCol, rgba, ux, vy, type Rect, type VariantRows } from '../kit/cbm';
@@ -174,7 +175,7 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
 
   return (
     <Stage>
-      <Header t={t} part={10} title={P.title} />
+      <Header t={t} part={modernSections.s24.part} title={P.title} />
       <ArchMap on={['g', 'c']} o={inv(0, 0.5, t)} />
 
       {/* ============================================================ 24.1 nothing checks the image */}
@@ -198,7 +199,7 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
             <Txt x={920} y={706} size={28} fill={C.chalk2}>is it in the image?</Txt>
           </g>
         </Svg>
-        <Rich x={750} y={840} size={34} text="Nothing checks that the {c:concept} is visible in the {x:image}." o={s1line} />
+        <Rich x={750} y={840} w={1010} size={34} text="A CLIP score alone does not locate the {c:concept} in the {x:image}." o={s1line} />
       </Slide>
 
       {/* ============================================================ 24.2 intuition: naming vs pointing */}

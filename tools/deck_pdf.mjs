@@ -52,7 +52,8 @@ for (const [id, k] of steps) {
 await browser.close(); server.close();
 execFileSync(path.join(os.homedir(), 'base/bin/python'), ['-c', `
 import sys, json, pathlib, pypdf
-titles = {s['id']: s['title'] for s in json.load(open(sys.argv[2]))['scenes']}
+modern = json.load(open(pathlib.Path(sys.argv[2]).parents[1] / 'src/modernSections.json'))
+titles = {s['id']: modern.get(s['id'], {}).get('nav', s['title']) for s in json.load(open(sys.argv[2]))['scenes']}
 w = pypdf.PdfWriter()
 previous = None
 for f in sys.argv[3:]:

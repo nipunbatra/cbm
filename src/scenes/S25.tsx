@@ -13,6 +13,7 @@
 // 25.11 a match score is not a fact check: our photo + a mismatched phrase still feed the class average.
 // 25.12 recap: what changed compared with LaBo.  25.13 VariantCard + the cost line.
 import React from 'react';
+import modernSections from '../modernSections.json';
 import { C, F } from '../kit/theme';
 import { E, Header, HText, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, bw, bh, inv, type SceneProps } from '../kit/core';
 import { ArchMap, Block, Credit, CREDIT, Cross, EvTag, Flow, MathSvg, PhotoR, Pill, VariantCard, rgba, type Rect, type VariantRows } from '../kit/cbm';
@@ -182,7 +183,7 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
 
   return (
     <Stage>
-      <Header t={t} part={10} title={P.title} />
+      <Header t={t} part={modernSections.s25.part} title={P.title} />
       <ArchMap on={['c', 'f']} o={inv(0, 0.5, t)} />
 
       {/* ============================================================ 25.1 the last rung */}
@@ -205,7 +206,7 @@ export const S25: React.FC<SceneProps> = ({ t, P }) => {
         </Svg>
         <HText x={960} y={640} ax="center" ay="middle" size={60} weight={700} o={s1t}>Classification by description (CBD)</HText>
         <HText x={960} y={720} ax="center" size={30} color={C.chalk2} o={s1t}>Menon and Vondrick, ICLR 2023</HText>
-        <Rich x={960} y={820} ax="center" size={32} text="no {c:concept labels}, no {y:class labels}, no training" o={s1n} />
+        <Rich x={960} y={820} ax="center" size={32} text="no task {c:concept labels}, no task {y:class labels}, no fitting" o={s1n} />
       </Slide>
 
       {/* ============================================================ 25.2 intuition: a checklist per class, soft ticks */}

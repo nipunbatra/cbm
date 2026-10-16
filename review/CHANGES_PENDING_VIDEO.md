@@ -391,3 +391,19 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     succeeded. The live HTML, JavaScript, CSS, notes and PDF match the local release byte for byte. The
     published cosine slide was inspected. Course PR #13 is merged and deployed, with matching visible and
     accessible 313-page labels; all three course links point to the standalone CBM site.
+70. **Organise modern methods by supervision rung and design choice (browser s17.1), 16 October 2026.**
+    Rung two now has a map and three subsection separators: A uses CLIP scores directly (the PCBM
+    phrase example, then LaBo); B learns a concept predictor from CLIP (LF-CBM); C learns from targets
+    grounded in image regions (VLG-CBM). Each separator shows the prediction path and training signal.
+    Persistent headers, slide-map entries, notes headings and PDF bookmarks name the rung and group.
+    Revised introductions explain what changes between groups; the LF-CBM opening compares both
+    prediction paths. The recap follows the new order and distinguishes task fitting from pretraining.
+    Checked the distinction against LF-CBM Section 3 (https://arxiv.org/abs/2304.06129) and the VLG-CBM
+    pipeline (https://lilywenglab.github.io/VLG-CBM/). Content, type checking, 25 Python tests and four
+    deck tests passed. Inspected separators, revised openings, representative labelled slides, recap,
+    speaker notes and the searchable map. Saved audio, film timelines and beat list are unchanged.
+71. **Annotation PDF revision 25.** Saved review/cbm-lecture-review-2026-10-16-r25.pdf with 316 pages:
+    296 content slides and 20 separators, with 46 navigation bookmarks. Exported 109 pages with new
+    layouts or hierarchy labels. All 299 other slide bodies match r24 after allowing the new headers
+    and PDF text spacing; 207 pages outside the modern sections retain their body text exactly.
+    Every footer and bookmark destination was verified. Earlier annotation PDFs remain available.

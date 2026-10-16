@@ -7,6 +7,9 @@ import html, json, re
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 S = json.load(open(ROOT / 'narration/script.json'))
+MODERN = json.load(open(ROOT / 'src/modernSections.json'))
+def section_title(sc):
+    return MODERN.get(sc['id'], {}).get('nav', sc['title'])
 SYM = [(r'\cvec', 'ĉ'), (r'\ch', 'ĉ'), (r'\yh', 'ŷ'), (r'\gth', 'g<sub>θ</sub>'), (r'\fph', 'f<sub>φ</sub>'), (r'\lambda', 'λ'),
        (r'\mathbf', ''), (r'\theta', 'θ'), (r'\phi', 'φ'), (r'\in', '∈'), (r'\to', '→'), (r'\cdot', '·')]
 ROLE = {'x': '#5B9BFF', 'c': '#2DD4BF', 'f': '#9AA6B5', 'e': '#F5B342', 'l': '#FF7F6B', 'k': '#B98CFF', 'y': '#EEF1F4', 'm': '#7A8696'}
@@ -28,8 +31,8 @@ for i, sc in enumerate(S['scenes']):
     items = ''.join(
         f'<li><a href="index.html#{sc["id"]}.{k}" title="open this slide">{rich(b["head"]) if b.get("head") else ""}</a>'
         f'<p>{html.escape(b["text"])}</p></li>' for k, b in enumerate(sc['beats'], 1))
-    body.append(f'<section id="{sc["id"]}"><h2>{html.escape(sc["title"])}</h2><ol>{items}</ol></section>')
-toc = ''.join(f'<li><a href="#{sc["id"]}">{html.escape(sc["title"])}</a></li>' for sc in S['scenes'] if sc['id'] not in ('s00', 'end'))
+    body.append(f'<section id="{sc["id"]}"><h2>{html.escape(section_title(sc))}</h2><ol>{items}</ol></section>')
+toc = ''.join(f'<li><a href="#{sc["id"]}">{html.escape(section_title(sc))}</a></li>' for sc in S['scenes'] if sc['id'] not in ('s00', 'end'))
 page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Concept Bottleneck Models: lecture notes</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">

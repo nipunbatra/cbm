@@ -322,3 +322,16 @@ The dated entries below preserve the review history. The film remains on its ear
   passed and all 19 revised PCBM PDF pages were inspected. Audio and saved film timing are unchanged.
 - Revision 24 is published: source b9b6565, Pages release 340e05d. Live deck, notes and PDF match the local
   release bytes. Course PR #13 is merged and deployed with both 313-page labels and current CBM links.
+
+## 16 October 2026: supervision rungs and approach groups (revision 25, prepared)
+
+- Rung two now has three explicit alternatives: A direct CLIP scores (PCBM phrase example, followed
+  by LaBo), B a concept layer taught by CLIP (LF-CBM), C a concept layer trained with grounded targets
+  (VLG-CBM). s40 is the map; s47-s49 are the prediction-path separators. The existing rung-one/CEM and
+  rung-three/CBD separators remain. Persistent headers and all navigation surfaces show the hierarchy.
+- The LF-CBM opening compares the earlier and current prediction paths. LaBo now continues PCBM,
+  and its opening explains description selection and head initialisation. The recap follows this order.
+- All checks passed. The PDF has 316 pages and 46 bookmarks; 299 slide bodies are preserved apart
+  from hierarchy headers and PDF spacing. Every footer and bookmark is verified. Visual QA covered
+  all new separators, revised openings, representative headers, the recap, notes and slide-map navigation.
+- Audio, saved film timelines and the beat list are unchanged. Revised narration awaits the later film rebuild.

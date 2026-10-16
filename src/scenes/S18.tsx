@@ -1,5 +1,5 @@
 // s18 Part 10 · Language in a Bottle (LaBo, Yang et al., CVPR 2023). Revision 2: one slide per beat.
-// 18.1 label-free vs LaBo: a learned linear layer imitating CLIP vs CLIP itself as the detector
+// 18.1 direct scoring continues: PCBM phrase bank to LaBo description selection
 // 18.2 intuition: three class sentences, CLIP reads them, the real scores (100 x cosine) of the worked photo are the concepts
 // 18.3 the four steps, each with its helper (same layout as 17.3)
 // 18.4 step 1: the prompt and the REAL Gemini JSON reply (eight zebra sentences, D.worked.llm.labo.zebra)
@@ -13,6 +13,7 @@
 // 18.15 the 18.12 grid after training (W_trained), 12 / 12   18.16 stripes: ears, or stripes anywhere?
 // 18.17 what changed compared with the plain CBM   18.18 VariantCard.
 import React from 'react';
+import modernSections from '../modernSections.json';
 import { C, F } from '../kit/theme';
 import { E, Header, HText, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, inv, type SceneProps } from '../kit/core';
 import { Block, Credit, EvTag, Flow, MathSvg, PhotoR, ShareBars, rgba, ux, vy, type Rect, VariantCard, type VariantRows } from '../kit/cbm';
@@ -142,9 +143,7 @@ export const S18: React.FC<SceneProps> = ({ t, P }) => {
   const trackO = at(b(4) - 0.2, 0.4) * fout(16);
 
   // ---------------- 18.1 comparison
-  const s1lf = at(b(1) + 0.1), s1im = at(w(1, 'imitate') - 0.2);
-  const s1lb = at(w(1, 'LaBo') - 0.1), s1llm = at(w(1, 'language') - 0.1);
-  const s1det = at(w(1, 'keeps') - 0.1), s1live = at(w(1, 'keeps') + 0.3, 0.5);
+  const s1lb = at(w(1, 'Language') - .1), s1path = at(w(1, 'prediction') - .1);
 
   // ---------------- 18.2 intuition
   const s2s = (i: number) => at(w(2, 'sentences') - 0.1 + i * 0.2, 0.4);
@@ -257,49 +256,28 @@ export const S18: React.FC<SceneProps> = ({ t, P }) => {
 
   return (
     <Stage>
-      <Header t={t} part={10} title={P.title} />
+      <Header t={t} part={modernSections.s18.part} title={P.title} />
       <Svg><StepTrack cur={STEP[beatNow] ?? 0} o={trackO} /></Svg>
 
-      {/* ============================================================ 18.1 label-free vs LaBo */}
+      {/* ============================================================ 18.1 direct scoring: PCBM to LaBo */}
       <Slide o={sl(1)}>
         <SlideHead text={bh(P, 1)} />
-        <PhotoR R={{ x: 420, y: 422, w: 150, h: 100 }} src={`worked/${EX}`} o={s1lf * (1 - 0.5 * s1det)} radius={6} />
-        <PhotoR R={{ x: 420, y: 692, w: 150, h: 100 }} src={`worked/${EX}`} o={s1lb} radius={6} />
-        <Svg>
-          {/* label-free row */}
-          <g opacity={s1lf * (1 - 0.5 * s1det)}>
-            <Flow pts={[[574, 472], [596, 472]]} color={C.input} t={t} live={s1live} head={12} />
-            <Block x={750} y={472} w={300} h={110} kind="input" title="ResNet-50" sub="+ learned linear layer" size={28} />
-            <Txt x={750} y={556} size={24} fill={C.loss} o={s1im}>trained to imitate CLIP</Txt>
-            <Flow pts={[[906, 472], [980, 472]]} color={C.concept} t={t} live={s1live} head={12} />
-            {[0, 1, 2, 3, 4].map((j) => <rect key={j} x={992 + j * 36} y={472 - 20} width={26} height={40} rx={5} fill={rgba(C.concept, 0.35 + 0.12 * j)} />)}
-          </g>
-          {/* LaBo row */}
-          <g opacity={s1lb < 0.999 ? s1lb : undefined}>
-            <Flow pts={[[574, 742], [596, 742]]} color={C.input} t={t} live={s1live} head={12} />
-            <Block x={750} y={742} w={300} h={110} kind="input" title="CLIP" sub="image · sentence" size={32} hi={s1det} />
-            <Txt x={750} y={826} size={24} weight={600} fill={C.input} o={s1det}>CLIP itself detects the concepts</Txt>
-            <Flow pts={[[906, 742], [980, 742]]} color={C.concept} t={t} live={s1live} head={12} />
-            {[0, 1, 2, 3, 4].map((j) => <rect key={j} x={992 + j * 36} y={742 - 20} width={26} height={40} rx={5} fill={rgba(C.concept, 0.35 + 0.12 * j)} />)}
-          </g>
-          {/* language model names the concepts for both */}
-          <g opacity={s1llm < 0.999 ? s1llm : undefined}>
-            <Block x={1072} y={607} w={290} h={78} kind="neutral" title="language model" sub="names the concepts" size={24} subSize={18} />
-            <Flow pts={[[1072, 566], [1072, 500]]} color={C.chalk2} sw={2.5} head={12} dash="7 6" />
-            <Flow pts={[[1072, 648], [1072, 714]]} color={C.chalk2} sw={2.5} head={12} dash="7 6" />
-          </g>
-          {[472, 742].map((y, k) => (
-            <g key={k} opacity={k ? s1lb : s1lf * (1 - 0.5 * s1det)}>
-              <Flow pts={[[1180, y], [1290, y]]} color={C.concept} t={t + 0.5} live={s1live} head={12} />
-              <Block x={1370} y={y} w={150} h={84} kind="head" title="head" size={26} />
-              <Flow pts={[[1448, y], [1530, y]]} color={C.chalk2} t={t + 0.8} live={s1live} head={12} />
-              <Txt x={1546} y={y} size={30} anchor="start" weight={600} fill={C.chalk}>class</Txt>
-            </g>
-          ))}
+        <HText x={180} y={310} size={29} color={C.chalk2}>Language in a Bottle (LaBo)</HText>
+        <Rich x={180} y={420} size={33} text="PCBM example: {c:hand-chosen phrases}" />
+        <Rich x={180} y={500} size={33} text="LaBo: {c:propose and select descriptions}; initialise the {f:head}" o={s1lb} />
+        <Svg o={s1path}>
+          <Block x={280} y={710} w={260} h={110} title="image + phrases" kind="input" size={28} />
+          <Flow pts={[[425,710],[520,710]]} color={C.input} />
+          <Block x={690} y={710} w={310} h={110} title="frozen CLIP" kind="input" />
+          <Flow pts={[[860,710],[950,710]]} color={C.concept} />
+          <Block x={1120} y={710} w={310} h={110} title="concept scores" kind="concept" />
+          <Flow pts={[[1290,710],[1360,710]]} color={C.concept} />
+          <Block x={1500} y={710} w={250} h={110} title="class head" sub="learned" kind="head" />
+          <Flow pts={[[1640,710],[1720,710]]} color={C.chalk} />
+          <Txt x={1760} y={710} size={29}>class</Txt>
         </Svg>
-        <HText x={160} y={472} ay="middle" size={30} weight={600} color={C.chalk2} o={s1lf * (1 - 0.5 * s1det)}>label-free</HText>
-        <HText x={160} y={724} ay="middle" size={34} weight={700} o={s1lb}>LaBo</HText>
-        <HText x={160} y={766} ay="middle" size={22} color={C.chalk2} o={s1lb}>Language in a Bottle</HText>
+        <HText x={960} y={880} ax="center" size={33} o={s1path}>Same rung. Same prediction path. A different concept bank and head initialisation.</HText>
+        <EvTag x={180} y={965} kind="schematic" text="both are direct CLIP scoring approaches in this lecture" />
       </Slide>
 
       {/* ============================================================ 18.2 intuition: CLIP reads sentences */}

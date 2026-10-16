@@ -8,6 +8,7 @@
 // 19.8 intuition: who supplies the concepts, and who checks them (one line per variant family).
 // 19.9 intuition: the ladder as a staircase rising rung by rung; human labour and human checking fall together (schematic).
 import React from 'react';
+import modernSections from '../modernSections.json';
 import { C, F } from '../kit/theme';
 import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, bw, bh, inv, texHTML, type SceneProps } from '../kit/core';
 import { EvTag, MathSvg, Person, rgba } from '../kit/cbm';
@@ -21,15 +22,15 @@ const ROWS: Row[] = [
   { name: 'CEM', cite: 'Espinosa Zarlenga et al. 2022', data: { tex: `\\{(${X},\\ \\ccon{c},\\ y)\\}` }, from: { text: 'human labels' },
     head: { tex: '\\ch_j \\in \\mathbb{R}^m', sub: 'a vector per concept' }, train: { tex: '\\gth,\\ \\fph', sub: 'predictor + head' } },
   { name: 'PCBM', cite: 'Yuksekgonul et al. 2023', data: { tex: `\\{(${X},\\ y)\\}`, sub: '+ a concept bank' }, from: { text: 'a concept bank' },
-    head: { tex: `\\langle e(${X}),\\, v_j\\rangle\\ \\cleak{+\\ r}`, sub: 'projections + a residual' }, train: { tex: '\\fph', sub: 'head only' } },
-  { name: 'LF-CBM', cite: 'Oikarinen et al. 2023', data: { tex: `\\{(${X},\\ y)\\}` }, from: { text: 'a language model' },
-    head: { tex: `\\ch = W_c\\, e(${X})`, sub: 'a learned concept layer' }, train: { tex: 'W_c,\\ \\fph', sub: 'concept layer + head' } },
+    head: { text: 'scaled cosine scores', sub: 'phrase example' }, train: { tex: '\\fph', sub: 'head only' } },
   { name: 'LaBo', cite: 'Yang et al. 2023', data: { tex: `\\{(${X},\\ y)\\}` }, from: { text: 'a language model, CLIP' },
     head: { tex: `\\cos(\\phi(${X}),\\, \\psi(s_j))`, sub: 'raw CLIP scores' }, train: { tex: '\\fph', sub: 'head only' } },
+  { name: 'LF-CBM', cite: 'Oikarinen et al. 2023', data: { tex: `\\{(${X},\\ y)\\}` }, from: { text: 'a language model' },
+    head: { tex: `\\ch = W_c\\, e(${X})`, sub: 'a learned concept layer' }, train: { tex: 'W_c,\\ \\fph', sub: 'concept layer + head' } },
   { name: 'VLG-CBM', cite: 'Srivastava et al. 2024', data: { tex: `\\{(${X},\\ y)\\}`, sub: '+ a detector' }, from: { text: 'a language model, a detector' },
     head: { tex: `\\ch = W_c\\, e(${X})`, sub: 'a learned concept layer' }, train: { tex: 'W_c,\\ \\fph', sub: 'concept layer + head' } },
-  { name: 'CBD', cite: 'Menon and Vondrick 2023', data: { text: 'none' }, from: { text: 'a language model' },
-    head: { tex: `\\cos(\\phi(${X}),\\, \\psi(d))`, sub: 'raw CLIP scores' }, train: { text: 'nothing' } },
+  { name: 'CBD', cite: 'Menon and Vondrick 2023', data: { text: 'none for new task' }, from: { text: 'a language model' },
+    head: { tex: `\\cos(\\phi(${X}),\\, \\psi(d))`, sub: 'raw CLIP scores' }, train: { text: 'no task fitting' } },
 ];
 
 // 19.7 who supplies the concepts, who checks them
@@ -82,9 +83,9 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
   const T: number[][] = [
     [w(2, 'Supervised'), w(4, 'people'), w(5, 'number'), w(6, 'predictor')],
     [w(2, 'embedding'), w(4, 'people') + 0.15, w(5, 'vector'), w(6, 'predictor') + 0.15],
-    [w(3, 'Post'), w(4, 'bank'), w(5, 'projection'), w(6, 'only')],
-    [w(3, 'label'), w(4, 'language'), w(5, 'Label'), w(6, 'layer')],
+    [w(3, 'Post'), w(4, 'bank'), w(5, 'scaled'), w(6, 'only')],
     [w(3, 'LaBo'), w(4, 'CLIP'), w(5, 'raw'), w(6, 'only') + 0.2],
+    [w(3, 'label'), w(4, 'language'), w(5, 'Label'), w(6, 'layer')],
     [w(3, 'VLG'), w(4, 'detector'), w(5, 'VLG'), w(6, 'layer') + 0.2],
     [w(3, 'no'), w(4, 'language') + 0.3, w(5, 'raw') + 0.3, w(6, 'nothing')],
   ];
@@ -109,7 +110,7 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
 
   return (
     <Stage>
-      <Header t={t} part={10} title={P.title} />
+      <Header t={t} part={modernSections.s19.part} title={P.title} />
       {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => <SlideHead key={k} text={bh(P, k)} o={ho(k)} />)}
 
       {/* ============================================================ 19.1 to 19.6 the table, one column per beat */}

@@ -17,6 +17,7 @@ import script from '../../narration/script.json';
 import { reviewScene } from './reviewContent';
 import { SCENES } from '../scenes';
 import { Controls } from './Controls';
+import modernSections from '../modernSections.json';
 
 const recorded = timeline as unknown as Timeline;
 const TL: Timeline = { ...recorded, scenes: script.scenes.map((sc) => {
@@ -177,7 +178,7 @@ export const Deck: React.FC = () => {
           {stop.beat + 1 < nb && stop.to >= words.length ? <div style={{ color: '#6b7680', marginTop: 8, fontSize: 16 }}>Next slide: {sc.beats[stop.beat + 1].text.slice(0, 140)}…</div> : null}
         </div>
       ) : null}
-      <Controls sections={script.scenes.map((s) => ({ id: s.id, title: s.title, slides: s.beats.map((b) =>
+      <Controls sections={script.scenes.map((s) => ({ id: s.id, title: (modernSections as Record<string, {nav: string}>)[s.id]?.nav ?? s.title, slides: s.beats.map((b) =>
         ('head' in b && !String(b.head).includes('$') ? String(b.head).replace(/\{[xcfelkym]:([^{}]*)\}/g, '$1').trim() : '') || b.text.split(/(?<=[.!?])\s/)[0]
       ) }))} section={pos.s} slide={stop.beat}
         build={build} builds={builds}

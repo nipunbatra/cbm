@@ -10,6 +10,7 @@
 // 15.10 joint training: concept and task losses update the network; no vector-coordinate targets.
 // 15.11 training versus test recap. 15.12 the VariantCard and symbol legend.
 import React from 'react';
+import modernSections from '../modernSections.json';
 import { C, F } from '../kit/theme';
 import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, clamp, inv, type SceneProps } from '../kit/core';
 import { ArchMap, Block, ConceptRow, Credit, EvTag, Flow, MathSvg, Person, PhotoR, ShareBars, VecCol, rgba, VariantCard, type VariantRows } from '../kit/cbm';
@@ -384,7 +385,7 @@ export const S15: React.FC<SceneProps> = ({ t, P }) => {
       </Svg>
 
       {/* ================= HTML text ================= */}
-      <Header t={t} part={10} title={P.title} />
+      <Header t={t} part={modernSections.s15.part} title={P.title} />
 
       {/* slide 1 */}
       <SlideHead text={bh(P, 1)} o={s1} />

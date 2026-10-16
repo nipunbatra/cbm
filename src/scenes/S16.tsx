@@ -1,5 +1,6 @@
 // PCBM review: 19 slides, with a four-slide CLIP introduction in S16Primer.
 import React from 'react';
+import modernSections from '../modernSections.json';
 import { C } from '../kit/theme';
 import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, inv, type SceneProps } from '../kit/core';
 import { ArchMap, Block, Credit, EvTag, Flow, MathSvg, Person, PhotoR, ShareBars, VecCol, rgba, VariantCard, type VariantRows } from '../kit/cbm';
@@ -318,7 +319,7 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       </Svg>
 
       {/* ================= HTML text ================= */}
-      <Header t={t} part={10} title={P.title} />
+      <Header t={t} part={modernSections.s16.part} title={P.title} />
 
       {/* new slide 10: standardising */}
       <SlideHead text={bh(P, current(10))} o={n10} />

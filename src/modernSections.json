@@ -1,0 +1,30 @@
+{
+  "s15": {
+    "part": "10 \u00b7 RUNG ONE \u00b7 CONCEPT AND CLASS LABELS",
+    "nav": "Rung one \u00b7 Richer concepts: CEM"
+  },
+  "s16": {
+    "part": "10 \u00b7 RUNG TWO \u00b7 A \u00b7 DIRECT CLIP SCORES",
+    "nav": "Rung two A \u00b7 Direct CLIP scores: PCBM"
+  },
+  "s18": {
+    "part": "10 \u00b7 RUNG TWO \u00b7 A \u00b7 DIRECT CLIP SCORES",
+    "nav": "Rung two A \u00b7 Select descriptions: LaBo"
+  },
+  "s17": {
+    "part": "10 \u00b7 RUNG TWO \u00b7 B \u00b7 LEARN FROM CLIP",
+    "nav": "Rung two B \u00b7 Learn concepts from CLIP: LF-CBM"
+  },
+  "s24": {
+    "part": "10 \u00b7 RUNG TWO \u00b7 C \u00b7 LEARN FROM REGIONS",
+    "nav": "Rung two C \u00b7 Ground concept targets: VLG-CBM"
+  },
+  "s25": {
+    "part": "10 \u00b7 RUNG THREE \u00b7 NO TASK FITTING",
+    "nav": "Rung three \u00b7 Fixed description averages: CBD"
+  },
+  "s19": {
+    "part": "10 \u00b7 RECAP \u00b7 COMPARE THE RUNGS",
+    "nav": "Recap \u00b7 Compare the supervision rungs"
+  }
+}

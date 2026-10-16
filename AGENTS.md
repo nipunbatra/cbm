@@ -28,7 +28,9 @@ Controls stay visible while hovered or used with keyboard focus. The map groups 
   Timing helpers: `bs(P,k)` / `be(P,k)` beat start/end, `bw(P,k,'word')` when a word is spoken, `bh(P,k)` the heading.
   Kit: `src/kit/core.tsx` (Rich, SlideHead, Tex, Header), `src/kit/cbm.tsx` (photos, EvTag, ConceptRow, VariantCard),
   `src/kit/theme.ts` (colours = meaning, KaTeX macros `\cin \ccon \chead \cedit \closs \cleak \gth \fph \ch \cvec \yh`).
-- **Section separators:** s30-s46 use `src/scenes/SectionBreak.tsx` and one narration file each.
+- **Section separators:** s30-s46 use `src/scenes/SectionBreak.tsx`, except s40. The rung-two map s40 and
+  subsection diagrams s47-s49 use `src/scenes/ApproachBreak.tsx`. Each has one narration file.
+  `src/modernSections.json` supplies the persistent rung/group labels, map/notes headings and PDF bookmarks.
   New review scenes receive preview timing without changing the saved film timeline.
 - **Numbers:** `math/data.py` writes `src/data.json` (scenes read it as `D`). Never type a number on a slide that
   exists in data.json; spoken numbers must trace to it (`math/test_narration.py` checks).

@@ -13,6 +13,7 @@
 // 17.16 why sparse: a dense 3 x 34 grid vs the six readable weights   17.17 the risk: setting concepts
 // 17.18 what changed compared with the plain CBM (three rows) and three sources of supervision   17.19 VariantCard.
 import React from 'react';
+import modernSections from '../modernSections.json';
 import { C, F } from '../kit/theme';
 import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, clamp, inv, type SceneProps } from '../kit/core';
 import { TexSteps } from '../kit/slots';
@@ -229,12 +230,7 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
   const beatNow = (() => { let k = 1; for (let i = 1; i <= NB; i++) if (t >= b(i) - 0.35) k = i; return k; })();
   const trackO = at(b(4) - 0.2, 0.4) * (1 - at(b(18) - 0.35, 0.3));
 
-  // ---------------- 17.1 motivation
-  const s1p = at(b(1), 0.4), s1clip = at(w(1, 'label', 1) - 0.2, 0.5);
-  const s1ticks = Math.floor(clamp((t - w(1, 'label', 1)) / 0.35, 0, 5));
-  const s1n = at(w(1, '112') - 0.1);
-  const s1x = inv(w(1, 'no') - 0.1, w(1, 'no') + 0.6, t);
-  const s1lf = at(w(1, 'no') + 0.3);
+  const bridgeNow = at(w(1, 'Now') - .1);
 
   // ---------------- 17.2 intuition: teacher, student, questions
   const s2tc = at(w(2, 'CLIP') - 0.1), s2sc = (i: number) => at(w(2, 'score') + i * 0.2, 0.4);
@@ -373,21 +369,30 @@ export const S17: React.FC<SceneProps> = ({ t, P }) => {
 
   return (
     <Stage>
-      <Header t={t} part={10} title={P.title} />
+      <Header t={t} part={modernSections.s17.part} title={P.title} />
       <Svg><StepTrack cur={STEP[beatNow] ?? 0} o={trackO} /></Svg>
 
       {/* ============================================================ 17.1 motivation */}
       <Slide o={sl(1)}>
         <SlideHead text={bh(P, 1)} />
-        <Rich x={160} y={280} size={28} text="Label-Free Concept Bottleneck Model (LF-CBM)" />
+        <Rich x={160} y={285} size={28} text="Label-Free Concept Bottleneck Model (LF-CBM)" />
+        <HText x={160} y={360} size={30} color={C.chalk2}>Earlier · A · use CLIP scores directly</HText>
+        <HText x={160} y={625} size={30} color={C.concept} o={bridgeNow}>Now · B · learn a concept predictor</HText>
         <Svg>
-          <Person x={800} y={560} s={2.2} o={s1p} />
-          <Clipboard x={1080} y={560} ticks={s1ticks} o={s1clip} />
-          <Cross x={680} y={390} w={560} h={340} p={s1x} sw={7} />
+          {[455,720].map((y,i)=><g key={y} opacity={i?bridgeNow:1}>
+            <Block x={255} y={y} w={190} h={105} title="image" kind="input" />
+            <Flow pts={[[365,y],[430,y]]} color={C.input} />
+            <Block x={620} y={y} w={360} h={105} title={i?'image encoder':'CLIP + phrases'} sub="frozen" kind="input" size={30} />
+            <Flow pts={[[815,y],[860,y]]} color={C.concept} />
+            <Block x={1030} y={y} w={310} h={105} title={i?'learned concepts':'cosine scores'} sub={i?'taught by CLIP':undefined} kind="concept" size={29} />
+            <Flow pts={[[1200,y],[1270,y]]} color={C.concept} />
+            <Block x={1400} y={y} w={230} h={105} title="class head" sub="learned" kind="head" size={29} />
+            <Flow pts={[[1530,y],[1650,y]]} color={C.chalk} />
+            <Txt x={1670} y={y} anchor="start" size={32}>class</Txt>
+          </g>)}
         </Svg>
-        <HText x={1080} y={735} ax="center" size={26} color={C.chalk2} o={s1n}>CUB: 112 per bird photo</HText>
-        <Rich x={960} y={800} ax="center" size={32} text="a person labels every {c:concept} on every photo" o={s1clip} />
-        <Rich x={960} y={860} ax="center" size={32} text="label-free: no human {c:concept labels}" o={s1lf} />
+        <Rich x={960} y={880} ax="center" size={32} text="Same {y:class labels}. Different source of {c:concept values}." o={bridgeNow} />
+        <EvTag x={160} y={965} kind="schematic" text="prediction paths; CLIP teaches the lower concept layer during training" />
       </Slide>
 
       {/* ============================================================ 17.2 intuition: teacher and student */}
