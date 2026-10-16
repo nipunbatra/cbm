@@ -442,3 +442,8 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     244 content slides and 17 separators, with 40 navigation bookmarks. Exported 44 revised pages and
     preserved all 217 other slide bodies. Every footer and bookmark destination was verified, along with
     the absence of LaBo, LF-CBM and VLG-CBM text. Earlier PDFs remain available for annotation references.
+78. **Publish review revision 27.** Source af64f30 and Pages release 92d82ad are pushed and deployed.
+    Live HTML, JavaScript, CSS, notes and PDF match the local release bytes. Verified the published
+    direct transition from s16 to rung three, map count and revised comparison slide. Course PR #16
+    is merged and deployed with both PDF labels showing 261 pages and all three course links correct.
+    Audio, saved film timelines and beat list remain unchanged.
