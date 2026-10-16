@@ -11,7 +11,7 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 20 is live at https://nipunbatra.github.io/cbm/: 303 content slides plus 17 separators, matching notes
+Revision 21 is live at https://nipunbatra.github.io/cbm/: 303 content slides plus 17 separators, matching notes
 and a 320-page PDF with 43 navigation bookmarks.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
@@ -207,7 +207,7 @@ The dated entries below preserve the review history. The film remains on its ear
 2. **Remake the film after the review** (not now): regenerate the voice for changed lines, real timeline, music,
    captions, render, upload unlisted. Claude Code runs this pipeline (`tools/build.sh`, see CLAUDE.md); Codex should
    not run TTS, the timeline or renders.
-3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r20 are already live.
+3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r21 are already live.
    Later edits will need another deck/notes/PDF release on `nipunbatra/cbm` (`gh-pages`) and,
    if the page count changes, the course page through a pull request. The film remains a separate pending rebuild.
 4. Open checks, low priority:
@@ -270,7 +270,7 @@ The dated entries below preserve the review history. The film remains on its ear
   Both deployments succeeded. Live release bytes match the local files, the course shows 320 pages,
   and the published separator and course row were inspected in the browser. See publishing/README.md.
 
-## 16 October 2026: visible unit CAV (revision 21, prepared)
+## 16 October 2026: visible unit CAV (revision 21, published)
 
 - s16.8 now draws the unit CAV as a labelled teal arrow on the two-feature plot. Its direction and length
   come from D.pcbm_toy, with matching vector colours and a plain-language length reminder. Narration names
@@ -279,3 +279,6 @@ The dated entries below preserve the review history. The film remains on its ear
   changed; all other page streams and text, every footer and all bookmarks are verified. The slide and PDF
   were visually inspected. Content, type checking, 25 Python tests and four deck tests passed.
 - No audio generation, saved timeline rebuild or film rendering. The narration remains pending for the film.
+- Source commit 9b7773d and Pages release 2d7dc63 are pushed. Deployment succeeded; live HTML, JS, CSS,
+  notes and PDF match the local release. The live slide was visually inspected, and existing course links
+  and 320-page labels remain correct. See publishing/README.md for evidence.

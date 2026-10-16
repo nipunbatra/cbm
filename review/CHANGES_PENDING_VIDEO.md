@@ -344,3 +344,6 @@ Audio note: the voice for these lines was already generated and checked (asrchec
 59. **Annotation PDF revision 21.** Replaced page 172 (s16.8) in the 320-page, 43-bookmark PDF.
     All other 319 page streams and text are identical to r20; every footer and bookmark is checked.
     Rendered and inspected the revised PDF page. Previous review PDFs remain available.
+60. **Publish review revision 21.** Source commit 9b7773d and Pages release 2d7dc63 are pushed.
+    Deployment succeeded. Live HTML, JS, CSS, notes and PDF match the release bytes; the revised slide
+    was inspected in the browser. Existing course links and 320-page labels remain correct.
