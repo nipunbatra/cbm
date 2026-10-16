@@ -1,18 +1,8 @@
-// s16 Part 10 · Post-hoc concept bottleneck models (Yuksekgonul et al. 2023). Review revision, 26 beats.
-// Real numbers from D.worked.pcbm (CLIP ViT-B/32 on the 36 Commons photos, a teaching example).
-// 16.1 motivation: a concept predictor trained from scratch (crossed out) vs a pretrained, frozen encoder (padlock).
-// 16.2 to 16.3 intuition (one stage, a sketch): photos arranged in the encoder's feature space, a 'more striped'
-//      direction; the bank names it (and 'a long neck'); the worked photo's distance along stripes is its score.
-// 16.4 the worked photo -> frozen CLIP image encoder -> e(x) in R^512 (its real first entries and the last one).
-// 16.5 to 16.9: labelled concept examples, a 2-D space, the CAV, scoring, and the alternative CLIP route.
-// 16.10: dot product. 16.11: real phrase scores. 16.12 to 16.15: multi-image scaling. 16.16: bottleneck.
-// 16.17 to 16.20: fit the head, inspect sparse weights, calculate an answer, then the full test-time path.
-// 16.21 to 16.26: held-out photos, intervention, optional residual, comparison and summary.
-// Legacy drawings use old-to-current beat mapping; the expanded primer uses current beat IDs.
+// PCBM review: 19 slides, with a four-slide CLIP introduction in S16Primer.
 import React from 'react';
-import { C, F } from '../kit/theme';
-import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, clamp, inv, type SceneProps } from '../kit/core';
-import { ArchMap, Block, Credit, Cross, EvTag, Flow, MathSvg, Person, PhotoR, Pill, ShareBars, VecCol, rgba, VariantCard, type VariantRows } from '../kit/cbm';
+import { C } from '../kit/theme';
+import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, be, bw, bh, inv, type SceneProps } from '../kit/core';
+import { ArchMap, Block, Credit, EvTag, Flow, MathSvg, Person, PhotoR, ShareBars, VecCol, rgba, VariantCard, type VariantRows } from '../kit/cbm';
 import { lerp } from '../kit/anim';
 import { TexSteps } from '../kit/slots';
 import { D } from '../kit/data';
@@ -33,20 +23,12 @@ const LOG: number[] = PC.logits_example;
 const PRB: number[] = PC.probs_example;
 const ED = PC.edit;
 const CLS: string[] = WK.classes;
-const EX: string = WK.example;
-const EXC = WK.photo_credit[EX];
 const SIZE: Record<string, [number, number]> = WK.photo_size;
-const TRAIN: string[] = WK.train;
 const TEST: string[] = WK.test;
 const NCORRECT = Math.round(PC.test_acc * WK.n_test);
 const COLLECTIVE = '36 Wikimedia Commons photographs (CC BY-SA / CC BY / public domain)';
-const FEAT_DIM = 512; // CLIP ViT-B/32 image embedding width (structural)
 const sg = (v: number, d: number) => `${v < 0 ? '−' : ''}${Math.abs(v).toFixed(d)}`;
 const sgp = (v: number, d: number) => `${v < 0 ? '−' : '+'}${Math.abs(v).toFixed(d)}`;
-// e(x): the worked photo's real CLIP ViT-B/32 image feature (normalised): first entries and the last one (index 512)
-const E_FIRST: number[] = D.worked.extras.example_feature_first;
-const E_REAL: string[] = [...E_FIRST.slice(0, 3).map((v) => sgp(v, 3)), '⋮', sgp(D.worked.extras.example_feature_last, 3)];
-const E_IDX = ['1', '2', '3', '', String(FEAT_DIM)];
 const tn = (v: number, d: number) => `${v < 0 ? '-' : ''}${Math.abs(v).toFixed(d)}`;
 const short = (s: string) => s.replace(/^an? /, '');
 
@@ -57,49 +39,13 @@ const thumbFrac = (file: string, a: number): [number, number, number, number] =>
   const s = r / a; return [(1 - s) / 2, 0, (1 + s) / 2, 1];
 };
 
-/** a padlock glyph centred on (x, y) */
-const Lock: React.FC<{ x: number; y: number; s?: number; o?: number }> = ({ x, y, s = 1, o = 1 }) =>
-  o <= 0.001 ? null : (
-    <g transform={`translate(${x} ${y}) scale(${s})`} opacity={o < 0.999 ? o : undefined}>
-      <circle r={30} fill={C.bg} stroke={C.input} strokeWidth={2.5} />
-      <path d="M -9 -2 L -9 -10 A 9 9 0 0 1 9 -10 L 9 -2" fill="none" stroke={C.chalk} strokeWidth={3.5} />
-      <rect x={-13} y={-3} width={26} height={20} rx={4} fill={C.chalk} />
-      <circle cx={0} cy={6} r={3} fill={C.bg} />
-    </g>
-  );
-
-// ---- 16.2 and 16.3 the intuition: photos arranged in feature space along directions (a sketch, positions drawn)
-const SO: [number, number] = [300, 860]; // origin of the sketch
-const deg = (a: number): [number, number] => [Math.cos((a * Math.PI) / 180), -Math.sin((a * Math.PI) / 180)];
-const U_ST = deg(16), U_NK = deg(68); // the stripes and long-neck directions
-const at2 = (u: [number, number], d: number, e: number): [number, number] => [SO[0] + d * u[0] - e * u[1], SO[1] + d * u[1] + e * u[0]];
-const L_ST = 1420, L_NK = 600;
-const byCls = (c: string) => WK.train.filter((f: string) => f.startsWith(c));
-const SPACE: { f: string; p: [number, number] }[] = [
-  { f: byCls('zebra').find((f: string) => f !== WK.example) ?? WK.example, p: at2(U_ST, 960, -40) },
-  { f: byCls('zebra').filter((f: string) => f !== WK.example)[1] ?? WK.example, p: at2(U_ST, 1200, 95) },
-  { f: byCls('giraffe')[0], p: at2(U_NK, 330, 70) },
-  { f: byCls('giraffe')[1], p: at2(U_NK, 480, -60) },
-  { f: byCls('giraffe')[2], p: at2(U_NK, 230, -70) },
-  { f: byCls('horse')[0], p: [720, 610] },
-  { f: byCls('horse')[1], p: [870, 500] },
-  { f: byCls('horse')[2], p: [700, 440] },
-];
-const EXD = 1120, EXE = -170; // the worked photo: how far along stripes, and its offset from the axis
-const EXP = at2(U_ST, EXD, EXE);
-const TW = 112, THH = 75; // thumbnail size
-
-// ---- 16.10 the CLIP image/phrase dot product (illustrative unit vectors)
-const DE: [number, number] = D.pcbm_toy.clip.image, DV: [number, number] = D.pcbm_toy.clip.phrase;
-const DOT: number = D.pcbm_toy.clip.score;
-const PRODUCTS: number[] = D.pcbm_toy.clip.products;
 // ---- 16.10 the stripes score on a number line (real mean, spread and score)
 const NL = { x0: 300, x1: 1620, v0: 0.17, v1: 0.3, y: 470 };
 const nlx = (v: number) => NL.x0 + ((v - NL.v0) / (NL.v1 - NL.v0)) * (NL.x1 - NL.x0);
 // ---- 16.21 recap: the four rows of s10 ("what changes"), plain CBM against this variant
 const CMP_ROWS = ['concept source', 'detector', 'representation', 'what reaches the head'];
 const CMP_CBM = ['people label every concept', 'a trained concept predictor', 'one number per concept', 'only the concept values'];
-const CMP_PC = ['a concept bank of phrases', 'a frozen encoder and a projection', 'one number per concept', 'concept scores, plus a residual in PCBM-h'];
+const CMP_PC = ['a concept bank of phrases', 'frozen CLIP + cosine similarity', 'one number per concept', 'concept scores, plus a residual in PCBM-h'];
 const CMP_CHANGED = [true, true, false, true];
 const CT = { lx: 196, c1: 600, c1w: 540, c2: 1180, c2w: 580, hy: 330, y0: 400, rh: 112, bh: 84 };
 const CompareSvg: React.FC<{ o: number; rowO: (i: number) => number; hiO: (i: number) => number; changed: boolean[] }> = ({ o, rowO, hiO, changed }) =>
@@ -143,17 +89,14 @@ const CompareText: React.FC<{ o: number; name: string; cells: string[]; rowO: (i
 
 // final beat ("In symbols"): the variant card
 const VROWS: VariantRows = {
-  g: '\\ch_j = \\langle \\cin{e}(x),\\ \\ccon{v_j} \\rangle\\ \\ \\text{(}\\cin{e}\\text{ frozen, }\\ccon{v}\\text{: concept bank)}',
-  c: '\\ch = (\\ch_1, \\dots, \\ch_k)\\ \\ \\text{concept projections}',
+  g: '\\ch_j = \\operatorname{standardise}(\\cos(\\cin{e}(x),\\ccon{v_j}))',
+  c: '\\ch = (\\ch_1, \\dots, \\ch_k)\\ \\ \\text{standardised cosine scores}',
   f: '\\yh = \\fph(\\ch)\\ \\text{sparse linear}\\ \\ \\cleak{+\\,r(e(x))_{\\,\\text{PCBM-h}}}',
   train: '\\fph\\ \\text{only}\\ \\ (\\text{and } \\cleak{r} \\text{ in PCBM-h})',
   data: '\\{(x, y)\\}\\ +\\ \\text{concept bank}',
 };
 
 // ---- geometry
-const PH2 = { x: 160, y: 380, w: 390, h: 260 };
-const ENC2 = { x: 820, y: 510, w: 260, h: 130 };
-const V2 = { x: 1200, y: 360, rh: 62, w: 150 };
 const ZR = (i: number) => 360 + i * 54; // slide 5 rows
 const ZX = 820, ZS = 170;
 const MR = (i: number) => 366 + i * 54; // slide 7 matrix rows
@@ -162,12 +105,13 @@ const ST9 = { y: 470 }; // slide 9 row
 const HO = { x0: 330, y0: 330, dx: 215, dy: 165, w: 195, h: 130 }; // slide 15: the 12 held-out photos, 2 rows of 6
 
 export const S16: React.FC<SceneProps> = ({ t, P }) => {
-  const current = (k: number) => [0, 1, 2, 3, 4, 0, 0, 0, 10, 0, 14, 16, 0, 18, 19, 21, 22, 0, 0, 0, 0, 25, 26][k];
+  const current = (k: number) => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 9, 0, 11, 12, 14, 15, 0, 0, 0, 0, 18, 19][k];
   const b = (k: number) => bs(P, current(k));
   const w = (k: number, word: string, n = 0) => bw(P, current(k), word, n);
   const at = (x: number, d = 0.4) => inv(x, x + d, t);
   const NB = P.beats.length;
   const span = (k0: number, k1: number) => {
+    if (!current(k0) || !current(k1)) return 0;
     const fin = inv(b(k0) - 0.05, b(k0) + 0.25, t);
     if (current(k1) >= NB) return fin;
     const z = Math.min(be(P, current(k1)) + 0.02, bs(P, current(k1) + 1) - 0.34);
@@ -176,47 +120,10 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
   const so = (k: number) => span(k, k);
   const oo = (s: number, v = 1) => s * v;
 
-  // ---------------- 16.1
-  const s1 = so(1);
-  const pred1 = at(w(1, 'Instead') - 0.1, 0.5);
-  const cross1 = inv(w(1, 'scratch'), w(1, 'scratch') + 0.6, t);
-  const enc1 = at(w(1, 'reuse') - 0.1, 0.5);
-  const lock1 = at(w(1, 'pretrained') - 0.1);
-  const arr1 = E.io(inv(w(1, 'reuse') - 0.2, w(1, 'reuse') + 0.5, t));
-  const l1 = at(w(1, 'nobody') - 0.1);
-
-  // ---------------- new 16.2 and 16.3: the intuition (one stage)
-  const sI = span(2, 3), i2 = so(2), i3 = so(3);
-  const iPh = (k: number) => at(w(2, 'arranges') - 0.1 + k * 0.12, 0.35);
-  const iDir = E.io(inv(w(2, 'directions') - 0.1, w(2, 'directions') + 0.8, t));
-  const iStr = at(w(2, 'striped') - 0.1);
-  const iName = at(w(3, 'names') - 0.1);
-  const iEx = at(w(3, 'score') - 0.2, 0.4);
-  const iProj = E.io(inv(w(3, 'far') - 0.1, w(3, 'far') + 0.9, t));
-  const iQ = at(w(3, 'far') + 0.2);
-
-  // ---------------- 16.2
-  const s2 = so(4);
-  const ph2 = at(b(4) - 0.05, 0.3);
-  const enc2 = at(w(4, 'frozen') - 0.1, 0.5);
-  const lock2 = at(w(4, 'frozen') + 0.2);
-  const clip2 = at(w(4, 'CLIPs') - 0.1);
-  const vec2 = at(w(4, 'photograph') - 0.1, 0.5);
-  const eq2 = at(w(4, '512') - 0.1);
-
   // ---------------- 16.5
   const s5 = so(11);
   const z5 = (i: number) => E.out(inv(b(11) + 0.1 + i * 0.08, b(11) + 0.6 + i * 0.08, t));
   const hi5 = at(w(11, 'black') - 0.1);
-  // ---------------- 16.10 (legacy beat 8): where e and v come from, then their dot product
-  const d8 = so(8);
-  const d8e = at(w(8, 'image') - 0.1), d8v = at(w(8, 'text') - 0.1);
-  const d8vals = at(w(8, 'illustrative') - 0.1), d8w = at(w(8, 'First') - 0.1);
-  const d8n: [string, number][] = [
-    ['\\cin{e} \\cdot \\ccon{v} = ', w(8, 'First') - 0.1],
-    [`\\cin{${DE[0]}} \\times \\ccon{${DV[0]}} + \\cin{${DE[1]}} \\times \\ccon{${DV[1]}}`, w(8, 'First') - 0.1],
-    [`{} = ${PRODUCTS[0].toFixed(2)} + ${PRODUCTS[1].toFixed(2)} = \\ccon{${DOT.toFixed(2)}}`, w(8, 'Then') - 0.1],
-  ];
   // ---------------- 16.10 standardising, on a number line
   const n10 = so(10);
   const n10a = at(b(10) + 0.1, 0.5), n10m = at(w(10, 'Subtract') - 0.1, 0.5), n10s = at(w(10, 'divide') - 0.1, 0.5);
@@ -272,79 +179,17 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
   const cmpT = [w(21, 'concepts'), w(21, 'frozen'), 0, w(21, 'hybrid')];
   const cmpHi = (i: number) => at(cmpT[i] - 0.1, 0.4);
   const cmpSame = at(w(21, 'still') - 0.1);
-  const cardP = [w(22, 'g'), w(22, 'projection'), w(22, 'f', 3), w(22, 'Only'), w(22, 'images')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
+  const cardP = [w(22, 'cosine'), w(22, 'Standardise'), w(22, 'sparse'), w(22, 'Only'), w(22, 'images')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
 
 
   return (
     <Stage>
       {/* ================= photos ================= */}
-      {sI > 0.001 ? SPACE.map(({ f, p }, k) => (
-        <PhotoR key={f} R={{ x: p[0] - TW / 2, y: p[1] - THH / 2, w: TW, h: THH }} src={`worked/${f}`} frac={thumbFrac(f, THH / TW)} o={sI * iPh(k) * (1 - 0.45 * iEx)} radius={5} shadow={false} />
-      )) : null}
-      <PhotoR R={{ x: EXP[0] - TW * 0.6, y: EXP[1] - THH * 0.6, w: TW * 1.2, h: THH * 1.2 }} src={`worked/${EX}`} frac={thumbFrac(EX, THH / TW)} o={oo(sI, iEx)} radius={6} />
-      <PhotoR R={PH2} src={`worked/${EX}`} o={oo(s2, ph2)} />
       {s15h > 0.001 ? TEST.map((f, k) => (
         <PhotoR key={f} R={{ x: HO.x0 + (k % 6) * HO.dx, y: HO.y0 + Math.floor(k / 6) * HO.dy, w: HO.w, h: HO.h }} src={`worked/${f}`} frac={thumbFrac(f, HO.h / HO.w)} o={s15h * th8(k)} radius={6} shadow={false} />
       )) : null}
 
       <Svg>
-        {/* ---------------- slide 1 ---------------- */}
-        {s1 > 0.001 ? (
-          <g opacity={s1 < 0.999 ? s1 : undefined}>
-            <Block x={560} y={470} w={460} h={160} kind="concept" dash title="concept predictor" sub="trained from scratch" size={34} subSize={24} o={pred1} />
-            <Cross x={350} y={410} w={420} h={120} p={cross1} o={pred1 * 0.7} />
-            <Flow pts={[[820, 470], [1090, 470]]} color={C.chalk2} p={arr1} o={arr1} head={16} />
-            <Block x={1360} y={470} w={460} h={160} kind="input" title="pretrained encoder" sub="already exists" size={34} subSize={24} o={enc1} />
-            <Lock x={1580} y={398} o={lock1} />
-          </g>
-        ) : null}
-
-        {/* ---------------- slides 2 and 3: the intuition ---------------- */}
-        {sI > 0.001 ? (() => {
-          const eSt: [number, number] = [SO[0] + U_ST[0] * L_ST * iDir, SO[1] + U_ST[1] * L_ST * iDir];
-          const eNk: [number, number] = [SO[0] + U_NK[0] * L_NK * iDir, SO[1] + U_NK[1] * L_NK * iDir];
-          const foot: [number, number] = [SO[0] + U_ST[0] * EXD, SO[1] + U_ST[1] * EXD];
-          const col = iName > 0.5 ? C.concept : C.chalk2;
-          return (
-            <g opacity={sI < 0.999 ? sI : undefined}>
-              <circle cx={SO[0]} cy={SO[1]} r={6} fill={C.input} opacity={iPh(0)} />
-              {iDir > 0.001 ? (
-                <g>
-                  <Flow pts={[SO, eSt]} color={col} sw={iName > 0.5 ? 4 : 3} dash={iName > 0.5 ? undefined : '10 9'} head={18} />
-                  <Flow pts={[SO, eNk]} color={col} sw={iName > 0.5 ? 4 : 3} dash={iName > 0.5 ? undefined : '10 9'} head={18} />
-                </g>
-              ) : null}
-              {iProj > 0.001 ? (
-                <g>
-                  <line x1={EXP[0]} y1={EXP[1]} x2={lerp(EXP[0], foot[0], iProj)} y2={lerp(EXP[1], foot[1], iProj)} stroke={C.chalk2} strokeWidth={2.5} strokeDasharray="6 6" />
-                  {(() => {
-                    const off = 26, nx = -U_ST[1] * off, ny = U_ST[0] * off; // a measuring bar just below the axis
-                    const x2 = lerp(SO[0], foot[0], iProj) + nx, y2 = lerp(SO[1], foot[1], iProj) + ny;
-                    return (
-                      <g>
-                        <line x1={SO[0] + nx} y1={SO[1] + ny} x2={x2} y2={y2} stroke={C.concept} strokeWidth={10} strokeLinecap="round" opacity={0.85} />
-                        <line x1={x2 - nx * 0.6} y1={y2 - ny * 0.6} x2={x2 + nx * 0.6} y2={y2 + ny * 0.6} stroke={C.concept} strokeWidth={4} opacity={iProj} />
-                      </g>
-                    );
-                  })()}
-                </g>
-              ) : null}
-            </g>
-          );
-        })() : null}
-
-        {/* ---------------- slide 4 (was 2) ---------------- */}
-        {s2 > 0.001 ? (
-          <g opacity={s2 < 0.999 ? s2 : undefined}>
-            <Flow pts={[[PH2.x + PH2.w + 10, ENC2.y], [ENC2.x - ENC2.w / 2 - 10, ENC2.y]]} color={C.input} p={enc2} t={t} live={enc2} n={2} head={14} dotR={5} />
-            <Block x={ENC2.x} y={ENC2.y} w={ENC2.w} h={ENC2.h} kind="input" title="image encoder" sub="CLIP ViT-B/32" size={30} subSize={22} o={enc2} />
-            <Lock x={ENC2.x + ENC2.w / 2 - 8} y={ENC2.y - ENC2.h / 2 + 4} s={0.9} o={lock2} />
-            <Flow pts={[[ENC2.x + ENC2.w / 2 + 10, ENC2.y], [V2.x - 70, ENC2.y]]} color={C.input} p={vec2} t={t} live={vec2} n={1} head={14} dotR={5} />
-            <VecCol x={V2.x} y={V2.y} vals={E_REAL} rowH={V2.rh} w={V2.w} size={30} color={C.input} o={vec2} />
-            {E_IDX.map((s, i) => <Txt key={i} x={V2.x - 20} y={V2.y + (i + 0.5) * V2.rh} size={20} mono anchor="end" fill={C.mute} o={vec2}>{s}</Txt>)}
-          </g>
-        ) : null}
-
         {/* ---------------- slide 5: standardised scores ---------------- */}
         {s5 > 0.001 ? (
           <g opacity={s5 < 0.999 ? s5 : undefined}>
@@ -416,22 +261,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
           </g>
         ) : null}
 
-        {/* ---------------- slide 10: image and phrase routes produce the two vectors ---------------- */}
-        <g opacity={d8}>
-          <g opacity={d8e}>
-            <Block x={430} y={440} w={480} h={120} title="new animal photo" size={32} kind="input" />
-            <Flow pts={[[690,440],[820,440]]} color={C.input} />
-            <Block x={1010} y={440} w={360} h={120} title="CLIP image encoder" sub="pretrained, frozen" size={30} subSize={24} kind="input" />
-            <Flow pts={[[1210,440],[1320,440]]} color={C.input} />
-          </g>
-          <g opacity={d8v}>
-            <Block x={430} y={650} w={480} h={120} title='“black and white stripes”' size={30} kind="concept" />
-            <Flow pts={[[690,650],[820,650]]} color={C.concept} />
-            <Block x={1010} y={650} w={360} h={120} title="CLIP text encoder" sub="pretrained, frozen" size={30} subSize={24} kind="input" />
-            <Flow pts={[[1210,650],[1320,650]]} color={C.concept} />
-          </g>
-        </g>
-
         {/* ---------------- slide 10: standardising on a number line ---------------- */}
         {n10 > 0.001 ? (() => {
           const m = MEAN[0], sd = STD[0], r = RAW[0];
@@ -491,46 +320,6 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       {/* ================= HTML text ================= */}
       <Header t={t} part={10} title={P.title} />
 
-      {/* slide 1 */}
-      <SlideHead text={bh(P, current(1))} o={s1} />
-      <Rich x={160} y={280} size={28} text="Post-hoc Concept Bottleneck Model (PCBM)" o={s1} />
-      <Rich x={560} y={590} ax="center" size={28} color={C.chalk2} text="needs {c:concept labels}" o={oo(s1, pred1)} />
-      <Rich x={1360} y={590} ax="center" size={28} color={C.chalk2} text="{x:frozen}: never trained here" o={oo(s1, enc1)} />
-      <Rich x={960} y={740} ax="center" size={34} text="no need to label every {c:concept} on every training {x:image}" o={oo(s1, l1)} />
-
-      {/* new slides 2 and 3: the intuition */}
-      <SlideHead text={bh(P, current(2))} o={i2} />
-      <SlideHead text={bh(P, current(3))} o={i3} />
-      <Rich x={1760} y={SO[1] + U_ST[1] * L_ST - 26} ax="right" ay="bottom" size={28} color={C.chalk2} text="more striped" o={oo(i2, iStr)} />
-      <Rich x={1760} y={SO[1] + U_ST[1] * L_ST - 26} ax="right" ay="bottom" size={30} weight={700} text="{c:black and white stripes}" o={oo(i3, iName)} />
-      <Rich x={SO[0] + U_NK[0] * L_NK + 24} y={SO[1] + U_NK[1] * L_NK} ay="middle" size={30} weight={700} text="{c:a long neck}" o={oo(i3, iName)} />
-      <Rich x={1050} y={720} w={700} size={32} text="how far along {c:stripes} is this {x:photo}?" o={oo(i3, iQ)} />
-      <Rich x={1050} y={772} w={700} size={28} color={C.chalk2} text="that distance is its {c:concept score}" o={oo(i3, iQ)} />
-      <HText x={SO[0] + 40} y={SO[1] + 30} size={22} color={C.mute} o={oo(sI, iPh(0))}>{`feature space of the frozen encoder (sketch: ${FEAT_DIM} dimensions drawn as 2)`}</HText>
-      <EvTag x={1760} y={890} ax="right" kind="schematic" text="photo positions drawn for teaching" o={oo(sI, iPh(0))} />
-
-      {/* slide 4 (was 2) */}
-      <SlideHead text={bh(P, current(4))} o={s2} />
-      <Credit x={PH2.x} y={PH2.y + PH2.h + 10} text={`Photo: ${EXC.artist}, Wikimedia Commons, ${EXC.license}`} o={oo(s2, ph2)} />
-      <Rich x={V2.x + V2.w / 2} y={300} ax="center" size={30} text="{x:image features}" o={oo(s2, vec2)} />
-      <Tex x={V2.x + V2.w / 2} y={760} ax="center" size={56} tex={`\\cin{e}(\\cin{x}) \\in \\mathbb{R}^{${FEAT_DIM}}`} o={oo(s2, eq2)} />
-      <Rich x={ENC2.x} y={600} ax="center" size={26} color={C.chalk2} text="{x:frozen}" o={oo(s2, clip2)} />
-      <EvTag x={1760} y={890} ax="right" kind="computed" text={`CLIP ViT-B/32 image feature of this photo (normalised); 4 of ${FEAT_DIM} entries shown`} o={oo(s2, vec2)} />
-
-      {/* slide 10 (legacy beat 8): words and origins before symbols and arithmetic */}
-      <SlideHead text={bh(P, current(8))} o={d8} />
-      <Rich x={190} y={305} size={30} text="Continuing the {c:CLIP phrase route} from the previous slide" o={d8} />
-      <Rich x={1350} y={380} size={30} text="{x:image feature vector}" o={oo(d8,d8e)} />
-      <Tex x={1350} y={435} size={42} tex="\cin{e}" o={oo(d8,d8e)} />
-      <Tex x={1398} y={435} size={42} tex={`= (\\cin{${DE[0]}},\\ \\cin{${DE[1]}})`} o={oo(d8,d8vals)} />
-      <Rich x={1350} y={590} size={30} text="{c:concept direction}" o={oo(d8,d8v)} />
-      <Tex x={1350} y={645} size={42} tex="\ccon{v}" o={oo(d8,d8v)} />
-      <Tex x={1398} y={645} size={42} tex={`= (\\ccon{${DV[0]}},\\ \\ccon{${DV[1]}})`} o={oo(d8,d8vals)} />
-      <Rich x={190} y={790} size={32} text="{c:Concept score}: multiply matching entries, then add" o={oo(d8,d8w)} />
-      <TexSteps x={190} y={850} t={t} size={42} o={d8} parts={d8n} />
-      <EvTag x={190} y={950} kind="illustrative" text={`${DE.length} entries instead of ${FEAT_DIM}; unit vectors, not actual CLIP outputs`} o={oo(d8,d8vals)} />
-      <HText x={1760} y={945} ax="right" size={26} color={C.chalk2} o={oo(d8,at(w(8,'probability')-.1))}>A score, not a probability.</HText>
-
       {/* new slide 10: standardising */}
       <SlideHead text={bh(P, current(10))} o={n10} />
       <Rich x={nlx(RAW[0])} y={NL.y - 30} ax="center" ay="bottom" size={26} text={`{c:this photo ${RAW[0].toFixed(3)}}`} o={oo(n10, n10a)} />
@@ -582,7 +371,7 @@ export const S16: React.FC<SceneProps> = ({ t, P }) => {
       <div style={{ position: 'absolute', inset: 0, transform: 'scale(0.86)', transformOrigin: '960px 290px' }}>
         <VariantCard name="Post-hoc CBM (Yuksekgonul et al., ICLR 2023)" rows={VROWS} o={s12} p={cardP} y0={290} />
       </div>
-      <Rich x={960} y={912} ax="center" size={28} color={C.chalk2} text="$j$: one concept   ·   $k$: number of concepts   ·   $\cleak{r}$: the residual" o={oo(s12, legO)} />
+      <Rich x={960} y={912} ax="center" size={28} color={C.chalk2} text="$\cin{e}$: image vector   ·   $\ccon{v_j}$: phrase vector   ·   $\cleak{r}$: residual" o={oo(s12, legO)} />
 
       {/* new slide 21: recap against the plain CBM */}
       <SlideHead text={bh(P, current(21))} o={sR} />

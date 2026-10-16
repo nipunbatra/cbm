@@ -375,3 +375,15 @@ Audio note: the voice for these lines was already generated and checked (asrchec
 66. **Publish review revision 23.** Source commit 18f1057 and Pages release 02f39ae are pushed.
     Deployment succeeded. Live HTML, JS, CSS, notes and PDF match the local release bytes. Inspected
     the published slide; existing course links and visible/accessibility 320-page labels remain correct.
+67. **Use the CLIP phrase route throughout the PCBM introduction (browser s16.2), 16 October 2026.**
+    Replaced the first eleven slides with four: animal classes and an illustrative LLM prompt, a reviewed
+    shared phrase bank, a photo/phrase cosine comparison, then the complete named score vector. Removed
+    CAV fitting, feature-space direction plots and the two-dimensional dot-product detour. The LLM exchange
+    is explicitly illustrative; the unchanged measured scores use the saved hand-chosen bank. Updated the
+    training/test path, comparison and symbol card to use phrase vectors and cosine similarity consistently.
+    PCBM now has 19 slides, seven fewer; the lecture has 313 pages including 17 separators. Content, type
+    checking, 25 Python tests and four deck tests passed. Inspected the four new slides and the continuation
+    in the browser, and all 19 exported PCBM pages. Saved audio, film timelines and beat list are unchanged.
+68. **Annotation PDF revision 24.** Updated PCBM pages 165-183, retaining 43 bookmarks. All 294 slide bodies
+    outside s16 are preserved. Every slide footer and bookmark destination was checked. Pages after the
+    old PCBM section move up seven. Earlier PDFs remain available for existing annotation references.

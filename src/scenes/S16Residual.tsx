@@ -8,11 +8,13 @@ import { D } from '../kit/data';
 const PC = D.worked.pcbm;
 
 export const S16Residual: React.FC<SceneProps> = ({t,P}) => {
-  const so = (k: number) => {
+  const current = (k: number) => k - 7;
+  const so = (original: number) => {
+    const k = current(original);
     const z = Math.min(be(P,k)+.02,bs(P,k+1)-.34);
     return inv(bs(P,k)-.05,bs(P,k)+.25,t)*(1-inv(z,z+.3,t));
   };
-  const cue = (k: number,word: string) => inv(bw(P,k,word)-.1,bw(P,k,word)+.3,t);
+  const cue = (k: number,word: string) => inv(bw(P,current(k),word)-.1,bw(P,current(k),word)+.3,t);
   const first=so(23), second=so(24);
   return <>
     {[23,24].map(k => {
@@ -20,7 +22,7 @@ export const S16Residual: React.FC<SceneProps> = ({t,P}) => {
       const edit=editing ? cue(k,'edit') : 0;
       const score=editing ? C.edit : C.concept;
       return <React.Fragment key={k}>
-        <SlideHead text={bh(P,k)} o={o} />
+        <SlideHead text={bh(P,current(k))} o={o} />
         <Svg o={o}>
           <Block x={280} y={430} w={260} h={120} kind="input" title="image features" sub="frozen encoder" size={29} subSize={20} />
           <Flow pts={[[412,430],[518,430]]} color={C.input} />

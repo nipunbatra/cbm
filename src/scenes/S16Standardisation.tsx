@@ -19,15 +19,17 @@ const photoRect = (f: string, row: number) => {
 };
 
 export const S16Standardisation: React.FC<SceneProps> = ({t,P}) => {
-  const so = (k: number) => {
+  const current = (k: number) => k - 7;
+  const so = (original: number) => {
+    const k = current(original);
     const z = Math.min(be(P,k)+.02,bs(P,k+1)-.34);
     return inv(bs(P,k)-.05,bs(P,k)+.25,t)*(1-inv(z,z+.3,t));
   };
-  const cue = (k: number,word: string) => inv(bw(P,k,word)-.1,bw(P,k,word)+.3,t);
+  const cue = (k: number,word: string) => inv(bw(P,current(k),word)-.1,bw(P,current(k),word)+.3,t);
   const raw=so(12), stats=so(13), after=so(15);
   const showRaw=cue(12,'cell'), showAfter=cue(15,'units');
   return <>
-    {[12,13,15].map(k=><SlideHead key={k} text={bh(P,k)} o={so(k)} />)}
+    {[12,13,15].map(k=><SlideHead key={k} text={bh(P,current(k))} o={so(k)} />)}
     {[{o:raw,k:12,changed:false},{o:after,k:15,changed:true}].map(({o,k,changed})=><React.Fragment key={k}>
       <HText x={180} y={295} size={28} color={C.chalk2} o={o}>Three held-out photos</HText>
       <HText x={1190} y={282} ax="center" size={28} color={C.chalk2} o={o}>

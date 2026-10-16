@@ -11,8 +11,8 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 23 is live at https://nipunbatra.github.io/cbm/: 303 content slides plus 17 separators, matching notes
-and a 320-page PDF with 43 navigation bookmarks.
+Revision 24 is prepared for https://nipunbatra.github.io/cbm/: 296 content slides plus 17 separators, matching notes
+and a 313-page PDF with 43 navigation bookmarks.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
 
@@ -312,3 +312,11 @@ The dated entries below preserve the review history. The film remains on its ear
 - Source commit 18f1057 and Pages release 02f39ae are pushed. Deployment succeeded. Live HTML, JS,
   CSS, notes and PDF match the local release. The live slide was inspected, and course links and
   320-page labels remain correct. See publishing/README.md for evidence.
+
+- 16 Oct, browser s16.2: revision 24 replaces the opening eleven PCBM slides with four. The sequence is
+  animal classes, illustrative LLM concept suggestions, a reviewed hand-chosen phrase bank, actual CLIP
+  cosine similarity, and the complete score vector. CAV fitting and geometric projection examples are
+  removed from the lecture. Training, standardisation, intervention and the two residual slides remain.
+  PCBM now has 19 slides; the full deck and matching revision 24 PDF have 313 pages and 43 bookmarks.
+  The saved experiment is unchanged and is not attributed to the illustrative LLM exchange. All checks
+  passed and all 19 revised PCBM PDF pages were inspected. Audio and saved film timing are unchanged.
