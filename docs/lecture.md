@@ -670,19 +670,10 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 6. **Column four: what is trained**  
    The last column is what gets trained. CBMs and concept embedding models train the concept predictor and the head. Post-hoc models train only the head. Classification by description trains nothing on the new task.
 
-7. **High class accuracy does not prove meaningful concepts**  
-   Here is a control experiment. A pretrained image encoder already extracts useful features. Pass them through a layer with randomly chosen weights, keep that layer fixed, and train only the final class head using class labels. The layer was never taught to detect yellow bills or other named concepts. When the head can use enough of these mixed features, reported experiments show that class accuracy can approach concept-based models. So good predictions do not establish what each intermediate value means. Random describes how the weights are chosen; fixed describes whether they change.
-
-8. **Random weights: draw the mixing coefficients by chance**  
-   Zoom in on the random layer. Each weight says how much of an image feature to add or subtract. Random means drawing these coefficients by chance, without learning them from labels. In this illustrative example, the encoder gives features 2 and 1. Suppose the weights are 0.4 and minus 0.2. Multiply and add: 0.8 minus 0.2 gives 0.6. This is a mixed image feature, not an estimate of yellow bill. In this baseline, we draw the weights once and leave them untrained.
-
-9. **Fixed means: training does not update these weights**  
-   Fixed, or frozen, means keeping the weights unchanged throughout training. The encoder keeps its pretrained weights, and the random layer keeps its one draw. Only the class head adjusts its weights using class labels. Fixed weights do not mean fixed outputs. Photo A has features 2 and 1, which give 0.6. Photo B has features 1 and 2; the same weights give 0. The head can learn from these differences, even though neither value has a guaranteed concept meaning. Check the concepts themselves as well as class accuracy.
-
-10. **Who supplies the concepts, and who checks them?**  
+7. **Who supplies the concepts, and who checks them?**  
    One question sums up the table: who supplies the concepts, and who checks them? In CBMs and concept embedding models, people label the concepts, so people check them. In post-hoc models, a concept bank supplies them, checked only by whoever built it. In classification by description, a language model supplies the descriptions and there is no automatic factual check. We must review them.
 
-11. **Each rung up the ladder removes a cost and a check**  
+8. **Each rung up the ladder removes a cost and a check**  
    This is the general trade-off. Each rung up the ladder removes a human labour cost, and with it a human check. The labour saved on labelling has to be spent later, on checking that the concepts are really in the image.
 
 ## Part 11: Evaluating a concept bottleneck  (s42)
@@ -866,6 +857,64 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 6. **Compare with random directions**  
    A direction that separates two random sets of photos gives scores that jump between zero and one. So a concept counts only when its score is steady and different from random ones. And even then, TCAV says what the model responds to. It gives no way to correct it.
+
+## Appendix: Grounding the concepts (optional)  (s49)
+
+1. **Grounding the concepts**  
+   This final appendix is optional further reading, outside the main lecture. A concept name and a high score do not establish that the concept is present in an image. We revisit this issue, explain the random-layer control, and explore training from concepts located in image regions. This is an extension of rung two, using detector targets and class labels.
+
+## Grounding the concepts  (s24)
+
+1. **Why ground the concept targets in image regions?**  
+   This optional appendix explores grounding the concepts. Recall the weakness of using CLIP similarities as concept values: a phrase gets a score, but nothing locates the named concept in the image. We need a check that the concept is actually visible. The following slides show how a detector can supply this spatial check during training.
+
+2. **Naming a concept is not the same as pointing at it**  
+   The fix rests on a simple intuition. Naming a concept is not the same as pointing at it. So ask a detector to point at each concept in the image, and count only the concepts it can find.
+
+3. **Three ways a concept can fail**  
+   There are three ways a concept can fail. Some are not visual, such as a gull's call. Some describe the setting, not the bird. And some score highly on images that do not contain them, such as a black head on a gull whose head is white.
+
+4. **High class accuracy does not prove meaningful concepts**  
+   Here is a control experiment. A pretrained image encoder already extracts useful features. Pass them through a layer with randomly chosen weights, keep that layer fixed, and train only the final class head using class labels. The layer was never taught to detect yellow bills or other named concepts. When the head can use enough of these mixed features, reported experiments show that class accuracy can approach concept-based models. So good predictions do not establish what each intermediate value means. Random describes how the weights are chosen; fixed describes whether they change.
+
+5. **Random weights: draw the mixing coefficients by chance**  
+   Zoom in on the random layer. Each weight says how much of an image feature to add or subtract. Random means drawing these coefficients by chance, without learning them from labels. In this illustrative example, the encoder gives features 2 and 1. Suppose the weights are 0.4 and minus 0.2. Multiply and add: 0.8 minus 0.2 gives 0.6. This is a mixed image feature, not an estimate of yellow bill. In this baseline, we draw the weights once and leave them untrained.
+
+6. **Fixed means: training does not update these weights**  
+   Fixed, or frozen, means keeping the weights unchanged throughout training. The encoder keeps its pretrained weights, and the random layer keeps its one draw. Only the class head adjusts its weights using class labels. Fixed weights do not mean fixed outputs. Photo A has features 2 and 1, which give 0.6. Photo B has features 1 and 2; the same weights give 0. The head can learn from these differences, even though neither value has a guaranteed concept meaning. Check the concepts themselves as well as class accuracy.
+
+7. **VLG-CBM asks a detector to find each concept**  
+   Their method is the Vision-Language-Guided Concept Bottleneck Model, or VLG-CBM. It grounds the concepts first. It uses an open-vocabulary object detector: a detector that can search for any phrase you give it, not only a fixed list of objects. It looks for each concept in each training image, and draws a box where it finds it.
+
+8. **A box means 1, no box means 0**  
+   A concept counts as present only where a box was found. For our gull, the bill, head and wingtips each get a one, and the call gets a zero. We call this vector c det: the concept labels from the detector.
+
+9. **The grounded labels train the concept layer with a loss**  
+   These grounded labels train the concept layer: a linear layer that turns the backbone's features into one score per concept. The loss is a binary cross-entropy, as in the original CBM, but no person draws the labels.
+
+10. **One term of the loss, worked out**  
+   One term, as in Part 5. The wingtips have a box, so their label is one; if the layer predicts 0.8, the term is minus log 0.8, about 0.22. The call has no box, so its label is zero; a prediction of 0.2 costs the same, minus log of one minus 0.2.
+
+11. **Count the non-zero weights in each class's row**  
+   They also report the number of effective concepts, NEC for short. Each row of the head holds one class's weights, one per concept. Count the non-zero weights in each row, here three, two and four, and average over the classes: the NEC is three.
+
+12. **A head that uses every concept explains nothing**  
+   Why does this count matter? A head that puts weight on every concept can fit almost anything. The paper proves that even a random, untrained concept layer can approximate any linear classifier once there are enough concepts. So a dense head can be accurate and still explain nothing.
+
+13. **A fair comparison: the same number of concepts per class**  
+   So the fair comparison gives every model the same budget: the same number of concepts per class. Only then does higher accuracy say something about the concepts themselves.
+
+14. **The same count in symbols**  
+   In symbols, the count for class k is the zero norm of its row of weights: the number of entries that are not zero. The NEC averages that count over the K classes.
+
+15. **Five concepts per class can actually be read**  
+   The paper reports accuracy with the NEC held at five. A head like that can actually be read: each class rests on a handful of named concepts.
+
+16. **From direct CLIP scores to grounded concept learning**  
+   Compared with direct CLIP scoring, the concept values now come from a learned layer. Detector boxes supply its training labels. At prediction time, this layer produces the concept values instead of comparing the image with text. The class head is still learned from class labels. We also judge it at a fixed number of concepts per class, so the explanation stays short.
+
+17. **VLG-CBM in symbols**  
+   In symbols: g is a backbone with a concept layer, W c, trained on the detector labels c det. f is sparse and linear, with the number of effective concepts held fixed. The data: images and class labels, plus a detector.
 
 ## End card  (end)
 

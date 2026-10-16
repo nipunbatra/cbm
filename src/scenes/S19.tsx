@@ -5,11 +5,10 @@
 // 19.3 the rest of the "data needed" column (concept labels dropped; CBD: none);
 // 19.4 "concepts from"; 19.5 "what the head reads" (the PCBM-h residual in purple); 19.6 "trained" (symbols + words);
 // 19.7-9 random-layer control: setup, what random means, and what fixed means.
-// 19.10 intuition: who supplies the concepts, and who checks them (one line per variant family).
-// 19.11 intuition: the ladder as a staircase rising rung by rung; human labour and human checking fall together (schematic).
+// 19.7 intuition: who supplies the concepts, and who checks them (one line per variant family).
+// 19.8 intuition: the ladder as a staircase rising rung by rung; human labour and human checking fall together (schematic).
 import React from 'react';
 import modernSections from '../modernSections.json';
-import { RandomWeightsRecap } from './RandomWeightsRecap';
 import { C } from '../kit/theme';
 import { E, HText, Header, Rich, SlideHead, Stage, Svg, Tex, Txt, bs, bw, bh, inv, type SceneProps } from '../kit/core';
 import { EvTag, MathSvg, Person, rgba } from '../kit/cbm';
@@ -88,11 +87,11 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
   const drop = at(w(3, 'drop'), 0.5) * (1 - at(b(4) - 0.3, 0.4)); // concept-labelled rows step back during "drop the concept labels"
 
   // 19.7-9 explain the random-layer control; the remaining recap follows.
-  const s7 = ho(10), s7h = at(w(10, 'who') - 0.1);
-  const s7r = [w(10, 'CBMs'), w(10, 'post'), w(10, 'classification')].map((x) => at(x - 0.1, 0.5));
-  const s8 = ho(11), s8step = (i: number) => at(b(11) + 0.15 + i * 0.3, 0.5);
-  const s8lab = E.io(inv(w(11, 'labour') - 0.2, w(11, 'labour') + 0.8, t)), s8chk = E.io(inv(w(11, 'check') - 0.2, w(11, 'check') + 0.8, t));
-  const s8line = at(w(11, 'saved') - 0.3, 0.5);
+  const s7 = ho(7), s7h = at(w(7, 'who') - 0.1);
+  const s7r = [w(7, 'CBMs'), w(7, 'post'), w(7, 'classification')].map((x) => at(x - 0.1, 0.5));
+  const s8 = ho(8), s8step = (i: number) => at(b(8) + 0.15 + i * 0.3, 0.5);
+  const s8lab = E.io(inv(w(8, 'labour') - 0.2, w(8, 'labour') + 0.8, t)), s8chk = E.io(inv(w(8, 'check') - 0.2, w(8, 'check') + 0.8, t));
+  const s8line = at(w(8, 'saved') - 0.3, 0.5);
 
   return (
     <Stage>
@@ -138,9 +137,7 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
         </div>
       ) : null}
 
-      <RandomWeightsRecap t={t} P={P} />
-
-      {/* ============================================================ 19.10 who supplies the concepts, who checks them */}
+      {/* ============================================================ 19.7 who supplies the concepts, who checks them */}
       {s7 > 0.001 ? (
         <div style={{ position: 'absolute', inset: 0, opacity: s7 < 0.999 ? s7 : undefined }}>
           <Svg>
@@ -173,7 +170,7 @@ export const S19: React.FC<SceneProps> = ({ t, P }) => {
         </div>
       ) : null}
 
-      {/* ============================================================ 19.11 each rung up removes a cost and a check */}
+      {/* ============================================================ 19.8 each rung up removes a cost and a check */}
       {s8 > 0.001 ? (
         <div style={{ position: 'absolute', inset: 0, opacity: s8 < 0.999 ? s8 : undefined }}>
           <Svg>

@@ -28,12 +28,13 @@ Controls stay visible while hovered or used with keyboard focus. The map groups 
   Timing helpers: `bs(P,k)` / `be(P,k)` beat start/end, `bw(P,k,'word')` when a word is spoken, `bh(P,k)` the heading.
   Kit: `src/kit/core.tsx` (Rich, SlideHead, Tex, Header), `src/kit/cbm.tsx` (photos, EvTag, ConceptRow, VariantCard),
   `src/kit/theme.ts` (colours = meaning, KaTeX macros `\cin \ccon \chead \cedit \closs \cleak \gth \fph \ch \cvec \yh`).
-- **Section separators:** active separators s30-s46 use `src/scenes/SectionBreak.tsx`. The single rung-two
+- **Section separators:** active separators s30-s46 and s49 use `src/scenes/SectionBreak.tsx`. The single rung-two
   separator s47 uses `src/scenes/ApproachBreak.tsx`. Each has one narration file.
   `src/modernSections.json` supplies the persistent rung/group labels, map/notes headings and PDF bookmarks.
-  Removed scenes s17, s18 and s24, and separators s40, s48 and s49 remain as archived source, outside
+  Removed scenes s17 and s18, and separators s40 and s48 remain as archived source, outside
   `narration/order.txt`. The main lecture moves directly from the PCBM phrase example to rung three.
-  The recap retains a three-slide random-layer control (s19.7-9), without the full VLG-CBM walkthrough.
+  Grounding (s24) is optional further reading at the very end, after TCAV and separator s49.
+  Its random-layer control and two intuitive explanations are s24.4-6; they are outside the main recap.
   New review scenes receive preview timing without changing the saved film timeline.
 - **Numbers:** `math/data.py` writes `src/data.json` (scenes read it as `D`). Never type a number on a slide that
   exists in data.json; spoken numbers must trace to it (`math/test_narration.py` checks).

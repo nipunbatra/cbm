@@ -1,22 +1,24 @@
-// s24 Part 10 · Grounding the concepts: VLG-CBM (Srivastava et al., NeurIPS 2024). Revision 2: one idea per slide.
+// s24 Optional appendix · Grounding the concepts: VLG-CBM (Srivastava et al., NeurIPS 2024). Revision 2: one idea per slide.
 // 24.1 motivation: a language model names a concept, CLIP scores it, nothing checks the image.
 // 24.2 intuition: naming (a chip with no place in the photo) vs pointing (a box on the bill); only found concepts count.
 // 24.3 three ways a concept fails (not visual / the setting / scores high where absent), three cards.
-// 24.4 random-layer control: fixed image encoder and random layer, trained head; accuracy does not establish concept meaning.
-// 24.5 the detector step: boxes on the gull at D.gull.regions (illustrative boxes) and the pipeline.
-// 24.6 boxes become a 0/1 vector c^det for the gull's concepts (symbol named).  24.7 the concept layer; L_C in words, then symbols.
-// 24.8 one BCE term worked out for a label 1 and a label 0 (same numbers as Part 5; predictions illustrative).
-// 24.9 NEC on a small sparse 3 x 6 head (illustrative weights): count per row, average.
-// 24.10 intuition: a dense row (every weight non-zero) can fit anything; random concepts suffice (Theorem 4.1, reported).
-// 24.11 intuition: a fair comparison at the same budget; the dense row is cut to the same count, then accuracy bars.
-// 24.12 NEC formula, words over symbols, with the Herring Gull row of 24.9 counted.  24.13 held at 5: five named concepts.
-// 24.14 recap: what changed compared with direct CLIP scoring.  24.15 VariantCard.
+// 24.4-6 random-layer control and intuitive definitions: fixed image encoder and random layer, trained head; accuracy does not establish concept meaning.
+// 24.7 the detector step: boxes on the gull at D.gull.regions (illustrative boxes) and the pipeline.
+// 24.8 boxes become a 0/1 vector c^det for the gull's concepts (symbol named).  24.9 the concept layer; L_C in words, then symbols.
+// 24.10 one BCE term worked out for a label 1 and a label 0 (same numbers as Part 5; predictions illustrative).
+// 24.11 NEC on a small sparse 3 x 6 head (illustrative weights): count per row, average.
+// 24.12 intuition: a dense row (every weight non-zero) can fit anything; random concepts suffice (Theorem 4.1, reported).
+// 24.13 intuition: a fair comparison at the same budget; the dense row is cut to the same count, then accuracy bars.
+// 24.14 NEC formula, words over symbols, with the Herring Gull row of 24.11 counted.  24.15 held at 5: five named concepts.
+// 24.16 recap: what changed compared with direct CLIP scoring.  24.17 VariantCard.
 import React from 'react';
 import { C } from '../kit/theme';
 import { E, Header, HText, Rich, SlideHead, Stage, Svg, Tex, Txt, ROLE, bs, bw, bh, inv, type SceneProps } from '../kit/core';
 import { ArchMap, Block, Credit, CREDIT, Cross, EvTag, Flow, MathSvg, PhotoR, Pill, Region, VariantCard, VecCol, rgba, ux, vy, type Rect, type VariantRows } from '../kit/cbm';
 import { D } from '../kit/data';
 import { TexSteps } from '../kit/slots';
+import { RandomWeights } from './RandomWeights';
+import modernSections from '../modernSections.json';
 
 const REG: Record<string, number[]> = D.gull.regions;
 const FC = ROLE.f;
@@ -26,7 +28,7 @@ const Slide: React.FC<{ o: number; children?: React.ReactNode }> = ({ o, childre
 
 const pillW = (s: string, size: number) => s.length * size * 0.62 + size * 0.9;
 
-// detector boxes (illustrative) and the grounded labels of 24.5
+// detector boxes (illustrative) and the grounded labels of 24.7
 const BOXES: { key: string; label: string; side: 'top' | 'bottom' }[] = [
   { key: 'bill', label: 'yellow bill', side: 'bottom' },
   { key: 'head', label: 'white head', side: 'top' },
@@ -35,7 +37,7 @@ const BOXES: { key: string; label: string; side: 'top' | 'bottom' }[] = [
 const LABELS = [...BOXES.map((b) => b.label), 'loud laughing call'];
 const CDET = [1, 1, 1, 0];
 
-// 24.7 a small sparse head (illustrative weights): 3 gull species x 6 concepts
+// 24.9 a small sparse head (illustrative weights): 3 gull species x 6 concepts
 const MCOLS = ['grey back', 'black wingtips', 'yellow bill', 'red bill spot', 'dark back', 'pink legs'];
 const MROWS = ['Herring Gull', 'California Gull', 'Western Gull'];
 const MW: number[][] = [
@@ -46,26 +48,26 @@ const MW: number[][] = [
 const NNZ = MW.map((r) => r.filter((v) => v !== 0).length);
 const NEC7 = NNZ.reduce((s, v) => s + v, 0) / NNZ.length;
 
-// 24.8 the Herring Gull row of a head held at NEC = 5 (illustrative)
+// 24.10 the Herring Gull row of a head held at NEC = 5 (illustrative)
 const HROW = [1.2, 0.8, 0, 1.0, 0.9, 0, 0.6, 0];
 const HNAMES = ['grey back', 'black wingtips', 'yellow bill', 'red bill spot', 'white head'];
 const HNZ = HROW.map((v, i) => (v !== 0 ? i : -1)).filter((i) => i >= 0);
 
-// 24.9 a dense Herring Gull row: every weight non-zero (illustrative)
+// 24.11 a dense Herring Gull row: every weight non-zero (illustrative)
 const DENSE = [0.3, -0.1, 0.2, 0.4, -0.2, 0.1, 0.3, -0.3, 0.2, 0.1, -0.1, 0.4, 0.2, -0.2, 0.3, 0.1, -0.4, 0.2, 0.1, -0.1];
-// 24.10 two heads over the same 12 concepts (illustrative): A is sparse; B starts dense and is cut to the same count
+// 24.12 two heads over the same 12 concepts (illustrative): A is sparse; B starts dense and is cut to the same count
 const BUD_A = [0.9, 0, 0, 0.7, 0, 0.5, 0, 0, 0.8, 0, 0.4, 0];
 const BUD_B = [0.3, 0.2, 0.4, 0.1, 0.3, 0.2, 0.5, 0.1, 0.2, 0.3, 0.1, 0.2];
 const NBUD = BUD_A.filter((v) => v !== 0).length;
 const KEEP_B = BUD_B.map((v, j) => [v, j]).sort((a, c) => c[0] - a[0] || a[1] - c[1]).slice(0, NBUD).map((r) => r[1]);
 const ACC_AB = [0.62, 0.55]; // bar lengths only, no numbers shown
 
-// 24.8 one BCE term per label value (illustrative predictions; the same -log 0.8 as Part 5)
+// 24.10 one BCE term per label value (illustrative predictions; the same -log 0.8 as Part 5)
 const BCE_ROWS = [
   { chip: 'black wingtips', box: true, c: 1, p: 0.8, tex: '-\\log 0.8', v: -Math.log(0.8) },
   { chip: 'loud laughing call', box: false, c: 0, p: 0.2, tex: '-\\log(1 - 0.2)', v: -Math.log(1 - 0.2) },
 ];
-// 24.14 recap rows: direct CLIP scoring vs VLG-CBM
+// 24.16 recap rows: direct CLIP scoring vs VLG-CBM
 const RECAP: { lab: string; lf: string; vlg: string }[] = [
   { lab: 'where concept values come from', lf: '{x:CLIP} similarities', vlg: 'layer trained on {c:boxes}' },
   { lab: 'what trains the class head', lf: '{y:class labels}', vlg: '{y:class labels}' },
@@ -93,7 +95,7 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
   const b = (k: number) => bs(P, k);
   const w = (k: number, word: string, n = 0) => bw(P, k, word, n);
   const at = (x: number, d = 0.4) => inv(x, x + d, t);
-  const NB = 15;
+  const NB = P.beats.length;
   const sl = (k: number) => inv(b(k) - 0.05, b(k) + 0.25, t) * (k < NB ? 1 - inv(b(k + 1) - 0.35, b(k + 1) - 0.05, t) : 1);
 
   // ---------------- 24.1
@@ -107,54 +109,49 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
   // ---------------- 24.3
   const s2 = [at(w(3, 'visual') - 0.3, 0.5), at(w(3, 'setting') - 0.3, 0.5), at(w(3, 'score') - 0.3, 0.5)];
   const s3white = at(w(3, 'white') - 0.3, 0.5);
-  // ---------------- 24.4 random-layer control
-  const s4input = at(w(4, 'photo') - 0.2), s4random = at(w(4, 'randomly') - 0.2);
-  const s4head = at(w(4, 'Train') - 0.2), s4result = at(w(4, 'many') - 0.2);
-  const s4meaning = at(w(4, 'survived') - 0.2), s4check = at(w(4, 'check') - 0.2);
-  const PHCONTROL: Rect = { x: 130, y: 390, w: 210, h: 210 };
-  // ---------------- 24.5
-  const PH4: Rect = { x: 200, y: 310, w: 560, h: 560 };
-  const s4names = at(w(5, 'grounds') - 0.1), s4det = at(w(5, 'open') - 0.2), s4def = at(w(5, 'search') - 0.3, 0.5), s4each = at(w(5, 'looks') - 0.1);
-  const s4box = (i: number) => E.out(inv(w(5, 'draws') - 0.2 + i * 0.3, w(5, 'draws') + 0.5 + i * 0.3, t));
-  const s4out = at(w(5, 'box') - 0.2), live4 = at(w(5, 'looks'), 0.5);
-  // ---------------- 24.6
-  const PH5: Rect = { x: 200, y: 370, w: 380, h: 380 };
-  const s5rows = at(b(6) + 0.05, 0.5), s5grp = at(w(6, 'present') - 0.2);
-  const s5v = [w(6, 'bill'), w(6, 'head'), w(6, 'wingtips'), w(6, 'call')].map((x) => at(x - 0.1, 0.3));
-  const s5sym = at(w(6, 'det') - 0.5, 0.5);
   // ---------------- 24.7
-  const s6layer = at(w(7, 'linear') - 0.2, 0.5);
-  const s6w = [at(w(7, 'loss') - 0.2), at(w(7, 'loss') + 0.1), at(w(7, 'binary') - 0.2), at(w(7, 'binary') + 0.3), at(w(7, 'loss') + 0.3)];
-  const s6s = at(w(7, 'binary') + 0.6, 0.5), s6line = at(w(7, 'original') - 0.2);
-  // ---------------- 24.8 one BCE term
-  const s8eqn = at(b(8) + 0.1, 0.5);
+  const PH4: Rect = { x: 200, y: 310, w: 560, h: 560 };
+  const s4names = at(w(7, 'grounds') - 0.1), s4det = at(w(7, 'open') - 0.2), s4def = at(w(7, 'search') - 0.3, 0.5), s4each = at(w(7, 'looks') - 0.1);
+  const s4box = (i: number) => E.out(inv(w(7, 'draws') - 0.2 + i * 0.3, w(7, 'draws') + 0.5 + i * 0.3, t));
+  const s4out = at(w(7, 'box') - 0.2), live4 = at(w(7, 'looks'), 0.5);
+  // ---------------- 24.8
+  const PH5: Rect = { x: 200, y: 370, w: 380, h: 380 };
+  const s5rows = at(b(8) + 0.05, 0.5), s5grp = at(w(8, 'present') - 0.2);
+  const s5v = [w(8, 'bill'), w(8, 'head'), w(8, 'wingtips'), w(8, 'call')].map((x) => at(x - 0.1, 0.3));
+  const s5sym = at(w(8, 'det') - 0.5, 0.5);
+  // ---------------- 24.9
+  const s6layer = at(w(9, 'linear') - 0.2, 0.5);
+  const s6w = [at(w(9, 'loss') - 0.2), at(w(9, 'loss') + 0.1), at(w(9, 'binary') - 0.2), at(w(9, 'binary') + 0.3), at(w(9, 'loss') + 0.3)];
+  const s6s = at(w(9, 'binary') + 0.6, 0.5), s6line = at(w(9, 'original') - 0.2);
+  // ---------------- 24.10 one BCE term
+  const s8eqn = at(b(10) + 0.1, 0.5);
   const s8r = [
-    { row: at(w(8, 'wingtips') - 0.3), lab: at(w(8, 'label') - 0.1), pr: at(w(8, 'predicts') - 0.1), term: at(w(8, 'minus') - 0.1), val: at(w(8, 'about') - 0.1) },
-    { row: at(w(8, 'call') - 0.3), lab: at(w(8, 'label', 1) - 0.1), pr: at(w(8, 'prediction') - 0.1), term: at(w(8, 'costs') - 0.1), val: at(w(8, 'minus', 1) + 0.3) },
+    { row: at(w(10, 'wingtips') - 0.3), lab: at(w(10, 'label') - 0.1), pr: at(w(10, 'predicts') - 0.1), term: at(w(10, 'minus') - 0.1), val: at(w(10, 'about') - 0.1) },
+    { row: at(w(10, 'call') - 0.3), lab: at(w(10, 'label', 1) - 0.1), pr: at(w(10, 'prediction') - 0.1), term: at(w(10, 'costs') - 0.1), val: at(w(10, 'minus', 1) + 0.3) },
   ];
-  const s8close = at(w(8, 'minus', 2) + 0.4, 0.5);
-  const T8 = [[w(8, 'minus') - 0.1, w(8, 'about') - 0.1], [w(8, 'costs') - 0.1, w(8, 'minus', 1) + 0.3]];
-  // ---------------- 24.9 NEC counted
-  const s7m = at(w(9, 'number') - 0.2, 0.5), s7rows = at(w(9, 'row') - 0.2, 0.5), s7nz = at(w(9, 'non') - 0.2, 0.5), s7cnt = at(w(9, 'three') - 0.3, 0.5);
-  const s7avg = at(w(9, 'average') - 0.2, 0.5);
-  // ---------------- 24.10 a dense head explains nothing
-  const s9row = (j: number) => at(w(10, 'puts') - 0.3 + j * 0.05, 0.3), s9cnt = at(w(10, 'every') - 0.1, 0.5);
-  const s9rand = at(w(10, 'random') - 0.2, 0.6), s9thm = at(w(10, 'approximate') - 0.3, 0.5), s9line = at(w(10, 'accurate') - 0.2, 0.5);
-  // ---------------- 24.11 the same budget
-  const s10rows = at(b(11) + 0.05, 0.5), s10cut = E.io(inv(w(11, 'budget') - 0.2, w(11, 'budget') + 0.8, t));
-  const s10badge = at(w(11, 'number') - 0.1, 0.5), s10acc = E.out(inv(w(11, 'higher') - 0.3, w(11, 'higher') + 0.6, t));
-  const s10line = at(w(11, 'concepts', 1) - 0.4, 0.5);
-  // ---------------- 24.12 the count in symbols
-  const s12w = [at(b(12) + 0.1), at(w(12, 'zero') - 0.2), at(w(12, 'averages') - 0.2)];
-  const s12row = at(w(12, 'number') - 0.2, 0.5), s12cnt = at(w(12, 'zero', 1) - 0.1, 0.5);
-  // ---------------- 24.13 held at five
-  const s8eq = at(b(13) + 0.1, 0.5), s8five = at(w(13, 'five') - 0.2), s8row = at(w(13, 'head') - 0.2, 0.5);
-  const s8read = (i: number) => at(w(13, 'read') - 0.4 + i * 0.15, 0.3), s8cmp = at(w(13, 'handful') - 0.2);
-  // ---------------- 24.14 recap
-  const s14h = at(b(14) + 0.1, 0.5), s14r = [at(w(14, 'concept') - 0.2, 0.5), at(w(14, 'head') - 0.2, 0.5)];
-  const s14vlg = [at(w(14, 'boxes') - 0.3, 0.5), at(w(14, 'labels', 1) - 0.2, 0.5)];
-  // ---------------- 24.15
-  const cardP = [w(15, 'g'), w(15, 'f'), w(15, 'f') + 0.5, w(15, 'held'), w(15, 'data')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
+  const s8close = at(w(10, 'minus', 2) + 0.4, 0.5);
+  const T8 = [[w(10, 'minus') - 0.1, w(10, 'about') - 0.1], [w(10, 'costs') - 0.1, w(10, 'minus', 1) + 0.3]];
+  // ---------------- 24.11 NEC counted
+  const s7m = at(w(11, 'number') - 0.2, 0.5), s7rows = at(w(11, 'row') - 0.2, 0.5), s7nz = at(w(11, 'non') - 0.2, 0.5), s7cnt = at(w(11, 'three') - 0.3, 0.5);
+  const s7avg = at(w(11, 'average') - 0.2, 0.5);
+  // ---------------- 24.12 a dense head explains nothing
+  const s9row = (j: number) => at(w(12, 'puts') - 0.3 + j * 0.05, 0.3), s9cnt = at(w(12, 'every') - 0.1, 0.5);
+  const s9rand = at(w(12, 'random') - 0.2, 0.6), s9thm = at(w(12, 'approximate') - 0.3, 0.5), s9line = at(w(12, 'accurate') - 0.2, 0.5);
+  // ---------------- 24.13 the same budget
+  const s10rows = at(b(13) + 0.05, 0.5), s10cut = E.io(inv(w(13, 'budget') - 0.2, w(13, 'budget') + 0.8, t));
+  const s10badge = at(w(13, 'number') - 0.1, 0.5), s10acc = E.out(inv(w(13, 'higher') - 0.3, w(13, 'higher') + 0.6, t));
+  const s10line = at(w(13, 'concepts', 1) - 0.4, 0.5);
+  // ---------------- 24.14 the count in symbols
+  const s12w = [at(b(14) + 0.1), at(w(14, 'zero') - 0.2), at(w(14, 'averages') - 0.2)];
+  const s12row = at(w(14, 'number') - 0.2, 0.5), s12cnt = at(w(14, 'zero', 1) - 0.1, 0.5);
+  // ---------------- 24.15 held at five
+  const s8eq = at(b(15) + 0.1, 0.5), s8five = at(w(15, 'five') - 0.2), s8row = at(w(15, 'head') - 0.2, 0.5);
+  const s8read = (i: number) => at(w(15, 'read') - 0.4 + i * 0.15, 0.3), s8cmp = at(w(15, 'handful') - 0.2);
+  // ---------------- 24.16 recap
+  const s14h = at(b(16) + 0.1, 0.5), s14r = [at(w(16, 'concept') - 0.2, 0.5), at(w(16, 'head') - 0.2, 0.5)];
+  const s14vlg = [at(w(16, 'boxes') - 0.3, 0.5), at(w(16, 'labels', 1) - 0.2, 0.5)];
+  // ---------------- 24.17
+  const cardP = [w(17, 'g'), w(17, 'f'), w(17, 'f') + 0.5, w(17, 'held'), w(17, 'data')].reduce((s, x) => s + inv(x - 0.1, x + 0.4, t), 0) / 5;
 
   // layout constants
   const MX = 560, MY = 440, MCW = 150, MCH = 78;
@@ -167,14 +164,15 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
   })();
   const EQX = 220; // centring offset for the loss pieces
   const PL: Rect = { x: 240, y: 350, w: 400, h: 400 }, PR: Rect = { x: 1060, y: 350, w: 400, h: 400 }; // 24.2
-  const DX = 400, DY = 470, DCW = 64, DCH = 72; // 24.9 dense row
-  const BX0 = 520, BY = 400, BRH = 104, BCW = 80, BCH = 76; // 24.11 budget rows
-  const ZX = 560, ZY = 620, ZCW = 110, ZCH = 72; // 24.12 one counted row
-  const NECX = [995, 1228]; // 24.12 word labels over the average and the count
+  const DX = 400, DY = 470, DCW = 64, DCH = 72; // 24.11 dense row
+  const BX0 = 520, BY = 400, BRH = 104, BCW = 80, BCH = 76; // 24.13 budget rows
+  const ZX = 560, ZY = 620, ZCW = 110, ZCH = 72; // 24.14 one counted row
+  const NECX = [995, 1228]; // 24.14 word labels over the average and the count
 
   return (
     <Stage>
-      <Header t={t} part={10} title={P.title} />
+      <Header t={t} title={P.title} />
+      <HText x={96} y={58} size={22} weight={600} color={C.mute} mono o={inv(0,.5,t)}>{modernSections.s24.label}</HText>
       <ArchMap on={['g', 'c']} o={inv(0, 0.5, t)} />
 
       {/* ============================================================ 24.1 nothing checks the image */}
@@ -271,36 +269,12 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={880} ax="right" kind="illustrative" text="example concepts chosen for teaching" o={s2[0]} />
       </Slide>
 
-      {/* ============================================================ 24.4 random-layer control */}
-      <Slide o={sl(4)}>
-        <SlideHead text={bh(P, 4)} />
-        <PhotoR R={PHCONTROL} src="gull.jpg" o={s4input} />
-        <Credit x={130} y={640} text={CREDIT['gull.jpg']} o={s4input} />
-        <Svg>
-          <Txt x={235} y={355} size={28} fill={C.input} o={s4input}>input photo</Txt>
-          <Flow pts={[[345,495],[398,495]]} color={C.input} o={s4input} />
-          <Block x={535} y={495} w={270} h={120} kind="input" title="image encoder" sub="pretrained, fixed" size={29} subSize={20} o={s4input} />
-          <Flow pts={[[672,495],[758,495]]} color={C.input} o={s4random} />
-          <Txt x={715} y={407} size={24} fill={C.input} o={s4random}>features</Txt>
-          <Block x={910} y={495} w={300} h={120} kind="neutral" title="concept layer" sub="random weights, fixed" size={30} subSize={20} o={s4random} />
-          <Flow pts={[[1062,495],[1148,495]]} color={C.mute} o={s4head} />
-          <Txt x={1105} y={407} size={24} fill={C.chalk2} o={s4head}>values</Txt>
-          <Block x={1270} y={495} w={240} h={120} kind="head" title="class head" sub="trained" size={30} subSize={22} o={s4head} />
-          <Txt x={1270} y={330} size={27} fill={C.loss} o={s4head}>fit using class labels</Txt>
-          <Flow pts={[[1270,355],[1270,429]]} color={C.loss} o={s4head} />
-          <Flow pts={[[1392,495],[1498,495]]} color={C.chalk} o={s4head} />
-          <Block x={1630} y={495} w={260} h={120} kind="output" title="bird species" sub="predicted class" size={30} subSize={21} o={s4head} />
-        </Svg>
-        <Rich x={910} y={580} ax="center" w={430} align="center" size={26} color={C.chalk2} text="Never trained to detect {c:yellow bill}." o={s4random} />
-        <Rich x={960} y={730} ax="center" size={34} text="With many outputs, this baseline can be {y:almost as accurate as concept models}." o={s4result} />
-        <Rich x={960} y={795} ax="center" size={29} color={C.chalk2} text="Useful image information can survive without named concept meanings." o={s4meaning} />
-        <Rich x={960} y={900} ax="center" size={34} text="Check: does a high {c:yellow-bill score} really mean a {c:yellow bill} is present?" o={s4check} />
-        <EvTag x={1760} y={1000} ax="right" kind="reported" text="Srivastava et al. 2024, Section 4 and Figure 3; prediction path schematic" o={s4result} />
-      </Slide>
+      {[4,5,6].map(k => <SlideHead key={k} text={bh(P,k)} o={sl(k)} />)}
+      <RandomWeights t={t} P={P} start={4} />
 
-      {/* ============================================================ 24.5 the detector */}
-      <Slide o={sl(5)}>
-        <SlideHead text={bh(P, 5)} />
+      {/* ============================================================ 24.7 the detector */}
+      <Slide o={sl(7)}>
+        <SlideHead text={bh(P, 7)} />
         <Rich x={160} y={260} size={28} text="Vision-Language-Guided Concept Bottleneck Model (VLG-CBM)" />
         <PhotoR R={PH4} src="gull.jpg" />
         <Credit x={PH4.x} y={PH4.y + PH4.h + 8} text={CREDIT['gull.jpg']} />
@@ -320,9 +294,9 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={880} ax="right" kind="illustrative" text="boxes drawn for teaching, not a detector run" o={s4box(0)} />
       </Slide>
 
-      {/* ============================================================ 24.6 grounded labels: a 0/1 vector */}
-      <Slide o={sl(6)}>
-        <SlideHead text={bh(P, 6)} />
+      {/* ============================================================ 24.8 grounded labels: a 0/1 vector */}
+      <Slide o={sl(8)}>
+        <SlideHead text={bh(P, 8)} />
         <PhotoR R={PH5} src="gull.jpg" />
         <Credit x={PH5.x} y={PH5.y + PH5.h + 8} text={CREDIT['gull.jpg']} />
         <Svg>
@@ -352,9 +326,9 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={880} ax="right" kind="illustrative" text="boxes drawn for teaching" o={s5rows} />
       </Slide>
 
-      {/* ============================================================ 24.7 the loss, words then symbols */}
-      <Slide o={sl(7)}>
-        <SlideHead text={bh(P, 7)} />
+      {/* ============================================================ 24.9 the loss, words then symbols */}
+      <Slide o={sl(9)}>
+        <SlideHead text={bh(P, 9)} />
         <Rich x={960} y={330} ax="center" size={32} text="concept layer: {x:backbone features} → one {c:score per concept}" o={s6layer} />
         {[
           { x: 380, word: '{l:concept loss}', tex: '\\closs{\\mathcal{L}_C}', o: s6w[0] },
@@ -372,9 +346,9 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <Rich x={960} y={770} ax="center" size={32} color={C.chalk2} text="as in the original CBM, but no person draws the labels" o={s6line} />
       </Slide>
 
-      {/* ============================================================ 24.8 one BCE term, worked out */}
-      <Slide o={sl(8)}>
-        <SlideHead text={bh(P, 8)} />
+      {/* ============================================================ 24.10 one BCE term, worked out */}
+      <Slide o={sl(10)}>
+        <SlideHead text={bh(P, 10)} />
         <Tex x={960} y={350} ax="center" size={46} o={s8eqn}
           tex="\text{BCE}(\ccon{c}, \ch) = -\log \ch\ \ \text{if } \ccon{c} = 1, \qquad -\log(1 - \ch)\ \ \text{if } \ccon{c} = 0" />
         <Svg>
@@ -407,9 +381,9 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="illustrative" text="predictions made up for teaching" o={s8r[0].row} />
       </Slide>
 
-      {/* ============================================================ 24.9 NEC on a small sparse head */}
-      <Slide o={sl(9)}>
-        <SlideHead text={bh(P, 9)} />
+      {/* ============================================================ 24.11 NEC on a small sparse head */}
+      <Slide o={sl(11)}>
+        <SlideHead text={bh(P, 11)} />
         <Svg>
           <g opacity={s7m < 0.999 ? s7m : undefined}>
             <rect x={MX - 6} y={MY - 6} width={MCOLS.length * MCW + 12} height={MROWS.length * MCH + 12} rx={10} fill={C.headFill} stroke="#8792A2" strokeWidth={2.5} />
@@ -443,9 +417,9 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="illustrative" text="weights drawn for teaching" o={s7m} />
       </Slide>
 
-      {/* ============================================================ 24.10 a dense head explains nothing */}
-      <Slide o={sl(10)}>
-        <SlideHead text={bh(P, 10)} />
+      {/* ============================================================ 24.12 a dense head explains nothing */}
+      <Slide o={sl(12)}>
+        <SlideHead text={bh(P, 12)} />
         <Svg>
           {DENSE.map((v, j) => {
             const x = DX + j * DCW, o = s9row(j);
@@ -468,9 +442,9 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="illustrative" text="weights drawn for teaching" o={s9row(0)} />
       </Slide>
 
-      {/* ============================================================ 24.11 a fair comparison: the same budget */}
-      <Slide o={sl(11)}>
-        <SlideHead text={bh(P, 11)} />
+      {/* ============================================================ 24.13 a fair comparison: the same budget */}
+      <Slide o={sl(13)}>
+        <SlideHead text={bh(P, 13)} />
         <Svg>
           {[BUD_A, BUD_B].map((row, i) => {
             const y = BY + i * BRH;
@@ -519,11 +493,11 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="illustrative" text="weights and bars drawn for teaching" o={s10rows} />
       </Slide>
 
-      {/* ============================================================ 24.12 the count in symbols, words first */}
-      <Slide o={sl(12)}>
-        <SlideHead text={bh(P, 12)} />
+      {/* ============================================================ 24.14 the count in symbols, words first */}
+      <Slide o={sl(14)}>
+        <SlideHead text={bh(P, 14)} />
         <TexSteps x={960} y={510} t={t} size={60} ax="center" parts={[
-          ['\\text{NEC} = ', b(12) + 0.1], ['\\frac{1}{K}\\sum_{k=1}^{K}', w(12, 'averages') - 0.2], ['\\|\\chead{W_{k}}\\|_0', w(12, 'zero') - 0.2],
+          ['\\text{NEC} = ', b(14) + 0.1], ['\\frac{1}{K}\\sum_{k=1}^{K}', w(14, 'averages') - 0.2], ['\\|\\chead{W_{k}}\\|_0', w(14, 'zero') - 0.2],
         ]} />
         <Rich x={NECX[0]} y={420} w={210} ax="center" ay="bottom" size={26} lh={1.2} text="average over the {y:K classes}" o={s12w[2]} />
         <Rich x={NECX[1]} y={420} w={210} ax="center" ay="bottom" size={26} lh={1.2} text="non-zero {f:weights} in row k" o={s12w[1]} />
@@ -548,9 +522,9 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="illustrative" text="weights drawn for teaching (the row from the count slide)" o={s12row} />
       </Slide>
 
-      {/* ============================================================ 24.13 NEC held at five */}
-      <Slide o={sl(13)}>
-        <SlideHead text={bh(P, 13)} />
+      {/* ============================================================ 24.15 NEC held at five */}
+      <Slide o={sl(15)}>
+        <SlideHead text={bh(P, 15)} />
         <Tex x={990} y={380} ax="right" size={60} tex="\text{NEC} =" o={s8eq} />
         <Tex x={1010} y={380} ax="left" size={60} tex="5" o={s8five} />
         <Svg>
@@ -578,9 +552,9 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         <EvTag x={1760} y={900} ax="right" kind="illustrative" text="weights drawn for teaching" o={s8row} />
       </Slide>
 
-      {/* ============================================================ 24.14 recap: what changed compared with direct CLIP scoring */}
-      <Slide o={sl(14)}>
-        <SlideHead text={bh(P, 14)} />
+      {/* ============================================================ 24.16 recap: what changed compared with direct CLIP scoring */}
+      <Slide o={sl(16)}>
+        <SlideHead text={bh(P, 16)} />
         <Rich x={980} y={360} ax="center" size={30} weight={700} color={C.chalk2} text="direct CLIP scoring" o={s14h} />
         <Rich x={1460} y={360} ax="center" size={30} weight={700} text="VLG-CBM" o={s14h} />
         <Svg o={s14h}>
@@ -599,9 +573,9 @@ export const S24: React.FC<SceneProps> = ({ t, P }) => {
         })}
       </Slide>
 
-      {/* ============================================================ 24.15 the card */}
-      <Slide o={sl(15)}>
-        <SlideHead text={bh(P, 15)} />
+      {/* ============================================================ 24.17 the card */}
+      <Slide o={sl(17)}>
+        <SlideHead text={bh(P, 17)} />
         <div style={{ position: 'absolute', inset: 0, transform: 'scale(0.92)', transformOrigin: '960px 270px' }}>
           <VariantCard name="VLG-CBM (Srivastava et al., NeurIPS 2024)" rows={VROWS} p={cardP} y0={270} />
         </div>

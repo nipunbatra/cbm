@@ -467,3 +467,18 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     Live HTML, JavaScript, CSS, notes and PDF match local bytes. Inspected both published new slides
     and the 263-slide map. Course PR #17 is merged and deployed, with both PDF labels showing
     263 pages and all three standalone CBM links correct. Audio and film timing remain unchanged.
+82. **Move grounding to the final optional appendix (browser s24.1), 16 October 2026.**
+    Restored the grounding material as optional further reading after TCAV, preceded by separator
+    s49. The active order ends s46, s26, s49, s24, end. Persistent headers, slide-map entries, notes
+    headings and PDF bookmarks identify it as optional appendix material. Its opening no longer
+    assumes a preceding rung-two subgroup. Moved the random-layer control and two explanations from
+    the main recap into s24.4-6; later grounding slides shift by two. The main recap now has eight
+    slides and retains the general concept-checking takeaway. LaBo and LF-CBM remain archived.
+    Type checking, 26 Python tests and four deck tests passed. Rendered every appendix slide,
+    inspected the shorter recap, and checked the TCAV-to-appendix browser transition. Saved audio,
+    both film timelines and docs/beats.txt are unchanged.
+83. **Annotation PDF revision 29.** Saved review/cbm-lecture-review-2026-10-16-r29.pdf with 278 pages:
+    260 content slides and 18 separators, with 42 navigation bookmarks. Exported 26 changed or restored
+    pages and preserved all 252 other slide bodies. Verified every footer and bookmark destination.
+    The final appendix separator is page 260; grounding occupies pages 261-277, before the end card.
+    Earlier annotation PDFs remain available.

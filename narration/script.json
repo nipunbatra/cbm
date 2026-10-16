@@ -1454,30 +1454,12 @@
     },
     {
      "id": "19.7",
-     "gap": 1.0,
-     "text": "Here is a control experiment. A pretrained image encoder already extracts useful features. Pass them through a layer with randomly chosen weights, keep that layer fixed, and train only the final class head using class labels. The layer was never taught to detect yellow bills or other named concepts. When the head can use enough of these mixed features, reported experiments show that class accuracy can approach concept-based models. So good predictions do not establish what each intermediate value means. Random describes how the weights are chosen; fixed describes whether they change.",
-     "head": "High class accuracy does not prove meaningful {c:concepts}"
-    },
-    {
-     "id": "19.8",
-     "gap": 1.0,
-     "text": "Zoom in on the random layer. Each weight says how much of an image feature to add or subtract. Random means drawing these coefficients by chance, without learning them from labels. In this illustrative example, the encoder gives features 2 and 1. Suppose the weights are 0.4 and minus 0.2. Multiply and add: 0.8 minus 0.2 gives 0.6. This is a mixed image feature, not an estimate of yellow bill. In this baseline, we draw the weights once and leave them untrained.",
-     "head": "Random weights: draw the {e:mixing coefficients} by chance"
-    },
-    {
-     "id": "19.9",
-     "gap": 1.2,
-     "text": "Fixed, or frozen, means keeping the weights unchanged throughout training. The encoder keeps its pretrained weights, and the random layer keeps its one draw. Only the class head adjusts its weights using class labels. Fixed weights do not mean fixed outputs. Photo A has features 2 and 1, which give 0.6. Photo B has features 1 and 2; the same weights give 0. The head can learn from these differences, even though neither value has a guaranteed concept meaning. Check the concepts themselves as well as class accuracy.",
-     "head": "Fixed means: training does not update these {e:weights}"
-    },
-    {
-     "id": "19.10",
      "gap": 1.2,
      "text": "One question sums up the table: who supplies the concepts, and who checks them? In CBMs and concept embedding models, people label the concepts, so people check them. In post-hoc models, a concept bank supplies them, checked only by whoever built it. In classification by description, a language model supplies the descriptions and there is no automatic factual check. We must review them.",
      "head": "Who supplies the {c:concepts}, and who checks them?"
     },
     {
-     "id": "19.11",
+     "id": "19.8",
      "gap": 1.2,
      "text": "This is the general trade-off. Each rung up the ladder removes a human labour cost, and with it a human check. The labour saved on labelling has to be spent later, on checking that the concepts are really in the image.",
      "head": "Each rung up the ladder removes a cost and a {e:check}"
@@ -1888,6 +1870,130 @@
      "gap": 1.0,
      "text": "A direction that separates two random sets of photos gives scores that jump between zero and one. So a concept counts only when its score is steady and different from random ones. And even then, TCAV says what the model responds to. It gives no way to correct it.",
      "head": "Compare with random directions"
+    }
+   ]
+  },
+  {
+   "id": "s49",
+   "title": "Appendix: Grounding the concepts (optional)",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "49.1",
+     "gap": 0.8,
+     "text": "This final appendix is optional further reading, outside the main lecture. A concept name and a high score do not establish that the concept is present in an image. We revisit this issue, explain the random-layer control, and explore training from concepts located in image regions. This is an extension of rung two, using detector targets and class labels.",
+     "head": "Grounding the {c:concepts}"
+    }
+   ]
+  },
+  {
+   "id": "s24",
+   "title": "Grounding the concepts",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "24.1",
+     "gap": 0.8,
+     "text": "This optional appendix explores grounding the concepts. Recall the weakness of using CLIP similarities as concept values: a phrase gets a score, but nothing locates the named concept in the image. We need a check that the concept is actually visible. The following slides show how a detector can supply this spatial check during training.",
+     "head": "Why ground the {c:concept targets} in image regions?"
+    },
+    {
+     "id": "24.2",
+     "gap": 1.0,
+     "text": "The fix rests on a simple intuition. Naming a concept is not the same as pointing at it. So ask a detector to point at each concept in the image, and count only the concepts it can find.",
+     "head": "Naming a {c:concept} is not the same as pointing at it"
+    },
+    {
+     "id": "24.3",
+     "gap": 1.0,
+     "text": "There are three ways a concept can fail. Some are not visual, such as a gull's call. Some describe the setting, not the bird. And some score highly on images that do not contain them, such as a black head on a gull whose head is white.",
+     "head": "Three ways a {c:concept} can fail"
+    },
+    {
+     "id": "24.4",
+     "gap": 1.0,
+     "text": "Here is a control experiment. A pretrained image encoder already extracts useful features. Pass them through a layer with randomly chosen weights, keep that layer fixed, and train only the final class head using class labels. The layer was never taught to detect yellow bills or other named concepts. When the head can use enough of these mixed features, reported experiments show that class accuracy can approach concept-based models. So good predictions do not establish what each intermediate value means. Random describes how the weights are chosen; fixed describes whether they change.",
+     "head": "High class accuracy does not prove meaningful {c:concepts}"
+    },
+    {
+     "id": "24.5",
+     "gap": 1.0,
+     "text": "Zoom in on the random layer. Each weight says how much of an image feature to add or subtract. Random means drawing these coefficients by chance, without learning them from labels. In this illustrative example, the encoder gives features 2 and 1. Suppose the weights are 0.4 and minus 0.2. Multiply and add: 0.8 minus 0.2 gives 0.6. This is a mixed image feature, not an estimate of yellow bill. In this baseline, we draw the weights once and leave them untrained.",
+     "head": "Random weights: draw the {e:mixing coefficients} by chance"
+    },
+    {
+     "id": "24.6",
+     "gap": 1.2,
+     "text": "Fixed, or frozen, means keeping the weights unchanged throughout training. The encoder keeps its pretrained weights, and the random layer keeps its one draw. Only the class head adjusts its weights using class labels. Fixed weights do not mean fixed outputs. Photo A has features 2 and 1, which give 0.6. Photo B has features 1 and 2; the same weights give 0. The head can learn from these differences, even though neither value has a guaranteed concept meaning. Check the concepts themselves as well as class accuracy.",
+     "head": "Fixed means: training does not update these {e:weights}"
+    },
+    {
+     "id": "24.7",
+     "gap": 0.8,
+     "text": "Their method is the Vision-Language-Guided Concept Bottleneck Model, or VLG-CBM. It grounds the concepts first. It uses an open-vocabulary object detector: a detector that can search for any phrase you give it, not only a fixed list of objects. It looks for each concept in each training image, and draws a box where it finds it.",
+     "head": "VLG-CBM asks a detector to find each {c:concept}"
+    },
+    {
+     "id": "24.8",
+     "gap": 0.8,
+     "text": "A concept counts as present only where a box was found. For our gull, the bill, head and wingtips each get a one, and the call gets a zero. We call this vector c det: the concept labels from the detector.",
+     "head": "A box means 1, no box means 0"
+    },
+    {
+     "id": "24.9",
+     "gap": 1.0,
+     "text": "These grounded labels train the concept layer: a linear layer that turns the backbone's features into one score per concept. The loss is a binary cross-entropy, as in the original CBM, but no person draws the labels.",
+     "head": "The {c:grounded labels} train the concept layer with a {l:loss}"
+    },
+    {
+     "id": "24.10",
+     "gap": 1.0,
+     "text": "One term, as in Part 5. The wingtips have a box, so their label is one; if the layer predicts 0.8, the term is minus log 0.8, about 0.22. The call has no box, so its label is zero; a prediction of 0.2 costs the same, minus log of one minus 0.2.",
+     "head": "One term of the {l:loss}, worked out"
+    },
+    {
+     "id": "24.11",
+     "gap": 0.8,
+     "text": "They also report the number of effective concepts, NEC for short. Each row of the head holds one class's weights, one per concept. Count the non-zero weights in each row, here three, two and four, and average over the classes: the NEC is three.",
+     "head": "Count the non-zero {f:weights} in each class's row"
+    },
+    {
+     "id": "24.12",
+     "gap": 1.0,
+     "text": "Why does this count matter? A head that puts weight on every concept can fit almost anything. The paper proves that even a random, untrained concept layer can approximate any linear classifier once there are enough concepts. So a dense head can be accurate and still explain nothing.",
+     "head": "A {f:head} that uses every {c:concept} explains nothing"
+    },
+    {
+     "id": "24.13",
+     "gap": 1.0,
+     "text": "So the fair comparison gives every model the same budget: the same number of concepts per class. Only then does higher accuracy say something about the concepts themselves.",
+     "head": "A fair comparison: the same number of {c:concepts} per class"
+    },
+    {
+     "id": "24.14",
+     "gap": 1.0,
+     "text": "In symbols, the count for class k is the zero norm of its row of weights: the number of entries that are not zero. The NEC averages that count over the K classes.",
+     "head": "The same count in symbols"
+    },
+    {
+     "id": "24.15",
+     "gap": 1.0,
+     "text": "The paper reports accuracy with the NEC held at five. A head like that can actually be read: each class rests on a handful of named concepts.",
+     "head": "Five {c:concepts} per class can actually be read"
+    },
+    {
+     "id": "24.16",
+     "gap": 1.0,
+     "text": "Compared with direct CLIP scoring, the concept values now come from a learned layer. Detector boxes supply its training labels. At prediction time, this layer produces the concept values instead of comparing the image with text. The class head is still learned from class labels. We also judge it at a fixed number of concepts per class, so the explanation stays short.",
+     "head": "From direct {x:CLIP scores} to {c:grounded concept learning}"
+    },
+    {
+     "id": "24.17",
+     "gap": 1.2,
+     "text": "In symbols: g is a backbone with a concept layer, W c, trained on the detector labels c det. f is sparse and linear, with the number of effective concepts held fixed. The data: images and class labels, plus a detector.",
+     "head": "VLG-CBM in symbols"
     }
    ]
   },

@@ -46,4 +46,7 @@ s45
 s14
 s46
 s26
+# Optional further reading, kept last rather than in the teaching flow.
+s49
+s24
 end

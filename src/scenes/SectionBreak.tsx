@@ -84,6 +84,11 @@ const SECTIONS: Record<string, { label: string; prompt: string; rung: number | n
     "prompt": "From the image to an editable explanation",
     "rung": null
   },
+  "s49": {
+    "label": "APPENDIX · OPTIONAL FURTHER READING",
+    "prompt": "Beyond the main lecture: do the concept names match the image?",
+    "rung": null
+  },
   "s46": {
     "label": "APPENDIX",
     "prompt": "Testing with Concept Activation Vectors (TCAV)",

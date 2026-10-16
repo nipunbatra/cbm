@@ -364,3 +364,10 @@ The dated entries below preserve the review history. The film remains on its ear
   Source 783f444 and Pages release b28644d are pushed and deployed. Live files match the local release;
   course PR #17 is merged and deployed with both PDF labels showing 263 pages. Live map and both new
   slides were inspected. Evidence: qa/review-2026-10-16/r28-live-verification.json and r28-live-*.png.
+
+- 16 Oct, browser s24.1: revision 29 makes grounding the final optional appendix after TCAV, with
+  separator s49 and optional labels in headers, map, notes and PDF bookmarks. The random-layer control
+  and two new explanations move from the main recap to s24.4-6; the rest of the grounding section
+  follows. LaBo and LF-CBM remain archived. The checked PDF has 278 pages and 42 bookmarks, with
+  grounding on pages 261-277 after its separator. All 252 unchanged slide bodies are preserved.
+  All checks passed; restored slides and the TCAV-to-appendix transition were inspected. Film timing is unchanged.

@@ -1,4 +1,4 @@
-// Recap 7-9: the random-layer control, with words before the small arithmetic example.
+// Three slides: the random-layer control, with words before the small arithmetic example.
 import React from 'react';
 import { C } from '../kit/theme';
 import { HText, Rich, Svg, Txt, bs, bw, inv, type SceneProps } from '../kit/core';
@@ -11,8 +11,8 @@ const vector = (v: number[]) => `[${v.map(num).join(', ')}]`;
 const Slide: React.FC<{o: number; children: React.ReactNode}> = ({o,children}) =>
   o <= .001 ? null : <div style={{position:'absolute',inset:0,opacity:o}}>{children}</div>;
 
-export const RandomWeightsRecap: React.FC<SceneProps> = ({t,P}) => {
-  const b=(k:number)=>bs(P,k), cue=(k:number,word:string)=>inv(bw(P,k,word)-.1,bw(P,k,word)+.4,t);
+export const RandomWeights: React.FC<SceneProps & {start: number}> = ({t,P,start}) => {
+  const b=(k:number)=>bs(P,k+start-7), cue=(k:number,word:string)=>inv(bw(P,k+start-7,word)-.1,bw(P,k+start-7,word)+.4,t);
   const show=(k:number)=>inv(b(k)-.05,b(k)+.25,t)*(1-inv(b(k+1)-.35,b(k+1)-.05,t));
   const input=cue(7,'pretrained'), mix=cue(7,'randomly'), head=cue(7,'train'), finding=cue(7,'reported');
   const arithmetic=cue(8,'Multiply'), features=cue(8,'encoder'), weights=cue(8,'Suppose');
