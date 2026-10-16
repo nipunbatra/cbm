@@ -11,7 +11,7 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 21 is live at https://nipunbatra.github.io/cbm/: 303 content slides plus 17 separators, matching notes
+Revision 22 is live at https://nipunbatra.github.io/cbm/: 303 content slides plus 17 separators, matching notes
 and a 320-page PDF with 43 navigation bookmarks.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
@@ -207,7 +207,7 @@ The dated entries below preserve the review history. The film remains on its ear
 2. **Remake the film after the review** (not now): regenerate the voice for changed lines, real timeline, music,
    captions, render, upload unlisted. Claude Code runs this pipeline (`tools/build.sh`, see CLAUDE.md); Codex should
    not run TTS, the timeline or renders.
-3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r21 are already live.
+3. **Publish subsequent review changes when requested**: the slides, notes and PDF through r22 are already live.
    Later edits will need another deck/notes/PDF release on `nipunbatra/cbm` (`gh-pages`) and,
    if the page count changes, the course page through a pull request. The film remains a separate pending rebuild.
 4. Open checks, low priority:
@@ -283,7 +283,7 @@ The dated entries below preserve the review history. The film remains on its ear
   notes and PDF match the local release. The live slide was visually inspected, and existing course links
   and 320-page labels remain correct. See publishing/README.md for evidence.
 
-## 16 October 2026: CAV and phrase routes (revision 22, prepared)
+## 16 October 2026: CAV and phrase routes (revision 22, published)
 
 - s16.9 explicitly closes the fitted-CAV example and compares two routes to a concept direction.
   The upper row recaps labelled image features and a fitted classifier. The lower row uses a phrase
@@ -294,3 +294,6 @@ The dated entries below preserve the review history. The film remains on its ear
 - Audio, saved film timelines and the beat list remain unchanged. Revised narration awaits the film rebuild.
 - Matching PDF: review/cbm-lecture-review-2026-10-16-r22.pdf, 320 pages and 43 bookmarks. Only page 173
   changed. Other page streams/text, all footers and bookmark destinations are verified; the page was inspected.
+- Source commit d5919d2 and Pages release 56964cb are pushed. Deployment succeeded. Live HTML, JS,
+  CSS, notes and PDF match the local release. The live slide is visually checked, and course links and
+  320-page labels remain correct. See publishing/README.md for evidence.

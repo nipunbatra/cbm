@@ -358,3 +358,6 @@ Audio note: the voice for these lines was already generated and checked (asrchec
 62. **Annotation PDF revision 22.** Updated page 173 (s16.9), retaining 320 pages and 43 bookmarks.
     All other 319 page streams and text match revision 21. Every footer and bookmark was checked,
     and the revised page was rendered and visually inspected. Earlier PDFs remain available.
+63. **Publish review revision 22.** Source commit d5919d2 and Pages release 56964cb are pushed.
+    Deployment succeeded. Live HTML, JS, CSS, notes and PDF match the local release bytes. Inspected
+    the published slide; existing course links and visible/accessibility 320-page labels remain correct.
