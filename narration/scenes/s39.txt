@@ -1,0 +1,2 @@
+## s39 | Part 10 · Rung One: Concept labels and class labels | 0.4 | 0.8
+[[Concept labels and class labels]] On rung one, every training image has concept labels and a class label; concept embedding models keep this supervision but give each concept a richer representation. || 0.8

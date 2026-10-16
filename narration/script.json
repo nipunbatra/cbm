@@ -18,6 +18,20 @@
    ]
   },
   {
+   "id": "s30",
+   "title": "Part 1: Why make predictions interpretable?",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "30.1",
+     "gap": 0.8,
+     "text": "We begin with the black box: what evidence did the model use, and can a person inspect it?",
+     "head": "Why make predictions interpretable?"
+    }
+   ]
+  },
+  {
    "id": "s01",
    "title": "The black box",
    "lead": 0.4,
@@ -191,6 +205,20 @@
    ]
   },
   {
+   "id": "s31",
+   "title": "Part 2: The concept bottleneck",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "31.1",
+     "gap": 0.8,
+     "text": "Now we put named concepts between the image and the prediction.",
+     "head": "The concept bottleneck"
+    }
+   ]
+  },
+  {
    "id": "s02",
    "title": "Introducing the concept bottleneck",
    "lead": 0.4,
@@ -339,6 +367,20 @@
    ]
   },
   {
+   "id": "s32",
+   "title": "Part 3: What is a concept?",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "32.1",
+     "gap": 0.8,
+     "text": "Before building a bottleneck, we need to decide what counts as a concept.",
+     "head": "What is a concept?"
+    }
+   ]
+  },
+  {
    "id": "s03",
    "title": "What is a concept?",
    "lead": 0.4,
@@ -437,6 +479,20 @@
    ]
   },
   {
+   "id": "s33",
+   "title": "Part 4: From concepts to a prediction",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "33.1",
+     "gap": 0.8,
+     "text": "Next, we follow one image from its predicted concepts to class scores and probabilities.",
+     "head": "From concepts to a prediction"
+    }
+   ]
+  },
+  {
    "id": "s04",
    "title": "From concepts to predictions: the arithmetic",
    "lead": 0.4,
@@ -519,6 +575,20 @@
      "gap": 1.0,
      "text": "The full path is still image, concept predictor, concept vector, task head, scores and softmax. A person can correct a concept in the middle, then run the same task head again. The answer can change without retraining either network.",
      "head": "The {c:concept vector} is the point where a person can {e:intervene}"
+    }
+   ]
+  },
+  {
+   "id": "s34",
+   "title": "Part 5: Learning the concepts",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "34.1",
+     "gap": 0.8,
+     "text": "We now compare how the concept predictor and task head learn from their labels.",
+     "head": "Learning the concepts"
     }
    ]
   },
@@ -653,6 +723,20 @@
    ]
   },
   {
+   "id": "s35",
+   "title": "Part 6: Human interventions",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "35.1",
+     "gap": 0.8,
+     "text": "Next, a person corrects a concept and we follow the effect on the prediction.",
+     "head": "Human interventions"
+    }
+   ]
+  },
+  {
    "id": "s06",
    "title": "Human interventions",
    "lead": 0.4,
@@ -723,6 +807,20 @@
      "gap": 1.0,
      "text": "This demonstrates the mechanism, not a clinical result. Real sleep staging applies scoring rules to thirty-second epochs, and this head was written by hand.",
      "head": "A demonstration of the mechanism, not a clinical result"
+    }
+   ]
+  },
+  {
+   "id": "s36",
+   "title": "Part 7: When a correct edit hurts",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "36.1",
+     "gap": 0.8,
+     "text": "A correct concept edit can still hurt the final prediction, so we need to understand how the head uses it.",
+     "head": "When a correct edit hurts"
     }
    ]
   },
@@ -801,6 +899,20 @@
    ]
   },
   {
+   "id": "s37",
+   "title": "Part 8: An incomplete concept vocabulary",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "37.1",
+     "gap": 0.8,
+     "text": "What happens when the concept vocabulary leaves out information needed for the task?",
+     "head": "An incomplete concept vocabulary"
+    }
+   ]
+  },
+  {
    "id": "s08",
    "title": "What if the concepts are incomplete?",
    "lead": 0.4,
@@ -871,6 +983,20 @@
      "gap": 1.0,
      "text": "More accurate colour and size estimates would not help. The fix is a richer vocabulary: add shape. Now the two vectors differ.",
      "head": "The fix is a richer vocabulary: add {c:shape}"
+    }
+   ]
+  },
+  {
+   "id": "s38",
+   "title": "Part 10: Modern concept bottleneck architectures",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "38.1",
+     "gap": 0.8,
+     "text": "We now compare newer architectures by the supervision they need, from concept labels to class labels to no fitting on the new task.",
+     "head": "Modern concept bottleneck architectures"
     }
    ]
   },
@@ -955,6 +1081,20 @@
    ]
   },
   {
+   "id": "s39",
+   "title": "Part 10 · Rung One: Concept labels and class labels",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "39.1",
+     "gap": 0.8,
+     "text": "On rung one, every training image has concept labels and a class label; concept embedding models keep this supervision but give each concept a richer representation.",
+     "head": "Concept labels and class labels"
+    }
+   ]
+  },
+  {
    "id": "s15",
    "title": "Concept embedding models",
    "lead": 0.4,
@@ -1031,6 +1171,20 @@
      "gap": 1.2,
      "text": "In symbols, for concept j out of k: g now outputs a probability and two embeddings, each m numbers long. c hat j is the mixed vector, and f reads all of them. Training still needs images, concept labels and class labels.",
      "head": "Concept embedding models in symbols"
+    }
+   ]
+  },
+  {
+   "id": "s40",
+   "title": "Part 10 · Rung Two: Class labels for the task",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "40.1",
+     "gap": 0.8,
+     "text": "We now move to rung two: the task images still need class labels, but no concept label for every image; post-hoc models build a concept bank from a separate source, such as labelled concept examples or text descriptions.",
+     "head": "Class labels for the task"
     }
    ]
   },
@@ -1536,6 +1690,20 @@
    ]
   },
   {
+   "id": "s41",
+   "title": "Part 10 · Rung Three: No fitting on the new task",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "41.1",
+     "gap": 0.8,
+     "text": "On rung three, a pretrained model scores descriptions and a fixed rule combines the scores, without fitting a head to labelled examples from the new task.",
+     "head": "No fitting on the new task"
+    }
+   ]
+  },
+  {
    "id": "s25",
    "title": "Classification by description",
    "lead": 0.4,
@@ -1684,6 +1852,20 @@
    ]
   },
   {
+   "id": "s42",
+   "title": "Part 11: Evaluating a concept bottleneck",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "42.1",
+     "gap": 0.8,
+     "text": "How should we judge a concept bottleneck? We need to check the concepts, the predictions and the effect of interventions.",
+     "head": "Evaluating a concept bottleneck"
+    }
+   ]
+  },
+  {
    "id": "s11",
    "title": "How should we evaluate a CBM?",
    "lead": 0.4,
@@ -1807,6 +1989,20 @@
    ]
   },
   {
+   "id": "s43",
+   "title": "Part 12: Beyond images",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "43.1",
+     "gap": 0.8,
+     "text": "The bottleneck idea also applies to other kinds of input, provided the intermediate concepts have a useful meaning.",
+     "head": "Beyond images"
+    }
+   ]
+  },
+  {
    "id": "s12",
    "title": "Beyond images",
    "lead": 0.4,
@@ -1860,6 +2056,20 @@
      "gap": 1.2,
      "text": "The recipe is the same each time. Name the findings an expert checks, predict them from the raw signal, and let the decision depend on them alone.",
      "head": "One recipe in every domain"
+    }
+   ]
+  },
+  {
+   "id": "s44",
+   "title": "Part 13: What can still go wrong?",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "44.1",
+     "gap": 0.8,
+     "text": "An editable concept interface is useful, but we still need to check how it behaves and what its scores mean.",
+     "head": "What can still go wrong?"
     }
    ]
   },
@@ -1926,6 +2136,20 @@
    ]
   },
   {
+   "id": "s45",
+   "title": "Recap: Putting the pieces together",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "45.1",
+     "gap": 0.8,
+     "text": "We finish by following the whole path again, from an image through concepts to a prediction and an intervention.",
+     "head": "Putting the pieces together"
+    }
+   ]
+  },
+  {
    "id": "s14",
    "title": "Final replay",
    "lead": 0.4,
@@ -1972,6 +2196,20 @@
      "gap": 2.0,
      "text": "Four things to remember. Post-hoc methods explain a model after the fact, while a concept bottleneck makes the answer pass through named concepts. Fixing a concept helps only if the head reads it the right way. A soft score can carry more than its name says, and that extra information leaks to the head. And newer variants find concepts with fewer labels, so check that each one looks at the right evidence.",
      "head": "What to remember"
+    }
+   ]
+  },
+  {
+   "id": "s46",
+   "title": "Appendix: Testing concept use in a black box",
+   "lead": 0.4,
+   "hold": 0.8,
+   "beats": [
+    {
+     "id": "46.1",
+     "gap": 0.8,
+     "text": "The appendix introduces testing with concept activation vectors, a way to ask whether a black-box model responds to a named concept.",
+     "head": "Testing concept use in a black box"
     }
    ]
   },

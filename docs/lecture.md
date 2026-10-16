@@ -8,6 +8,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 1. 
    Concept Bottleneck Models. From black-box predictions to interpretable, editable concepts.
 
+## Part 1: Why make predictions interpretable?  (s30)
+
+1. **Why make predictions interpretable?**  
+   We begin with the black box: what evidence did the model use, and can a person inspect it?
+
 ## The black box  (s01)
 
 1. **Can a person inspect, and correct, the evidence a network used?**  
@@ -90,6 +95,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 16. **The same path in symbols**  
    In symbols: x is the input, c hat is the vector of predicted concepts, and y hat is the prediction. A concept predictor, g, maps x to c hat. A task head, f, maps c hat to y hat.
 
+## Part 2: The concept bottleneck  (s31)
+
+1. **The concept bottleneck**  
+   Now we put named concepts between the image and the prediction.
+
 ## Introducing the concept bottleneck  (s02)
 
 1. **Here is that idea on a real photograph**  
@@ -160,6 +170,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 9. **The same record in symbols**  
    In symbols, the concept labels c form a vector with 112 entries, each zero or one, and the label y is one of 200 species. The model predicts c hat, a value between zero and one for each concept.
 
+## Part 3: What is a concept?  (s32)
+
+1. **What is a concept?**  
+   Before building a bottleneck, we need to decide what counts as a concept.
+
 ## What is a concept?  (s03)
 
 1. **A concept is a claim that a person can check**  
@@ -207,6 +222,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 15. **Each concept is a named claim that a specialist can check**  
    Each is a named claim about the input that a specialist could check.
 
+## Part 4: From concepts to a prediction  (s33)
+
+1. **From concepts to a prediction**  
+   Next, we follow one image from its predicted concepts to class scores and probabilities.
+
 ## From concepts to predictions: the arithmetic  (s04)
 
 1. **Follow the image all the way to class probabilities**  
@@ -247,6 +267,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 13. **The concept vector is the point where a person can intervene**  
    The full path is still image, concept predictor, concept vector, task head, scores and softmax. A person can correct a concept in the middle, then run the same task head again. The answer can change without retraining either network.
+
+## Part 5: Learning the concepts  (s34)
+
+1. **Learning the concepts**  
+   We now compare how the concept predictor and task head learn from their labels.
 
 ## How does the model learn the concepts?  (s05)
 
@@ -309,6 +334,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 6. **As more groups are corrected, the independent model gains most**  
    The independent model improves fastest. Its head was trained on true concepts, so it trusts corrected ones. The joint model improves least.
 
+## Part 6: Human interventions  (s35)
+
+1. **Human interventions**  
+   Next, a person corrects a concept and we follow the effect on the prediction.
+
 ## Human interventions  (s06)
 
 1. **A person can fix a concept the model got wrong**  
@@ -343,6 +373,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 11. **A demonstration of the mechanism, not a clinical result**  
    This demonstrates the mechanism, not a clinical result. Real sleep staging applies scoring rules to thirty-second epochs, and this head was written by hand.
+
+## Part 7: When a correct edit hurts  (s36)
+
+1. **When a correct edit hurts**  
+   A correct concept edit can still hurt the final prediction, so we need to understand how the head uses it.
 
 ## A correct edit can still hurt  (s07)
 
@@ -379,6 +414,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 11. **A constructed case: the failure can happen**  
    This head was built faulty on purpose, to show that the failure can happen. It says nothing about how often it does.
 
+## Part 8: An incomplete concept vocabulary  (s37)
+
+1. **An incomplete concept vocabulary**  
+   What happens when the concept vocabulary leaves out information needed for the task?
+
 ## What if the concepts are incomplete?  (s08)
 
 1. **The bottleneck can pass on only what the vocabulary names**  
@@ -413,6 +453,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 11. **The fix is a richer vocabulary: add shape**  
    More accurate colour and size estimates would not help. The fix is a richer vocabulary: add shape. Now the two vectors differ.
+
+## Part 10: Modern concept bottleneck architectures  (s38)
+
+1. **Modern concept bottleneck architectures**  
+   We now compare newer architectures by the supervision they need, from concept labels to class labels to no fitting on the new task.
 
 ## Modern concept bottleneck architectures  (s10)
 
@@ -452,6 +497,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 12. **For each variant: how the path from image to concepts to class changes**  
    For each variant, we first say in one line what changed compared with the plain CBM. Then we write down how the path changes: from x, the image, to c hat, the concepts, to y hat, the class.
 
+## Part 10 · Rung One: Concept labels and class labels  (s39)
+
+1. **Concept labels and class labels**  
+   On rung one, every training image has concept labels and a class label; concept embedding models keep this supervision but give each concept a richer representation.
+
 ## Concept embedding models  (s15)
 
 1. **One number per concept is a narrow channel**  
@@ -489,6 +539,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 12. **Concept embedding models in symbols**  
    In symbols, for concept j out of k: g now outputs a probability and two embeddings, each m numbers long. c hat j is the mixed vector, and f reads all of them. Training still needs images, concept labels and class labels.
+
+## Part 10 · Rung Two: Class labels for the task  (s40)
+
+1. **Class labels for the task**  
+   We now move to rung two: the task images still need class labels, but no concept label for every image; post-hoc models build a concept bank from a separate source, such as labelled concept examples or text descriptions.
 
 ## Post-hoc concept bottleneck models  (s16)
 
@@ -732,6 +787,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 15. **VLG-CBM in symbols**  
    In symbols: g is a backbone with a concept layer, W c, trained on the detector labels c det. f is sparse and linear, with the number of effective concepts held fixed. The data: images and class labels, plus a detector.
 
+## Part 10 · Rung Three: No fitting on the new task  (s41)
+
+1. **No fitting on the new task**  
+   On rung three, a pretrained model scores descriptions and a fixed rule combines the scores, without fitting a head to labelled examples from the new task.
+
 ## Classification by description  (s25)
 
 1. **The last rung: no training data at all**  
@@ -802,6 +862,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 9. **Each rung up the ladder removes a cost and a check**  
    This is the general trade-off. Each rung up the ladder removes a human labour cost, and with it a human check. The labour saved on labelling has to be spent later, on checking that the concepts are really in the image.
 
+## Part 11: Evaluating a concept bottleneck  (s42)
+
+1. **Evaluating a concept bottleneck**  
+   How should we judge a concept bottleneck? We need to check the concepts, the predictions and the effect of interventions.
+
 ## How should we evaluate a CBM?  (s11)
 
 1. **Accuracy alone hides most of what a concept bottleneck promises**  
@@ -861,6 +926,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 19. **Why similar accuracy can hide very different intervention utility**  
    Why can similar accuracy hide such different behaviour? Accuracy marks only the final answer, not the route to it. The multi-task model's class head never reads its concept estimates, so fixing one is like correcting a note that nobody reads. In the strict CBM, the concepts are the only road to the answer, so a fix reaches the prediction.
 
+## Part 12: Beyond images  (s43)
+
+1. **Beyond images**  
+   The bottleneck idea also applies to other kinds of input, provided the intermediate concepts have a useful meaning.
+
 ## Beyond images  (s12)
 
 1. **Where else do concept bottlenecks fit?**  
@@ -886,6 +956,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 8. **One recipe in every domain**  
    The recipe is the same each time. Name the findings an expert checks, predict them from the raw signal, and let the decision depend on them alone.
+
+## Part 13: What can still go wrong?  (s44)
+
+1. **What can still go wrong?**  
+   An editable concept interface is useful, but we still need to check how it behaves and what its scores mean.
 
 ## An interpretable interface is not the end of the story  (s13)
 
@@ -916,6 +991,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 9. **A 2026 survey maps the field onto the same parts**  
    Knab and colleagues' 2026 survey organises the field around the same parts: the input, the concepts, the output and the training. It lists these issues among its open challenges.
 
+## Recap: Putting the pieces together  (s45)
+
+1. **Putting the pieces together**  
+   We finish by following the whole path again, from an image through concepts to a prediction and an intervention.
+
 ## Final replay  (s14)
 
 1. **One last time: a black box maps the photo to a species**  
@@ -938,6 +1018,11 @@ shown on the slide, then the narration (the film voice and the deck's speaker no
 
 7. **What to remember**  
    Four things to remember. Post-hoc methods explain a model after the fact, while a concept bottleneck makes the answer pass through named concepts. Fixing a concept helps only if the head reads it the right way. A soft score can carry more than its name says, and that extra information leaks to the head. And newer variants find concepts with fewer labels, so check that each one looks at the right evidence.
+
+## Appendix: Testing concept use in a black box  (s46)
+
+1. **Testing concept use in a black box**  
+   The appendix introduces testing with concept activation vectors, a way to ask whether a black-box model responds to a named concept.
 
 ## Appendix: testing with concept activation vectors  (s26)
 

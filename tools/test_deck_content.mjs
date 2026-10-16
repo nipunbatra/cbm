@@ -19,6 +19,19 @@ test('unchanged narration keeps exact recorded timing', () => {
   assert.equal(current(sourceOf(original)), original);
 });
 
+test('a new separator previews without recorded audio or changes to the film timeline', () => {
+  const before = JSON.stringify(recorded);
+  const sc = { id: 's40', title: 'Rung two', lead: 0.4, hold: 0.8,
+    beats: [{ id: '40.1', head: 'Class labels for the task', text: 'Next, post-hoc concept bottleneck models.', gap: 0.8 }] };
+  const preview = current(sc);
+  assert.equal(preview.start, 0);
+  assert.ok(preview.dur > 0);
+  assert.equal(preview.beats[0].start, sc.lead);
+  assert.deepEqual(preview.beats[0].words.map((w) => w.w), sc.beats[0].text.split(' '));
+  assert.ok(preview.end > preview.beats[0].end);
+  assert.equal(JSON.stringify(recorded), before);
+});
+
 test('revised scene follows the current slide order and every word is inside its beat', () => {
   const before = JSON.stringify(recorded);
   for (const sc of script.scenes) {

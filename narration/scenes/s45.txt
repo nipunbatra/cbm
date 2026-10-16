@@ -1,0 +1,2 @@
+## s45 | Recap: Putting the pieces together | 0.4 | 0.8
+[[Putting the pieces together]] We finish by following the whole path again, from an image through concepts to a prediction and an intervention. || 0.8

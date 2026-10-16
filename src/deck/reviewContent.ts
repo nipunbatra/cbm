@@ -18,7 +18,9 @@ function previewWords(text: string, start: number, end: number): Word[] {
   });
 }
 
-export function reviewScene(script: ScriptScene, recorded: SceneT, fps: number, tempo: number): SceneT {
+export function reviewScene(script: ScriptScene, recorded: SceneT | undefined, fps: number, tempo: number): SceneT {
+  // New review sections have no audio yet. Give them local preview timing only.
+  recorded ??= { id: script.id, title: '', start: 0, end: 0, dur: 0, beats: [] };
   if (script.title === recorded.title && script.beats.length === recorded.beats.length &&
       script.beats.every((b, i) => b.id === recorded.beats[i].id && b.text === recorded.beats[i].text &&
         b.head === recorded.beats[i].head)) return recorded;

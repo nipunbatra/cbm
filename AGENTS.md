@@ -28,6 +28,8 @@ Controls stay visible while hovered or used with keyboard focus. The map groups 
   Timing helpers: `bs(P,k)` / `be(P,k)` beat start/end, `bw(P,k,'word')` when a word is spoken, `bh(P,k)` the heading.
   Kit: `src/kit/core.tsx` (Rich, SlideHead, Tex, Header), `src/kit/cbm.tsx` (photos, EvTag, ConceptRow, VariantCard),
   `src/kit/theme.ts` (colours = meaning, KaTeX macros `\cin \ccon \chead \cedit \closs \cleak \gth \fph \ch \cvec \yh`).
+- **Section separators:** s30-s46 use `src/scenes/SectionBreak.tsx` and one narration file each.
+  New review scenes receive preview timing without changing the saved film timeline.
 - **Numbers:** `math/data.py` writes `src/data.json` (scenes read it as `D`). Never type a number on a slide that
   exists in data.json; spoken numbers must trace to it (`math/test_narration.py` checks).
 - **Readable lecture:** `docs/lecture.md` (generated: every heading and its narration). Style rules for slides:

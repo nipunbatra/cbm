@@ -1,0 +1,2 @@
+## s40 | Part 10 · Rung Two: Class labels for the task | 0.4 | 0.8
+[[Class labels for the task]] We now move to rung two: the task images still need class labels, but no concept label for every image; post-hoc models build a concept bank from a separate source, such as labelled concept examples or text descriptions. || 0.8

@@ -6,30 +6,47 @@
 #   [[Slide heading, colour markup allowed]] Spoken narration ... || pause
 # Numbers are written the way they are spoken; every spoken number traces to src/data.json (math/test_narration.py).
 s00
+s30
 s01
 s21
+s31
 s02
 s22
+s32
 s03
+s33
 s04
+s34
 s05
 s23
+s35
 s06
+s36
 s07
+s37
 s08
 # Part 9 (s09 and s20) was removed during review on 16 October 2026.
 # Keep the recorded scene sources for the later film rebuild; the live lecture skips both.
+s38
 s10
+s39
 s15
+s40
 s16
 s17
 s18
 s24
+s41
 s25
 s19
+s42
 s11
+s43
 s12
+s44
 s13
+s45
 s14
+s46
 s26
 end

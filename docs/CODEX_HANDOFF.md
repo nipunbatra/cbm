@@ -249,3 +249,18 @@ The dated entries below preserve the review history. The film remains on its ear
 - Saved review/cbm-lecture-review-2026-10-16-r19.pdf; all retained bodies, footers and bookmarks verified.
   Content and code checks passed, and the affected transitions were inspected in the browser.
 - Audio, saved timelines and the beat list remain unchanged. Publication is pending the next review update.
+
+## 16 October 2026: section separators (revision 20, prepared)
+
+- Added 17 separator scenes, s30-s46, before the main parts, recap, appendix and the three supervision
+  rungs within Part 10. Existing content slide IDs are unchanged. Drawings share src/scenes/SectionBreak.tsx;
+  their narration lives in the corresponding narration/scenes/s30.txt through s46.txt files.
+- Rung two comes immediately before PCBM. It distinguishes class-labelled task images from the source
+  of the concept bank, following the PCBM paper (https://arxiv.org/abs/2205.15480). Separate concept
+  examples may have labels; the task images do not need dense concept labels.
+- The review deck now gives new scenes preview timing without requiring saved audio. The regression
+  checks cover this path and confirm that saved film timing is not mutated.
+- Matching PDF: review/cbm-lecture-review-2026-10-16-r20.pdf, 320 pages and 43 bookmarks. This is
+  303 retained content slides plus 17 separators. All retained bodies, footers and bookmarks are verified.
+- Content, type checking, 25 Python tests and four deck tests pass. All new separators were inspected.
+  Source, deck, notes and course publication are being completed together. Audio and film remain unchanged.

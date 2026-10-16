@@ -1,0 +1,2 @@
+## s46 | Appendix: Testing concept use in a black box | 0.4 | 0.8
+[[Testing concept use in a black box]] The appendix introduces testing with concept activation vectors, a way to ask whether a black-box model responds to a named concept. || 0.8

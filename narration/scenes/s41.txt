@@ -1,0 +1,2 @@
+## s41 | Part 10 · Rung Three: No fitting on the new task | 0.4 | 0.8
+[[No fitting on the new task]] On rung three, a pretrained model scores descriptions and a fixed rule combines the scores, without fitting a head to labelled examples from the new task. || 0.8

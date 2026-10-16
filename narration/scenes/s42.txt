@@ -1,0 +1,2 @@
+## s42 | Part 11: Evaluating a concept bottleneck | 0.4 | 0.8
+[[Evaluating a concept bottleneck]] How should we judge a concept bottleneck? We need to check the concepts, the predictions and the effect of interventions. || 0.8

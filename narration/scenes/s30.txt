@@ -1,0 +1,2 @@
+## s30 | Part 1: Why make predictions interpretable? | 0.4 | 0.8
+[[Why make predictions interpretable?]] We begin with the black box: what evidence did the model use, and can a person inspect it? || 0.8

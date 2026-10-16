@@ -1,0 +1,2 @@
+## s36 | Part 7: When a correct edit hurts | 0.4 | 0.8
+[[When a correct edit hurts]] A correct concept edit can still hurt the final prediction, so we need to understand how the head uses it. || 0.8

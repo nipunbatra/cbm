@@ -1,0 +1,2 @@
+## s38 | Part 10: Modern concept bottleneck architectures | 0.4 | 0.8
+[[Modern concept bottleneck architectures]] We now compare newer architectures by the supervision they need, from concept labels to class labels to no fitting on the new task. || 0.8

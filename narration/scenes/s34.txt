@@ -1,0 +1,2 @@
+## s34 | Part 5: Learning the concepts | 0.4 | 0.8
+[[Learning the concepts]] We now compare how the concept predictor and task head learn from their labels. || 0.8

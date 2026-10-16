@@ -1,0 +1,2 @@
+## s35 | Part 6: Human interventions | 0.4 | 0.8
+[[Human interventions]] Next, a person corrects a concept and we follow the effect on the prediction. || 0.8

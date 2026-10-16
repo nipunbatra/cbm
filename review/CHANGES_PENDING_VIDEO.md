@@ -320,3 +320,14 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     and 26 bookmarks. Removed r18 page 130 and pages 153-157. Verified all retained slide bodies,
     new footers and bookmark destinations, and visually inspected the CEM recap, summary, Part 10
     transition and final page. Earlier PDFs, audio, saved timelines and the beat list remain unchanged.
+55. **Add section and supervision-rung separators (browser s16.1).** Added 17 short title cards before
+    the main parts, recap and appendix, and before each of Part 10's three rungs. Rung two explicitly
+    distinguishes class labels on task images from the separate concept-bank source; PCBM follows this
+    card. New cards use s30-s46 so existing content slide links do not move. Each has narration. The deck
+    can preview new scenes without recorded audio, covered by a regression test. Content compilation,
+    type checking, 25 Python tests and four deck tests passed. Inspected every separator and the
+    CEM-to-rung-two-to-PCBM transition. No audio, saved timeline or film changes were made.
+56. **Annotation PDF revision 20.** Saved review/cbm-lecture-review-2026-10-16-r20.pdf with 320 pages:
+    303 content slides plus 17 separators. All 303 retained slide bodies match revision 19, and every
+    footer and all 43 navigation bookmarks are checked. Inspected all new separators and the transitions.
+    The earlier review PDFs remain available for annotations.

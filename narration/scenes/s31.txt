@@ -1,0 +1,2 @@
+## s31 | Part 2: The concept bottleneck | 0.4 | 0.8
+[[The concept bottleneck]] Now we put named concepts between the image and the prediction. || 0.8

@@ -1,0 +1,2 @@
+## s33 | Part 4: From concepts to a prediction | 0.4 | 0.8
+[[From concepts to a prediction]] Next, we follow one image from its predicted concepts to class scores and probabilities. || 0.8

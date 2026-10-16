@@ -29,6 +29,7 @@ import { S24 } from './S24';
 import { S25 } from './S25';
 import { S26 } from './S26';
 import { End } from './End';
+import { SectionBreak } from './SectionBreak';
 
 export const SCENES: Record<string, React.FC<SceneProps>> = {
   s00: S00,
@@ -58,5 +59,22 @@ export const SCENES: Record<string, React.FC<SceneProps>> = {
   s24: S24,
   s25: S25,
   s26: S26,
+  s30: SectionBreak,
+  s31: SectionBreak,
+  s32: SectionBreak,
+  s33: SectionBreak,
+  s34: SectionBreak,
+  s35: SectionBreak,
+  s36: SectionBreak,
+  s37: SectionBreak,
+  s38: SectionBreak,
+  s39: SectionBreak,
+  s40: SectionBreak,
+  s41: SectionBreak,
+  s42: SectionBreak,
+  s43: SectionBreak,
+  s44: SectionBreak,
+  s45: SectionBreak,
+  s46: SectionBreak,
   end: End,
 };

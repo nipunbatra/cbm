@@ -1,0 +1,2 @@
+## s43 | Part 12: Beyond images | 0.4 | 0.8
+[[Beyond images]] The bottleneck idea also applies to other kinds of input, provided the intermediate concepts have a useful meaning. || 0.8

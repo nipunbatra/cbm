@@ -1,0 +1,2 @@
+## s32 | Part 3: What is a concept? | 0.4 | 0.8
+[[What is a concept?]] Before building a bottleneck, we need to decide what counts as a concept. || 0.8

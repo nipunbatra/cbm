@@ -21,7 +21,6 @@ import { Controls } from './Controls';
 const recorded = timeline as unknown as Timeline;
 const TL: Timeline = { ...recorded, scenes: script.scenes.map((sc) => {
   const previous = recorded.scenes.find((s) => s.id === sc.id);
-  if (!previous) throw new Error(`No recorded scene ${sc.id} for slide review`);
   return reviewScene(sc, previous, recorded.fps, recorded.tempo);
 }) };
 const FPS = TL.fps;
