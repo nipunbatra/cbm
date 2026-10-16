@@ -425,3 +425,7 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     all 255 other slide bodies are preserved. Every footer and bookmark destination was verified.
     No LF-CBM or Oikarinen text remains in the PDF. Rendered and inspected the revised map, phrase review,
     ladder, grounded-method comparison, recap and references. Earlier annotation PDFs remain available.
+75. **Publish review revision 26.** Source c2aa678 and Pages release 0ed3f85 are pushed and deployed.
+    Live HTML, JavaScript, CSS, notes and PDF match the local release bytes. Inspected the published
+    two-group map. Course PR #15 is merged and deployed; both visible and accessible labels show
+    296 pages, and all three course links remain correct. Audio and film timing remain unchanged.

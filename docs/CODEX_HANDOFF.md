@@ -11,8 +11,8 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 
 ## Current reviewed release
 
-Revision 25 is live at https://nipunbatra.github.io/cbm/: 296 content slides plus 20 separators, matching notes
-and a 316-page PDF with 46 navigation bookmarks.
+Revision 26 is live at https://nipunbatra.github.io/cbm/: 277 content slides plus 19 separators, matching notes
+and a 296-page PDF with 44 navigation bookmarks.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
 
@@ -344,4 +344,5 @@ The dated entries below preserve the review history. The film remains on its ear
   retains useful review guidance (reject class names, merge duplicates and check weak matches), without
   changing the saved hand-chosen bank or measured scores. Map, headings, notes, references and recap agree.
   The checked r26 PDF has 296 pages and 44 bookmarks; 41 revised pages were exported and all 255 other
-  slide bodies preserved. Earlier PDFs and archived s17/s48 sources remain. Publication verification pending.
+  slide bodies preserved. Earlier PDFs and archived s17/s48 sources remain. Source c2aa678 and Pages release 0ed3f85 are pushed and deployed. Live deck assets, notes and PDF
+  match local bytes; course PR #15 is merged and deployed with both PDF labels showing 296 pages.
