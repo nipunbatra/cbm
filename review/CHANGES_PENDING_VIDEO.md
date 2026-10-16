@@ -463,3 +463,7 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     and the references page; all 251 other slide bodies are preserved. Every footer and bookmark
     destination was verified. Rendered the new examples and neighbouring slides for visual QA.
     Earlier annotation PDFs remain available.
+81. **Publish review revision 28.** Source 783f444 and Pages release b28644d are pushed and deployed.
+    Live HTML, JavaScript, CSS, notes and PDF match local bytes. Inspected both published new slides
+    and the 263-slide map. Course PR #17 is merged and deployed, with both PDF labels showing
+    263 pages and all three standalone CBM links correct. Audio and film timing remain unchanged.
