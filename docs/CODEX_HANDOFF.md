@@ -385,3 +385,7 @@ The dated entries below preserve the review history. The film remains on its ear
 - r30 publication verified: source af8ac78, Pages e16b208, both successful deployments and five live
   file hashes checked. Course PR #19 merged with both PDF labels at 262 pages. Live slide map confirms
   three evaluation slides. Evidence: qa/review-2026-10-16/r30-live-verification.json.
+- 18 Oct, recording mode published: `?mode=recording` shows each slide fully and advances one slide
+  per click/key. R toggles mode; full slide notes and auto-hiding controls work. Source 7dae0e6,
+  Pages 93cbc1f, deployment 39119168711. Live forward navigation verified; all five assets match.
+  Course links and the r30 PDF remain current. QA: qa/recording-2026-10-18/.

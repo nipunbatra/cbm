@@ -286,3 +286,13 @@ files match local bytes. Course PR #19 is merged; deployment 38909778141 succeed
 262 pages, and all three CBM links are correct. Evidence: `qa/review-2026-10-16/r30-live-verification.json`
 and `r30-live-evaluation.png`. The annotation PDF is `review/cbm-lecture-review-2026-10-16-r30.pdf`.
 Audio and saved film timing remain unchanged.
+
+## Recording mode, 18 October 2026
+
+Open https://nipunbatra.github.io/cbm/?mode=recording for complete slides and one advance per slide.
+R toggles the mode; C opens its controls. The current lecture has 262 complete slides rather than
+777 sentence stops. Notes show each slide's full narration; slides wait for the presenter to advance.
+Source 7dae0e6 and Pages 93cbc1f are pushed. Deployment 39119168711 succeeded. Live navigation and
+controls were inspected, and all five hosted release files match local bytes. The existing DL-2026
+links still point to this deck, notes and the unchanged r30 PDF. Evidence is in
+`qa/recording-2026-10-18/live-verification.json` and `live-recording-mode.png`.

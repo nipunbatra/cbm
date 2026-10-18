@@ -513,3 +513,6 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     boundaries and switching at every partial build. Type checking, 26 Python tests and eight deck
     tests passed. Browser checks cover keys, clicks, sections, map, reload and both modes. This changes
     only the browser player; lecture content, the r30 PDF, narration, audio and film timings are unchanged.
+89. **Publish recording mode, 18 October 2026.** Source 7dae0e6 and Pages 93cbc1f are deployed.
+    Verified the live recording link, one-key slide advances and mode controls. All five hosted release
+    files match local bytes; DL-2026 links remain current. The r30 PDF and saved film artefacts are unchanged.
