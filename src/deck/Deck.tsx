@@ -4,6 +4,7 @@
 // moves on its own. Keys: right / space / page-down / click = next build, left / page-up = back, shift+right = jump
 // without transition, up / down = previous / next section, n = notes (current sentence highlighted), o = overview,
 // c = controls, m / o = slide map, a = transitions on/off, f = full screen. URL hash #s03.4 opens scene s03 at the end of beat 4.
+// ?mode=recording shows complete slides: one click per slide, with no reveal animations. R toggles this mode.
 // ?print renders every beat's end state as its own page (for the PDF).
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Player, type PlayerRef } from '@remotion/player';
@@ -18,6 +19,7 @@ import { reviewScene } from './reviewContent';
 import { SCENES } from '../scenes';
 import { Controls } from './Controls';
 import modernSections from '../modernSections.json';
+import { adjacentPosition, buildStops, lastStopOfBeat as lastStop, recordingFromSearch, sectionStart, slideEndFrame, type Pos } from './navigation';
 
 const recorded = timeline as unknown as Timeline;
 const TL: Timeline = { ...recorded, scenes: script.scenes.map((sc) => {
@@ -25,7 +27,6 @@ const TL: Timeline = { ...recorded, scenes: script.scenes.map((sc) => {
   return reviewScene(sc, previous, recorded.fps, recorded.tempo);
 }) };
 const FPS = TL.fps;
-const HOLD = -0.05; // the beat's end state (scene authors design and check the frame at beat end - 0.05 s)
 
 const Placeholder: React.FC<SceneProps> = ({ P }) => (
   <Stage>
@@ -43,34 +44,12 @@ const SceneOnly: React.FC<{ id: string }> = ({ id }) => {
   return <Comp t={frame / FPS} P={P} />;
 };
 
-type Pos = { s: number; k: number }; // scene index, build-stop index within the scene
-const stepFrame = (s: number, k: number) => {
-  const sc = TL.scenes[s];
-  const b = sc.beats[k];
-  const end = b.end - sc.start + HOLD;
-  return Math.max(0, Math.min(Math.round(end * FPS), Math.round(sc.dur * FPS) - 1));
-};
-// build stops of a scene: the end of every sentence inside a beat (if it is not right at the beat's end), then the
-// beat's end. Each stop remembers its beat and the sentence span, for the notes.
-type Stop = { frame: number; beat: number; from: number; to: number };
-const MIN_GAP = 1.0; // seconds: a sentence ending closer than this to the next stop is not a stop of its own
-const STOPS: Stop[][] = TL.scenes.map((sc, s) => sc.beats.flatMap((b, k) => {
-  const end = stepFrame(s, k);
-  const out: Stop[] = []; let from = 0;
-  const ws = b.words ?? [];
-  ws.forEach((w, i) => {
-    if (i === ws.length - 1 || !/[.?!]["')]?$/.test(w.w) || /^(al|e\.g|i\.e|etc)\.$/i.test(w.w)) return;
-    const f = Math.round((w.e - sc.start + 0.15) * FPS);
-    const prev = out.length ? out[out.length - 1].frame : -Infinity;
-    if (f > prev + MIN_GAP * FPS && f < end - MIN_GAP * FPS) { out.push({ frame: f, beat: k, from, to: i + 1 }); from = i + 1; }
-  });
-  out.push({ frame: end, beat: k, from, to: ws.length });
-  return out;
-}));
-const lastStopOfBeat = (s: number, k: number) => STOPS[s].reduce((a, st, i) => (st.beat === k ? i : a), 0);
+const stepFrame = (s: number, k: number) => slideEndFrame(TL, s, k);
+const STOPS = buildStops(TL);
+const lastStopOfBeat = (s: number, beat: number) => lastStop(STOPS, s, beat);
 const parseHash = (): Pos => {
   const m = /^#(\w+?)(?:\.(\d+))?$/.exec(location.hash);
-  if (!m) return { s: 0, k: 0 };
+  if (!m) return sectionStart(STOPS, 0, recordingFromSearch(location.search));
   // Existing review links to the removed Part 9 continue at the next section.
   const removed = m[1] === 's09' || m[1] === 's20';
   const id = removed ? 's10' : m[1];
@@ -82,6 +61,7 @@ const parseHash = (): Pos => {
 
 export const Deck: React.FC = () => {
   const [pos, setPos] = useState<Pos>(parseHash);
+  const [recording, setRecording] = useState(() => recordingFromSearch(location.search));
   const [notes, setNotes] = useState(false);
   const [animate, setAnimate] = useState(true);
   const player = useRef<PlayerRef>(null);
@@ -118,37 +98,48 @@ export const Deck: React.FC = () => {
   }, [runTo]);
 
   useEffect(() => {
-    const onHash = () => { const p = parseHash(); stopAnim(); shown.current = STOPS[p.s][p.k].frame; setPos(p); player.current?.seekTo(shown.current); };
+    const onHash = () => { setRecording(recordingFromSearch(location.search)); const p = parseHash(); stopAnim(); shown.current = STOPS[p.s][p.k].frame; setPos(p); player.current?.seekTo(shown.current); };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
   // a new section: show its stop immediately (the Player remounts with this frame)
   useEffect(() => { player.current?.seekTo(shown.current); }, [pos.s]);
 
+  const nextPos = adjacentPosition(STOPS, pos, 1, recording);
+  const prevPos = adjacentPosition(STOPS, pos, -1, recording);
   const next = useCallback((transition = animate) => {
-    if (pos.k + 1 < STOPS[pos.s].length) go({ s: pos.s, k: pos.k + 1 }, transition);
-    else if (pos.s + 1 < TL.scenes.length) go({ s: pos.s + 1, k: 0 }, false);
-  }, [pos, go, animate]);
+    const p = adjacentPosition(STOPS, pos, 1, recording);
+    if (p) go(p, transition && !recording);
+  }, [pos, go, animate, recording]);
   const prev = useCallback(() => {
-    if (pos.k > 0) go({ s: pos.s, k: pos.k - 1 }, false);
-    else if (pos.s > 0) go({ s: pos.s - 1, k: STOPS[pos.s - 1].length - 1 }, false);
-  }, [pos, go]);
+    const p = adjacentPosition(STOPS, pos, -1, recording);
+    if (p) go(p, false);
+  }, [pos, go, recording]);
   const toggleNotes = useCallback(() => setNotes((v) => !v), []);
-  const toggleAnimate = useCallback(() => setAnimate((v) => !v), []);
+  const toggleAnimate = useCallback(() => { if (!recording) setAnimate((v) => !v); }, [recording]);
+  const toggleRecording = useCallback(() => {
+    const enabled = !recording;
+    const url = new URL(location.href);
+    if (enabled) url.searchParams.set('mode', 'recording'); else url.searchParams.delete('mode');
+    history.replaceState(null, '', url);
+    setRecording(enabled);
+    // Finish the current slide immediately, including when toggled halfway through a reveal.
+    go({ s: pos.s, k: lastStopOfBeat(pos.s, STOPS[pos.s][pos.k].beat) }, false);
+  }, [recording, pos, go]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || document.querySelector('dialog[open]') ||
+      if ((recording && e.repeat) || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || document.querySelector('dialog[open]') ||
           (e.target as HTMLElement).closest('input,textarea,select,summary,[contenteditable="true"]') ||
           ((e.target as HTMLElement).closest('button') && [' ', 'Enter'].includes(e.key))) return;
       if (['ArrowRight', ' ', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); next(animate && !e.shiftKey); }
       else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
-      else if (e.key === 'ArrowDown') { e.preventDefault(); go({ s: Math.min(TL.scenes.length - 1, pos.s + 1), k: 0 }, false); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); go({ s: Math.max(0, pos.s - 1), k: 0 }, false); }
-      else if (e.key === 'Home') { e.preventDefault(); go({ s: 0, k: 0 }, false); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); go(sectionStart(STOPS, Math.min(TL.scenes.length - 1, pos.s + 1), recording), false); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); go(sectionStart(STOPS, Math.max(0, pos.s - 1), recording), false); }
+      else if (e.key === 'Home') { e.preventDefault(); go(sectionStart(STOPS, 0, recording), false); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [pos, go, animate, next, prev]);
+  }, [pos, go, animate, next, prev, recording]);
   useEffect(() => () => stopAnim(), []);
 
   const stop = STOPS[pos.s][pos.k];
@@ -171,8 +162,8 @@ export const Deck: React.FC = () => {
       </div>
       {notes ? (
         <div style={{ height: 187, flexShrink: 0, boxSizing: 'border-box', overflow: 'auto', padding: '14px 28px', background: '#0b0d10', color: '#cfd6dd', fontSize: 19, lineHeight: 1.45 }}>
-          <div style={{ color: '#7d8894', fontSize: 14, marginBottom: 6 }}>{`${sc.id} · ${sc.title} · slide ${stop.beat + 1} of ${nb} · build ${build} of ${builds}`}</div>
-          {words.length ? (<span><span style={{ color: '#7d8894' }}>{words.slice(0, stop.from).join(' ')} </span>
+          <div style={{ color: '#7d8894', fontSize: 14, marginBottom: 6 }}>{`${sc.id} · ${sc.title} · slide ${stop.beat + 1} of ${nb} · ${recording ? 'recording: full slide' : `build ${build} of ${builds}`}`}</div>
+          {recording ? sc.beats[stop.beat].text : words.length ? (<span><span style={{ color: '#7d8894' }}>{words.slice(0, stop.from).join(' ')} </span>
             <span style={{ color: '#ffffff' }}>{words.slice(stop.from, stop.to).join(' ')}</span>
             <span style={{ color: '#5b6570' }}> {words.slice(stop.to).join(' ')}</span></span>) : sc.beats[stop.beat].text}
           {stop.beat + 1 < nb && stop.to >= words.length ? <div style={{ color: '#6b7680', marginTop: 8, fontSize: 16 }}>Next slide: {sc.beats[stop.beat + 1].text.slice(0, 140)}…</div> : null}
@@ -182,10 +173,9 @@ export const Deck: React.FC = () => {
         ('head' in b && !String(b.head).includes('$') ? String(b.head).replace(/\{[xcfelkym]:([^{}]*)\}/g, '$1').trim() : '') || b.text.split(/(?<=[.!?])\s/)[0]
       ) }))} section={pos.s} slide={stop.beat}
         build={build} builds={builds}
-        notes={notes} animate={animate} canPrev={pos.s > 0 || pos.k > 0}
-        canNext={pos.s < TL.scenes.length - 1 || pos.k < STOPS[pos.s].length - 1}
+        notes={notes} animate={animate} recording={recording} canPrev={!!prevPos} canNext={!!nextPos}
         onPrev={prev} onNext={() => next()} onJump={(s, beat) => go({ s, k: lastStopOfBeat(s, beat) }, false)}
-        onNotes={toggleNotes} onAnimate={toggleAnimate} />
+        onNotes={toggleNotes} onAnimate={toggleAnimate} onRecording={toggleRecording} />
     </div>
   );
 };

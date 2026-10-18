@@ -14,6 +14,8 @@ Section order: `narration/order.txt`. Readable full text: `docs/lecture.md` (gen
 Revision 30 is live at https://nipunbatra.github.io/cbm/: 244 content slides plus 18 separators, matching notes
 and a 262-page PDF with 42 navigation bookmarks. Part 11 is condensed to three slides. Grounding
 remains the final optional appendix, after TCAV.
+Recording mode is available at `?mode=recording` or with R in the deck. It visits complete slides
+with one click per slide (262 stops instead of 777), retaining the existing teaching mode.
 The full source history is at https://github.com/nipunbatra/cbm (`main`); Pages deploys `gh-pages`.
 The dated entries below preserve the review history. The film remains on its earlier narration.
 

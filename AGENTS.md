@@ -17,6 +17,9 @@ Keys in the deck: right arrow, space or click = next build; left = back; up/down
 (the narration, current sentence highlighted); M or O = searchable slide map; A = transitions on/off; F = full screen.
 C opens the controls bar. It hides after three idle seconds; move to the bottom-right corner or tap to recover it.
 Controls stay visible while hovered or used with keyboard focus. The map groups all slides by section.
+Recording: open `?mode=recording` or press R (also in Controls). Every slide is fully revealed;
+right/space/click advances one whole slide, left goes back one. Notes show the full slide narration.
+The flag stays in the URL on navigation and reload; the normal URL keeps sentence-by-sentence builds.
 `#s04.6` opens section s04 at slide 6. Builds stop at the end of each narration sentence and wait for a click.
 
 ## Where things live

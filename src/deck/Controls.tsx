@@ -4,9 +4,9 @@ import './controls.css';
 type Section = { id: string; title: string; slides: string[] };
 type Props = {
   sections: Section[]; section: number; slide: number; build: number; builds: number;
-  notes: boolean; animate: boolean; canPrev: boolean; canNext: boolean;
+  notes: boolean; animate: boolean; recording: boolean; canPrev: boolean; canNext: boolean;
   onPrev: () => void; onNext: () => void; onJump: (section: number, slide: number) => void;
-  onNotes: () => void; onAnimate: () => void;
+  onNotes: () => void; onAnimate: () => void; onRecording: () => void;
 };
 
 /** Browser chrome only. It is absent from the PDF and the film. */
@@ -85,7 +85,7 @@ export const Controls: React.FC<Props> = (p) => {
       if (e.ctrlKey || e.metaKey || e.altKey || dialog.current?.open ||
           (e.target as HTMLElement).closest('input,textarea,select,[contenteditable="true"]')) return;
       const k = e.key.toLowerCase();
-      if (!['c', 'm', 'o', 'n', 'a', 'f', 'escape'].includes(k)) return;
+      if (e.repeat || !['c', 'm', 'o', 'n', 'a', 'r', 'f', 'escape'].includes(k)) return;
       e.preventDefault();
       keyboardFocus.current = true;
       if (k === 'c') {
@@ -94,6 +94,7 @@ export const Controls: React.FC<Props> = (p) => {
       } else if (k === 'm' || k === 'o') showMap();
       else if (k === 'n') p.onNotes();
       else if (k === 'a') p.onAnimate();
+      else if (k === 'r') p.onRecording();
       else if (k === 'f') void toggleFullscreen();
       else { setOpen(false); document.getElementById('deck-stage')?.focus(); }
       wake();
@@ -110,7 +111,7 @@ export const Controls: React.FC<Props> = (p) => {
       document.removeEventListener('keydown', key);
       document.removeEventListener('fullscreenchange', full);
     };
-  }, [open, p.notes, p.onNotes, p.onAnimate, idle, wake, showMap, toggleFullscreen]);
+  }, [open, p.notes, p.onNotes, p.onAnimate, p.onRecording, idle, wake, showMap, toggleFullscreen]);
 
   const count = p.sections.slice(0, p.section).reduce((n, s) => n + s.slides.length, 0) + p.slide + 1;
   const total = p.sections.reduce((n, s) => n + s.slides.length, 0);
@@ -126,12 +127,13 @@ export const Controls: React.FC<Props> = (p) => {
       onPointerLeave={() => { pointerInside.current = false; idle(); }}
       onPointerMove={wake} onFocusCapture={wake} onBlurCapture={idle}>
       <nav id="deck-controls" className="deck-toolbar" aria-label="Slide controls" hidden={!open}>
-        <span className="deck-counter">Slide {count} / {total}<small>Build {p.build} / {p.builds}</small></span>
-        <button onClick={p.onPrev} disabled={!p.canPrev} title="Previous build (left arrow)">← Previous</button>
-        <button ref={nextButton} onClick={p.onNext} disabled={!p.canNext} title="Next build (right arrow)">Next →</button>
+        <span className="deck-counter">Slide {count} / {total}<small>{p.recording ? 'Recording · one click per slide' : `Build ${p.build} / ${p.builds}`}</small></span>
+        <button onClick={p.onPrev} disabled={!p.canPrev} title={`Previous ${p.recording ? 'slide' : 'build'} (left arrow)`}>← Previous</button>
+        <button ref={nextButton} onClick={p.onNext} disabled={!p.canNext} title={`Next ${p.recording ? 'slide' : 'build'} (right arrow)`}>Next →</button>
         <button ref={mapButton} onClick={showMap} aria-haspopup="dialog" title="Slide map (M or O)">Map</button>
         <button onClick={p.onNotes} aria-pressed={p.notes} title="Narration (N)">Notes</button>
-        <button onClick={p.onAnimate} aria-pressed={p.animate} title="Build animations (A)">Animation {p.animate ? 'on' : 'off'}</button>
+        <button onClick={p.onRecording} aria-pressed={p.recording} title="Recording mode: one click per complete slide (R)">Recording {p.recording ? 'on' : 'off'}</button>
+        {!p.recording && <button onClick={p.onAnimate} aria-pressed={p.animate} title="Build animations (A)">Animation {p.animate ? 'on' : 'off'}</button>}
         <button onClick={() => void toggleFullscreen()} aria-pressed={fullscreen}
           disabled={!document.fullscreenEnabled} title="Full screen (F)">{fullscreen ? 'Exit full screen' : 'Full screen'}</button>
         {message && <span role="status" className="deck-message">{message}</span>}
@@ -158,7 +160,7 @@ export const Controls: React.FC<Props> = (p) => {
         </details>)}
         {!matches.length && <p className="deck-map-empty">No matching slides. Try a different topic.</p>}
       </div>
-      <footer>← → build by build · ↑ ↓ section by section · N notes · A animation · F full screen</footer>
+      <footer>← → {p.recording ? 'slide by slide' : 'build by build'} · ↑ ↓ section by section · R recording mode · N notes · {!p.recording && 'A animation · '}F full screen</footer>
     </dialog>
   </>;
 };

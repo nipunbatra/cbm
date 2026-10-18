@@ -504,3 +504,12 @@ Audio note: the voice for these lines was already generated and checked (asrchec
     Live HTML, JavaScript, CSS, notes and PDF match local bytes. Verified the live three-slide evaluation
     section and map. Course PR #19 is merged and deployed; both PDF labels show 262 pages and all three
     standalone CBM links are correct. Audio and saved film timing remain unchanged.
+88. **Add one-click recording mode, 18 October 2026.** The `?mode=recording` URL and R shortcut
+    switch to complete slides with immediate transitions. Right/Space/click advances one slide; Left
+    returns one slide. Home, section shortcuts and map jumps also show completed slides. The existing
+    teaching mode retains its sentence builds; toggling during a build completes the current slide.
+    The toolbar identifies the mode and Notes shows the full narration. Auto-hiding controls remain.
+    Exhaustive forward/backward navigation covers all 262 slides (instead of 777 teaching stops),
+    boundaries and switching at every partial build. Type checking, 26 Python tests and eight deck
+    tests passed. Browser checks cover keys, clicks, sections, map, reload and both modes. This changes
+    only the browser player; lecture content, the r30 PDF, narration, audio and film timings are unchanged.
